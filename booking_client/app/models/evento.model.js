@@ -24,7 +24,7 @@ function slugify(text) {
 }
 
 EventSchema.pre('save', async function () {
-  // Solo (re)crea slug si es nuevo o cambia el título/fecha
+  // Solo (re)crea slug si es nuevo o cambia el título/fechas
   if (!this.isNew && !this.isModified('title') && !this.isModified('date') && this.slug) return;
 
   const datePart = this.date ? new Date(this.date).toISOString().slice(0, 10) : '';
