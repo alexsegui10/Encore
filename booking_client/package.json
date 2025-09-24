@@ -2,10 +2,12 @@
   "name": "booking_client",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-     "start": "node app/api/index.js"
+    "deploy": "git push -f render HEAD:main",
+    "start": "node app/api/index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "mongodb": "^6.20.0",
     "mongoose": "^8.18.2",
     "nodemon": "^3.1.10",
     "slug": "^11.0.0",

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+// app/models/evento.model.js
+import mongoose from 'mongoose';
 
 const EventSchema = new mongoose.Schema(
   {
@@ -24,21 +25,16 @@ function slugify(text) {
 }
 
 EventSchema.pre('save', async function () {
-  // Solo (re)crea slug si es nuevo o cambia el título/fechas
   if (!this.isNew && !this.isModified('title') && !this.isModified('date') && this.slug) return;
-
   const datePart = this.date ? new Date(this.date).toISOString().slice(0, 10) : '';
-  const base = slugify(`${this.title || 'evento'} ${datePart}`);
-  let candidate = base || 'evento';
-
-  const clash = await this.constructor.findOne({ slug: candidate, _id: { $ne: this._id } }).lean();
-  this.slug = clash ? `${base}-${Math.random().toString(36).slice(2, 6)}` : candidate;
+  const base = slugify(`${this.title || 'evento'} ${datePart}`) || 'evento';
+  const clash = await this.constructor.findOne({ slug: base, _id: { $ne: this._id } }).lean();
+  this.slug = clash ? `${base}-${Math.random().toString(36).slice(2, 6)}` : base;
 });
 
-// Validación simple por si acaso
 EventSchema.pre('validate', function (next) {
   if (this.price == null || this.price < 0) return next(new Error('price debe ser >= 0'));
   next();
 });
 
-module.exports = mongoose.model('Event', EventSchema);
+export default mongoose.model('Event', EventSchema);

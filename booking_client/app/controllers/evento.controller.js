@@ -1,6 +1,6 @@
 import Event from '../models/evento.model.js'; 
 
-// GET /eventos  (listado simple; sin filtros avanzados de momento)
+// GET /eventos 
 export const list = async (req, res, next) => {
   try {
     const items = await Event.find().sort('-date').lean();

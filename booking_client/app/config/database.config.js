@@ -1,14 +1,19 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log("MongoDB conectado");
-    } catch (err) {
-        console.error("Error conectando a MongoDB:", err.message);
-        process.exit(1);
-    }
+  try {
+    const uri = process.env.MONGO_URI;
+    if (!uri) throw new Error("Falta MONGO_URI en .env");
+ 
+    await mongoose.connect(uri, {
+      serverApi: { version: "1", strict: true, deprecationErrors: true },
+      serverSelectionTimeoutMS: 10000,
+    });
+
+    console.log("✅ Conectado a MongoDB:", mongoose.connection.host);
+  } catch (err) {
+    console.error("❌ Error conectando a MongoDB:", err.message);
+    process.exit(1);
+  }
 };
+//a
