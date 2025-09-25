@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "../config/database.config.js";
-import eventosRoutes from "../routes/evento.routes.js";
+import eventosRoutes from "../routes/evento.routes.js"; 
+import categoryRoutes from "../routes/category.routes.js";
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ await connectDB();
 app.get("/", (_req, res) => res.send("API OK"));
 
 app.use("/api", eventosRoutes);
+app.use("/api", categoryRoutes);
+//a
 
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
 

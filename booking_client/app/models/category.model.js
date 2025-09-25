@@ -1,15 +1,16 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 
 const CategorySchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true, maxlength: 120 },
+    name: { type: String, required: true, trim: true, maxlength: 100 },
     description: { type: String, trim: true, maxlength: 500 },
-    slug: { type: String, unique: true, index: true },
+    image: { type: String, trim: true }, // URL de la imagen de la categoría
+    slug: { type: String, unique: true, index: true }
   },
   { timestamps: true }
 );
 
-// slugify simple sin dependencias
 function slugify(text) {
   return String(text || '')
     .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
@@ -18,15 +19,17 @@ function slugify(text) {
     .replace(/(^-|-$)+/g, '');
 }
 
-
 CategorySchema.pre('save', async function () {
-  if (!this.isModified('name') && this.slug) return;
-
-  const base = slugify(this.name || 'categoria');
-  let candidate = base || 'categoria';
-
-  const clash = await this.constructor.findOne({ slug: candidate, _id: { $ne: this._id } }).lean();
-  this.slug = clash ? `${base}-${Math.random().toString(36).slice(2, 6)}` : candidate;
+  if (!this.isNew && !this.isModified('title') && !this.isModified('date') && this.slug) return;
+  const datePart = this.date ? new Date(this.date).toISOString().slice(0, 10) : '';
+  const base = slugify(`${this.title || 'evento'} ${datePart}`) || 'evento';
+  const clash = await this.constructor.findOne({ slug: base, _id: { $ne: this._id } }).lean();
+  this.slug = clash ? `${base}-${Math.random().toString(36).slice(2, 6)}` : base;
 });
 
-module.exports = mongoose.model('Category', CategorySchema);
+CategorySchema.pre('validate', function (next) {
+  if (this.price == null || this.price < 0) return next(new Error('price debe ser >= 0'));
+  next();
+});
+
+export default mongoose.model('Category', CategorySchema);
