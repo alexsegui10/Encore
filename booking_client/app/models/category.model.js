@@ -32,4 +32,17 @@ CategorySchema.pre('validate', function (next) {
   next();
 });
 
+// Method to serialize category data for carousel display
+CategorySchema.methods.toCategoryCarouselResponse = function() {
+  return {
+    id: this._id,
+    name: this.name,
+    description: this.description,
+    image: this.image || '/images/default-category.jpg',
+    slug: this.slug,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
+  };
+};
+
 export default mongoose.model('Category', CategorySchema);

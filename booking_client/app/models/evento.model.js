@@ -37,4 +37,10 @@ EventSchema.pre('validate', function (next) {
   next();
 });
 
+EventSchema.methods.toProductCarouselResponse = async function () {
+    return {
+        images: this.images
+    }
+}
+
 export default mongoose.model('Event', EventSchema);
