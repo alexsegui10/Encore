@@ -1,0 +1,23 @@
+<div class="event-card">
+    <h1>holaaaaa</h1>
+    <!-- Título del evento -->
+    <h3>{{ event.title }}</h3>
+
+    <!-- Fecha -->
+    <p><strong>Fecha:</strong> {{ event.date }}</p>
+
+    <!-- Ubicación -->
+    <p *ngIf="event.location"><strong>Ubicación:</strong> {{ event.location }}</p>
+
+    <!-- Precio -->
+    <p><strong>Precio:</strong> {{ event.price }}{{ event.currency || '€' }}</p>
+
+    <!-- Descripción -->
+    <p *ngIf="event.description">{{ event.description }}</p>
+
+    <!-- Botones de acción -->
+    <div class="actions">
+        <button>Editar</button>
+        <button>Eliminar</button>
+    </div>
+</div>
