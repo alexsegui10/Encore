@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "git push -f render HEAD:main",
-    "start": "node app/api/index.js"
+    "start": "node app/api/index.js",
+    "dev": "nodemon app/api/index.js"
   },
   "keywords": [],
   "author": "",
