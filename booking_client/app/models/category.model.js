@@ -32,7 +32,7 @@ CategorySchema.pre('validate', function (next) {
   next();
 });
 
-// Method to serialize category data for carousel display
+//serializer para carousel
 CategorySchema.methods.toCategoryCarouselResponse = function() {
   return {
     id: this._id,

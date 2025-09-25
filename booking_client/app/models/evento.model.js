@@ -37,6 +37,7 @@ EventSchema.pre('validate', function (next) {
   next();
 });
 
+//serializer para carousel
 EventSchema.methods.toProductCarouselResponse = async function () {
     return {
         images: this.images
