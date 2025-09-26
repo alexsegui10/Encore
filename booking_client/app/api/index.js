@@ -29,6 +29,6 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: "Error interno" });
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Servidor escuchando en http://0.0.0.0:${PORT}`);
+app.listen(PORT, "127.0.0.1", () => {
+  console.log(`Servidor escuchando en http://127.0.0.1:${PORT}`);
 });

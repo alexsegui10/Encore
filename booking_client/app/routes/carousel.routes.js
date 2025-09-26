@@ -1,9 +1,12 @@
-module.exports = (app) => {
-    const carousel = require('../controllers/carousel.controller');
 
-    //GET ALL
-    app.get('/carousel', carousel.get_carousel_category);
-    //GET ALL IMAGES FROM ONE PRODUCT
-    app.get('/carousel/:slug', carousel.get_carousel_product);
+import { Router } from 'express';
+import * as carousel from '../controllers/carousel.controller.js';
 
-}
+const api = Router();
+
+api.get('/carousel/categories', carousel.get_carousel_category);
+//GET EVENT DATA FOR CAROUSEL
+api.get('/carousel/evento/:slug', carousel.get_carousel_evento);
+
+
+export default api;

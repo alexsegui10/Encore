@@ -38,9 +38,20 @@ EventSchema.pre('validate', function (next) {
 });
 
 //serializer para carousel
-EventSchema.methods.toProductCarouselResponse = async function () {
+EventSchema.methods.toEventoCarouselResponse = async function () {
     return {
-        images: this.images
+        id: this._id,
+        title: this.title,
+        date: this.date,
+        price: this.price,
+        currency: this.currency,
+        location: this.location,
+        description: this.description,
+        category: this.category,
+        slug: this.slug,
+        status: this.status,
+        createdAt: this.createdAt,
+        updatedAt: this.updatedAt
     }
 }
 
