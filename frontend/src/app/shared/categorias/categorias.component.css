@@ -1,6 +1,41 @@
-.list-category-container {
-  padding: 8px 0;
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+
+:root{
+  --background-dark: #2d3548;
+  --text-light: rgba(255,255,255,0.6);
+  --text-lighter: rgba(255,255,255,0.9);
+  --spacing-s: 8px;
+  --spacing-m: 16px;
+  --spacing-l: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 64px;
+  --width-container: 1200px;
 }
-.list-category-container h2 {
-  margin-bottom: 10px;
+
+*{ border:0; margin:0; padding:0; box-sizing:border-box; }
+:host{ display:block; font-family:'Montserrat',sans-serif; }
+
+.hero-section{
+  align-items:flex-start;
+  background-image:linear-gradient(15deg,#0f4667 0%,#2a6973 150%);
+  display:flex; min-height:100%;
+  justify-content:center;
+  padding:var(--spacing-xxl) var(--spacing-l);
+}
+
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(1,1fr);
+  grid-column-gap:var(--spacing-l);
+  grid-row-gap:var(--spacing-l);
+  max-width:var(--width-container);
+  width:100%;
+}
+@media(min-width:540px){ .card-grid{ grid-template-columns:repeat(2,1fr); } }
+@media(min-width:960px){ .card-grid{ grid-template-columns:repeat(4,1fr); } }
+
+/* 🔥 Clave: difuminar todas las tarjetas excepto la hovered */
+:host ::ng-deep .card-grid:hover > app-card-category:not(:hover) .card__background{
+  filter: brightness(0.5) saturate(0) contrast(1.2) blur(20px);
+  transform: scale(1) translateZ(0);
 }

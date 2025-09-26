@@ -1,19 +1,16 @@
-<div class="category-card">
-  <h3>{{ category.name}}</h3>
+<div class="card">
+  <div class="card__background"
+       [style.background-image]="'url(' + backgroundUrl + ')'"></div>
 
-  <p *ngIf="category.description">
-    {{ category.description }}
-  </p>
+  <div class="card__content">
+    <p class="card__category">{{ category.slug || 'CATEGORY' }}</p>
+    <h3 class="card__heading">{{ category.name }}</h3>
 
-  <div class="meta">
-    <span *ngIf="category.slug"><strong>Slug:</strong> {{ category.slug }}</span>
-<!--     <span *ngIf="category.status" class="status">
-      <strong>Estado:</strong> {{ category.status }}
-    </span> -->
-  </div>
+    <h3 *ngIf="category.description" class="card__heading">{{ category.description }}</h3>
 
-  <div class="actions">
-    <button>Editar</button>
-    <button>Eliminar</button>
+<!--     <div class="actions">
+      <button type="button">Editar</button>
+      <button type="button">Eliminar</button>
+    </div> -->
   </div>
 </div>

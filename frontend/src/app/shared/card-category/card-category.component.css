@@ -1,28 +1,75 @@
-.category-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 12px;
-  margin: 8px 0;
-  background: #fff;
+:root{
+  --text-light: rgba(255,255,255,0.6);
+  --text-lighter: rgba(255,255,255,0.9);
+  --spacing-s: 8px;
+  --spacing-m: 16px;
+  --spacing-l: 24px;
 }
-.category-card h3 {
-  margin: 0 0 6px;
+
+/* Base tarjeta */
+.card{
+  list-style:none;
+  position:relative;
+  display:block;
 }
-.category-card .meta {
-  display: flex;
-  gap: 12px;
-  font-size: 0.9rem;
-  color: #555;
-  margin: 6px 0 10px;
+.card::before{
+  content:'';
+  display:block;
+  padding-bottom:150%; /* Mantiene proporción */
+  width:100%;
 }
-.category-card .actions {
-  display: flex;
-  gap: 8px;
+
+/* Fondo */
+.card__background{
+  position:absolute; inset:0;
+  background-size:cover;
+  background-position:center;
+  border-radius:var(--spacing-l);
+  filter: brightness(0.75) saturate(1.2) contrast(0.85);
+  transform-origin:center;
+  transform: scale(1) translateZ(0);
+  transition: filter 200ms linear, transform 200ms linear;
 }
-.category-card .actions button {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
-  cursor: pointer;
+
+/* Zoom en la tarjeta hovered */
+.card:hover .card__background{
+  transform: scale(1.05) translateZ(0);
+}
+
+/* Contenido */
+.card__content{
+  position:absolute;
+  left:0; top:0;
+  padding:var(--spacing-l);
+}
+.card__category{
+  color:var(--text-light);
+  font-size:0.9rem;
+  margin-bottom:var(--spacing-s);
+  text-transform:uppercase;
+}
+.card__heading{
+  color:var(--text-lighter);
+  font-size:1.9rem;
+  line-height:1.4;
+  text-shadow:2px 2px 20px rgba(0,0,0,0.2);
+  word-spacing:100vw;
+}
+
+.actions{
+  margin-top:var(--spacing-m);
+  display:flex;
+  gap:var(--spacing-s);
+}
+.actions button{
+  background:rgba(255,255,255,0.15);
+  color:var(--text-lighter);
+  border:none;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  backdrop-filter:blur(2px);
+}
+.actions button:hover{
+  background:rgba(255,255,255,0.25);
 }
