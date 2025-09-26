@@ -7,7 +7,7 @@ import { Event, CreateEventRequest, UpdateEventRequest } from '../models/event.m
     providedIn: 'root'
 })
 export class EventService {
-    private readonly apiUrl = 'http://10.250.78.59:4000/api/eventos';
+    private readonly apiUrl = 'http://127.0.0.1:4000/api/eventos';
 
     constructor(private http: HttpClient) { }
 
