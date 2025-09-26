@@ -1,0 +1,13 @@
+<div class="list-category-container">
+  <h2>Lista de Categorías</h2>
+
+  <ng-container *ngIf="categories?.length; else emptyState">
+    <div *ngFor="let category of categories">
+      <app-card-category [category]="category"></app-card-category>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <p>No hay categorías aún.</p>
+  </ng-template>
+</div>
