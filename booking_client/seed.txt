@@ -1,0 +1,53 @@
+/* 🔹 Ejemplo: Crear una categoría
+
+Método: POST
+URL: http://127.0.0.1:4000/api/category
+Body (raw JSON):
+
+{
+  "name": "Conciertos",
+  "description": "Eventos musicales en directo de todos los géneros",
+  "image": "https://example.com/images/conciertos.jpg"
+}
+
+🔹 Crear otra categoría
+{
+  "name": "Teatro",
+  "description": "Obras clásicas y modernas en diferentes teatros",
+  "image": "https://example.com/images/teatro.jpg"
+}
+
+🔹 Crear un evento
+
+⚠️ Aquí en category debes pasar el _id de la categoría (que obtienes al hacer GET /api/category).
+
+Método: POST
+URL: http://127.0.0.1:4000/api/eventos
+Body (raw JSON):
+
+{
+  "title": "Coldplay en Madrid",
+  "date": "2025-07-15T21:00:00.000Z",
+  "price": 75,
+  "currency": "EUR",
+  "location": "Estadio Santiago Bernabéu, Madrid",
+  "description": "Concierto de Coldplay con su gira mundial 2025",
+  "category": "66f9a2c8b1d7e2b7d4c9f123", 
+  "status": "published"
+}
+
+
+(Reemplaza 66f9a2c8b1d7e2b7d4c9f123 con el _id real que te devuelva tu categoría “Conciertos”)
+
+🔹 Otro evento
+{
+  "title": "Obra de Teatro: La vida es sueño",
+  "date": "2025-05-20T19:30:00.000Z",
+  "price": 25,
+  "currency": "EUR",
+  "location": "Teatro Español, Madrid",
+  "description": "Una representación clásica de Calderón de la Barca",
+  "category": "66f9a2c8b1d7e2b7d4c9f124",
+  "status": "published"
+}
+ */
