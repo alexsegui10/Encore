@@ -1,11 +1,1 @@
-<h2>Bienvenido a la página de inicio</h2>
-
-<p-carousel [value]="images" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
-
-    <ng-template pTemplate="item" let-img>
-        <div class="carousel-item">
-            <img [src]="img.src" alt="{{img.title}}" class="carousel-img" />
-            <h4>{{ img.title }}</h4>
-        </div>
-    </ng-template>
-</p-carousel>
+<app-carousel></app-carousel>

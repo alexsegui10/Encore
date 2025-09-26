@@ -1,1 +1,60 @@
-<p>carrusel works!</p>
+<div class="carousel-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="carousel-loading">
+    <p>Cargando...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !loading" class="carousel-error">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Carousel para categorías del HOME -->
+  <div *ngIf="!loading && !error && type === 'home'">
+    <p-carousel 
+      [value]="items" 
+      [numVisible]="numVisible" 
+      [numScroll]="1"
+      [autoplayInterval]="autoplayInterval"
+      [circular]="true"
+      [showNavigators]="true"
+      [showIndicators]="true"
+      [responsiveOptions]="[
+        {
+          breakpoint: '1024px',
+          numVisible: 2,
+          numScroll: 1
+        },
+        {
+          breakpoint: '768px',
+          numVisible: 1,
+          numScroll: 1
+        }
+      ]">
+      <ng-template pTemplate="item" let-category>
+        <app-carousel-item 
+          [item]="category" 
+          type="category">
+        </app-carousel-item>
+      </ng-template>
+    </p-carousel>
+  </div>
+
+  <!-- Carousel para imágenes de DETALLES -->
+  <div *ngIf="!loading && !error && type === 'details'">
+    <p-carousel 
+      [value]="images" 
+      [numVisible]="1" 
+      [numScroll]="1"
+      [autoplayInterval]="autoplayInterval"
+      [circular]="true"
+      [showNavigators]="true"
+      [showIndicators]="true">
+      <ng-template pTemplate="item" let-image>
+        <div class="detail-image-container">
+          <img [src]="image" alt="Imagen del evento" />
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+</div>
