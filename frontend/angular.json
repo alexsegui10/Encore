@@ -25,8 +25,13 @@
               }
             ],
             "styles": [
+<<<<<<< HEAD
+              "src/custom-theme.scss",
+              "src/styles.css"
+=======
               "src/styles.css",
               "node_modules/primeicons/primeicons.css"
+>>>>>>> 1c8064ccd868dc8362a4ae15cc8f6c34bfe79ef8
             ]
           },
           "configurations": {

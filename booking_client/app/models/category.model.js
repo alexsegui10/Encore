@@ -27,10 +27,6 @@ CategorySchema.pre('save', async function () {
   this.slug = clash ? `${base}-${Math.random().toString(36).slice(2, 6)}` : base;
 });
 
-CategorySchema.pre('validate', function (next) {
-  if (this.price == null || this.price < 0) return next(new Error('price debe ser >= 0'));
-  next();
-});
 
 //serializer para carousel
 CategorySchema.methods.toCategoryCarouselResponse = function() {

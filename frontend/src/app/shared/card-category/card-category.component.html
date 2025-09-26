@@ -1,0 +1,19 @@
+<div class="category-card">
+  <h3>{{ category.name}}</h3>
+
+  <p *ngIf="category.description">
+    {{ category.description }}
+  </p>
+
+  <div class="meta">
+    <span *ngIf="category.slug"><strong>Slug:</strong> {{ category.slug }}</span>
+<!--     <span *ngIf="category.status" class="status">
+      <strong>Estado:</strong> {{ category.status }}
+    </span> -->
+  </div>
+
+  <div class="actions">
+    <button>Editar</button>
+    <button>Eliminar</button>
+  </div>
+</div>

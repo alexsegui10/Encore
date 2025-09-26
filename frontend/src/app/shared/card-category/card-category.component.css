@@ -1,0 +1,28 @@
+.category-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0;
+  background: #fff;
+}
+.category-card h3 {
+  margin: 0 0 6px;
+}
+.category-card .meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: #555;
+  margin: 6px 0 10px;
+}
+.category-card .actions {
+  display: flex;
+  gap: 8px;
+}
+.category-card .actions button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+}
