@@ -18,12 +18,12 @@ export class CarouselItem {
   responsiveOptions = [
     {
       breakpoint: '1024px',
-      numVisible: 3,
+      numVisible: 1,
       numScroll: 1
     },
     {
       breakpoint: '768px',
-      numVisible: 2,
+      numVisible: 1,
       numScroll: 1
     },
     {
