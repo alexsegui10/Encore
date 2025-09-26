@@ -1,15 +1,57 @@
-<div class="carousel-item-container">
-    <div *ngIf="type === 'category'" class="category-item">
-        <div class="item-image">
-            <img [src]="item.image || '/images/default-category.jpg'" [alt]="item.name" />
-        </div>
-        <div class="item-content">
-            <h3 class="item-title">{{ item.name }}</h3>
-            <p class="item-description">{{ item.description }}</p>
-        </div>
-    </div>
+<div class="carousel-wrapper">
+    <!-- Carousel para categorías -->
+    <p-carousel 
+        *ngIf="page === 'categories'"
+        [value]="items_carousel" 
+        [numVisible]="3" 
+        [numScroll]="1" 
+        [responsiveOptions]="responsiveOptions"
+        [autoplayInterval]="3000"
+        [circular]="true"
+        [showNavigators]="true"
+        [showIndicators]="true">
+        
+        <ng-template let-item pTemplate="item">
+            <div class="carousel-item-container">
+                <div class="contenedor">
+                    <img 
+                        class="img_carousel" 
+                        [src]="item.image" 
+                        [alt]="item.name"
+                    />
+                    <div class="carousel-caption">
+                        <h3>{{ item.name }}</h3>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
 
-    <div *ngIf="type === 'image'" class="image-item">
-        <img [src]="item.image" [alt]="'Imagen de ' + item.name" />
+    <!-- Carousel para imágenes de detalles -->
+    <div *ngIf="page === 'details'">
+        <ng-container *ngFor="let detailItem of items_details">
+            <p-carousel 
+                [value]="detailItem.images" 
+                [numVisible]="1" 
+                [numScroll]="1" 
+                [responsiveOptions]="[{breakpoint: '1024px', numVisible: 1, numScroll: 1}]"
+                [autoplayInterval]="3000"
+                [circular]="true"
+                [showNavigators]="true"
+                [showIndicators]="true">
+                
+                <ng-template let-imageSrc pTemplate="item">
+                    <div class="carousel-item-container">
+                        <div class="contenedor">
+                            <img 
+                                class="img_carousel" 
+                                [src]="imageSrc" 
+                                [alt]="'Detail image'"
+                            />
+                        </div>
+                    </div>
+                </ng-template>
+            </p-carousel>
+        </ng-container>
     </div>
 </div>
