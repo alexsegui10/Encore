@@ -1,52 +1,351 @@
-.carousel-item-container {
-  padding: 0.5rem;
-}
-
-.category-item {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  overflow: hidden;
-  transition: transform 0.3s ease;
-}
-
-.category-item:hover {
-  transform: translateY(-5px);
-}
-
-.item-image {
+/* ===== HOME CAROUSEL WRAPPER ===== */
+.carousel-wrapper {
+  position: relative;
   width: 100%;
-  height: 200px;
+  height: 60vh;
+  min-height: 500px;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.item-image img {
+/* Subtle animated background */
+.carousel-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.01) 0%, transparent 50%);
+  animation: subtleShift 20s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes subtleShift {
+  0% { opacity: 0.3; transform: translateX(-10px); }
+  100% { opacity: 0.5; transform: translateX(10px); }
+}
+
+/* ===== PRIMENG CAROUSEL OVERRIDES FOR HERO ===== */
+::ng-deep .p-carousel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+::ng-deep .p-carousel .p-carousel-content {
+  background: transparent;
+  height: 100%;
+}
+
+::ng-deep .p-carousel .p-carousel-container {
+  padding: 0;
+  height: 100%;
+}
+
+::ng-deep .p-carousel .p-carousel-items-content {
+  height: 100%;
+}
+
+::ng-deep .p-carousel .p-carousel-items-container {
+  height: 100%;
+}
+
+/* ===== HERO NAVIGATION BUTTONS ===== */
+::ng-deep .p-carousel .p-carousel-prev,
+::ng-deep .p-carousel .p-carousel-next {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 60px !important;
+  height: 60px !important;
+  margin: 0 2rem !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  z-index: 10 !important;
+}
+
+::ng-deep .p-carousel .p-carousel-prev:hover,
+::ng-deep .p-carousel .p-carousel-next:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #333 !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6) !important;
+  border-color: white !important;
+}
+
+::ng-deep .p-carousel .p-carousel-prev:active,
+::ng-deep .p-carousel .p-carousel-next:active {
+  transform: scale(0.95) !important;
+}
+
+/* ===== HERO INDICATORS ===== */
+::ng-deep .p-carousel .p-carousel-indicators {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 !important;
+  margin: 0 !important;
+  z-index: 10;
+}
+
+::ng-deep .p-carousel .p-carousel-indicator button {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: none !important;
+  border-radius: 50px !important;
+  width: 12px !important;
+  height: 12px !important;
+  margin: 0 6px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+::ng-deep .p-carousel .p-carousel-indicator.p-highlight button {
+  background: white !important;
+  width: 30px !important;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+::ng-deep .p-carousel .p-carousel-indicator button:hover {
+  background: rgba(255, 255, 255, 0.8) !important;
+  transform: scale(1.2) !important;
+}
+
+/* ===== HERO CAROUSEL ITEM CONTAINER ===== */
+.carousel-item-container {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  transition: all 0.5s ease;
+}
+
+/* ===== HERO CONTENEDOR ===== */
+.contenedor {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.3), transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== HERO IMAGE STYLES ===== */
+.img_carousel {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: all 1s ease;
+  filter: brightness(0.7) contrast(1.1);
 }
 
-.item-content {
-  padding: 1rem;
+.contenedor:hover .img_carousel {
+  transform: scale(1.05);
+  filter: brightness(0.8) contrast(1.2) saturate(1.1);
 }
 
-.item-title {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
+/* ===== HERO OVERLAY EFFECTS ===== */
+.contenedor::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
-.item-description {
+.contenedor:hover::before {
+  opacity: 0.7;
+}
+
+/* ===== HERO CAPTION STYLES ===== */
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 70%,
+    transparent 100%
+  );
+  padding: 4rem 2rem 3rem;
+  z-index: 2;
+  transition: all 0.5s ease;
+}
+
+.carousel-caption h3 {
+  color: #ffffff;
+  font-size: 3rem;
+  font-weight: 900;
   margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.8);
+  letter-spacing: 2px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideInUp 1s ease 0.5s forwards;
 }
 
-.image-item img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 8px;
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carousel-caption h3::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ff6b6b);
+  border-radius: 2px;
+  animation: expandLine 1s ease 1s forwards;
+  transform-origin: center;
+  transform: translateX(-50%) scaleX(0);
+}
+
+@keyframes expandLine {
+  to {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN FOR HERO ===== */
+@media (max-width: 768px) {
+  .carousel-wrapper {
+    height: 50vh;
+    min-height: 400px;
+  }
+  
+  .carousel-item-container {
+    height: 50vh;
+    min-height: 400px;
+  }
+  
+  .carousel-caption h3 {
+    font-size: 2rem;
+    letter-spacing: 1px;
+    padding: 0 1rem;
+  }
+  
+  .carousel-caption {
+    padding: 2rem 1rem 2rem;
+  }
+  
+  ::ng-deep .p-carousel .p-carousel-prev,
+  ::ng-deep .p-carousel .p-carousel-next {
+    width: 45px !important;
+    height: 45px !important;
+    margin: 0 1rem !important;
+  }
+  
+  ::ng-deep .p-carousel .p-carousel-indicators {
+    bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-wrapper {
+    height: 40vh;
+    min-height: 350px;
+  }
+  
+  .carousel-item-container {
+    height: 40vh;
+    min-height: 350px;
+  }
+  
+  .carousel-caption h3 {
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .carousel-caption {
+    padding: 1.5rem 0.5rem 1.5rem;
+  }
+  
+  ::ng-deep .p-carousel .p-carousel-prev,
+  ::ng-deep .p-carousel .p-carousel-next {
+    width: 35px !important;
+    height: 35px !important;
+    margin: 0 0.5rem !important;
+  }
+  
+  ::ng-deep .p-carousel .p-carousel-indicators {
+    bottom: 15px;
+  }
+  
+  .carousel-caption h3::after {
+    width: 60px;
+    height: 3px;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+.carousel-item-container {
+  will-change: transform;
+}
+
+.img_carousel {
+  will-change: transform, filter;
+}
+
+.carousel-caption {
+  will-change: transform, opacity;
+}
+
+.carousel-caption h3 {
+  will-change: transform, opacity;
+}
+
+/* ===== SMOOTH TRANSITIONS ===== */
+.carousel-wrapper * {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-wrapper::before,
+  .carousel-caption h3,
+  .carousel-caption h3::after {
+    animation: none !important;
+  }
+  
+  .img_carousel,
+  .carousel-caption {
+    transition: none !important;
+  }
 }

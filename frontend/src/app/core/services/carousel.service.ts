@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CarouselHome, CarouselDetails, CarouselCategoriesResponse } from '../models/carousel.model';
+import { CarouselHome, CarouselDetails } from '../models/carousel.model';
 import { environment } from '../../../environments/environment';
-
-const URL = `http://127.0.0.1:4000/api/category`;
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +14,9 @@ export class CarouselService {
 
   // Para obtener las categorías del carousel del home
   getCarouselHome(): Observable<CarouselHome[]> {
-    return this.http.get<CarouselCategoriesResponse>(URL)
+    return this.http.get<{categories: CarouselHome[]}>(`${environment.api_url}/carousel`)
       .pipe(
-        map(response => response.categories || [])
+        map(response => response.categories)
       );
   }
 
@@ -27,6 +25,11 @@ export class CarouselService {
     if (!slug) {
       throw new Error('Slug is required');
     }
-    return this.http.get<CarouselDetails>(`${URL}/${slug}`);
+    return this.http.get<any>(`${environment.api_url}/carousel/${slug}`)
+      .pipe(
+        map(response => ({
+          images: response.evento?.images || [response.evento?.image || '/images/default-event.jpg']
+        }))
+      );
   }
 }

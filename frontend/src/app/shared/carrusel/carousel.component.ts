@@ -1,75 +1,45 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CarouselModule } from 'primeng/carousel';
 import { CommonModule } from '@angular/common';
-import { CarouselItem } from '../carousel-item/carousel-item.component';
-import { CarouselService } from '../../core/services/carousel.service';
+import { RouterModule } from '@angular/router';
 import { CarouselHome, CarouselDetails } from '../../core/models/carousel.model';
+import { CarouselService } from '../../core/services/carousel.service';
+import { ActivatedRoute } from '@angular/router';
+import { CarouselItem } from '../carousel-item/carousel-item.component';
 
 @Component({
   selector: 'app-carousel',
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.css'],
   standalone: true,
-  imports: [CommonModule, CarouselModule, CarouselItem]
+  imports: [CommonModule, RouterModule, CarouselItem]
 })
 export class CarouselComponent implements OnInit {
-  @Input() type: 'home' | 'details' = 'home';
-  @Input() eventSlug?: string;
-  @Input() numVisible = 3;
-  @Input() autoplayInterval = 3000;
-  
-  items: CarouselHome[] = [];
-  images: string[] = [];
-  loading = true;
-  error: string | null = null;
+  items_carousel: CarouselHome[] = [];
+  items_details: CarouselDetails[] = [];
+  slug_details: string | null = null;
+  page: string = '';
 
-  constructor(private carouselService: CarouselService) { }
+  constructor(private CarouselService: CarouselService, private ActivatedRoute: ActivatedRoute) {}
 
-  ngOnInit() {
-    this.loadData();
+  ngOnInit(): void {
+    this.slug_details = this.ActivatedRoute.snapshot.paramMap.get('slug');
+    this.loadCarouselData();
   }
 
-  private loadData() {
-    this.loading = true;
-    this.error = null;
-
-    if (this.type === 'home') {
-      this.loadHomeCategories();
-    } else if (this.type === 'details' && this.eventSlug) {
-      this.loadEventDetails();
+  loadCarouselData(): void {
+    if (this.slug_details) {
+      this.page = "details";
+      this.CarouselService.getCarouselDetails(this.slug_details).subscribe((data: CarouselDetails) => {
+        // console.log(data);
+        this.items_details = [data]; // Envolver en array ya que el servicio devuelve un solo objeto
+        // console.log(this.items_details);
+      });
     } else {
-      this.error = 'Configuración inválida del carousel';
-      this.loading = false;
+      this.page = "categories";
+      this.CarouselService.getCarouselHome().subscribe((data: CarouselHome[]) => {
+        // console.log(data);
+        this.items_carousel = data; // El servicio ya devuelve el array directamente
+      });
     }
-  }
-
-  private loadHomeCategories() {
-    this.carouselService.getCarouselHome().subscribe({
-      next: (categories) => {
-        this.items = categories;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error loading carousel categories:', error);
-        this.error = 'Error al cargar las categorías';
-        this.loading = false;
-      }
-    });
-  }
-
-  private loadEventDetails() {
-    if (!this.eventSlug) return;
-    
-    this.carouselService.getCarouselDetails(this.eventSlug).subscribe({
-      next: (details) => {
-        this.images = details.images;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error loading carousel details:', error);
-        this.error = 'Error al cargar las imágenes del evento';
-        this.loading = false;
-      }
-    });
   }
 }
