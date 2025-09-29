@@ -22,11 +22,10 @@
             <p-carousel [value]="detailItem.images" [numVisible]="1" [numScroll]="1"
                 [responsiveOptions]="[{breakpoint: '1024px', numVisible: 1, numScroll: 1}]" [autoplayInterval]="3000"
                 [circular]="true" [showIndicators]="false" [showNavigators]="false">
-
                 <ng-template let-imageSrc pTemplate="item">
                     <div class="carousel-item-container">
                         <div class="contenedor">
-                            <img class="img_carousel" [src]="imageSrc" [alt]="'Detail image'" />
+                            <img class="img_carousel" [src]="imageSrc" [alt]="'Detail image'"/>
                         </div>
                     </div>
                 </ng-template>

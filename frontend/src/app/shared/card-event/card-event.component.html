@@ -1,4 +1,4 @@
-<article class="event-card">
+<article class="event-card" [routerLink]="['/details', event.slug]">
   <div class="media">
     <img
       [src]="event.mainImage || '/assets/default-event.jpg'"
