@@ -1,7 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Category } from '../../core/models/category.model';
-
 @Component({
   selector: 'app-card-category',
   standalone: true,

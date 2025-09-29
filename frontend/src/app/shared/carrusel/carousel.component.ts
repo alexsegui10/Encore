@@ -32,7 +32,7 @@ export class CarouselComponent implements OnInit {
       this.CarouselService.getCarouselDetails(this.slug_details).subscribe((data: CarouselDetails) => {
         // console.log(data);
         this.items_details = [data]; // Envolver en array ya que el servicio devuelve un solo objeto
-        // console.log(this.items_details);
+        console.log(this.items_details);
       });
     } else {
       this.page = "categories";
