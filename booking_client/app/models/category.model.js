@@ -6,7 +6,9 @@ const CategorySchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true, maxlength: 100 },
     description: { type: String, trim: true, maxlength: 500 },
     image: { type: String, trim: true }, // URL de la imagen de la categoría
-    slug: { type: String, unique: true, index: true }
+    slug: { type: String, unique: true, index: true },
+    events: [{ type: mongoose.Schema.Types.ObjectId, ref: "Events" }],
+
   },
   { timestamps: true }
 );
@@ -29,7 +31,7 @@ CategorySchema.pre('save', async function () {
 
 
 //serializer para carousel
-CategorySchema.methods.toCategoryCarouselResponse = function() {
+CategorySchema.methods.toCategoryCarouselResponse = function () {
   return {
     id: this._id,
     name: this.name,
@@ -40,5 +42,20 @@ CategorySchema.methods.toCategoryCarouselResponse = function() {
     updatedAt: this.updatedAt
   };
 };
+
+CategorySchema.methods.addEvent = function (event_id) {
+  if (this.events.indexOf(event_id) === -1) {
+    this.events.push(event_id);
+  }
+  return this.save();
+};
+
+CategorySchema.methods.removeEvent = function (event_id) {
+  if (this.events.indexOf(event_id) !== -1) {
+    this.events.remove(event_id);
+  }
+  return this.save();
+};
+
 
 export default mongoose.model('Category', CategorySchema);
