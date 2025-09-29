@@ -41,6 +41,8 @@ export const create = async (req, res, next) => {
       description,
       category,
       status,
+      mainImage: req.body.mainImage || '/images/default-event.jpg',
+      images: req.body.images || []
     });
 
     await ev.save(); 
@@ -58,7 +60,7 @@ export const update = async (req, res, next) => {
     const doc = await Event.findOne({ slug });
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
 
-    const allowed = ['title', 'date', 'price', 'currency', 'location', 'description', 'category', 'status'];
+    const allowed = ['title', 'date', 'price', 'currency', 'location', 'description', 'category', 'status', 'mainImage', 'images'];
     for (const k of allowed) {
       if (k in req.body) doc[k] = req.body[k];
     }
