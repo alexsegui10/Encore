@@ -4,6 +4,7 @@ import * as concerts from '../controllers/evento.controller.js';
 const api = Router();
 
 api.get('/eventos', concerts.listEvents);
+api.get('/eventos/category/:slug', concerts.GetProductsByCategory);
 api.get('/eventos/:slug', concerts.getOneEvent);
 api.post('/eventos', concerts.createEvent);
 api.put('/eventos/:slug', concerts.updateEvent);

@@ -88,12 +88,11 @@ export class EventService {
 
     /**
      * Obtiene eventos por categoría
-     * @param categoryId - ID de la categoría
+     * @param categorySlug - Slug de la categoría
      * @returns Observable con la lista de eventos de la categoría
      */
-    getEventsByCategory(categoryId: string): Observable<Event[]> {
-        const params = new HttpParams().set('category', categoryId);
-        return this.http.get<Event[]>(this.apiUrl, { params });
+    getEventsByCategory(categorySlug: string): Observable<Event[]> {
+        return this.http.get<Event[]>(`${this.apiUrl}/category/${categorySlug}`);
     }
 
     /**

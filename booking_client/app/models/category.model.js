@@ -22,9 +22,8 @@ function slugify(text) {
 }
 
 CategorySchema.pre('save', async function () {
-  if (!this.isNew && !this.isModified('title') && !this.isModified('date') && this.slug) return;
-  const datePart = this.date ? new Date(this.date).toISOString().slice(0, 10) : '';
-  const base = slugify(`${this.title || 'evento'} ${datePart}`) || 'evento';
+  if (!this.isNew && !this.isModified('name') && this.slug) return;
+  const base = slugify(this.name || 'categoria') || 'categoria';
   const clash = await this.constructor.findOne({ slug: base, _id: { $ne: this._id } }).lean();
   this.slug = clash ? `${base}-${Math.random().toString(36).slice(2, 6)}` : base;
 });

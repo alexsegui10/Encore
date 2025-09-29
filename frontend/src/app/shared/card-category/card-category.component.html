@@ -1,11 +1,10 @@
- <div class="card" style="cursor: pointer;">
+<div class="card" style="cursor: pointer;" [routerLink]="['/shop/categories/', category.slug]">
   <div class="card__background" [style.background-image]="'url(' + backgroundUrl + ')'"></div>
 
   <div class="card__content">
     <p class="card__category">{{ category.slug || 'CATEGORY' }}</p>
-    <h3 class="card__heading" routerLink="/shop/categories/{{ category.slug }}" >{{ category.name }}</h3>
+    <h3 class="card__heading" >{{ category.name }}</h3>
 
     <h3 *ngIf="category.description" class="card__heading">{{ category.description }}</h3>
   </div>
 </div>
-<a class="btn btn-outline-primary btn-sm"  data-abc="true">View Products</a>

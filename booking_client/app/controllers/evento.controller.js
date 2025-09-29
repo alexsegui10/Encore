@@ -119,20 +119,22 @@ export const deleteEvent = async (req, res, next) => {
   }
 };
 
-const GetProductsByCategory = asyncHandler(async (req, res) => {
+export const GetProductsByCategory = asyncHandler(async (req, res) => {
+  try {
+    const { slug } = req.params;
 
-  const slug = req.params;
+    const category = await Category.findOne({ slug }).exec();
 
-  const category = await Category.findOne(slug).exec();
+    if (!category) {
+      return res.status(404).json({ message: "Categoria no encontrada" });
+    }
 
-  if (!category) {
-    res.status(400).json({ message: "Categoria no encontrada" });
+    // Obtener todos los eventos de esta categoría
+    const events = await Event.find({ category: category._id }).sort('-date').lean();
+
+    return res.status(200).json(events);
+  } catch (err) {
+    console.error('Error in GetProductsByCategory:', err);
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
-
-  return await res.status(200).json({
-    products: await Promise.all(category.products.map(async eventId => {
-      const productObj = await Event.findById(eventId).exec();
-      return await productObj.toProductResponse(user);
-    })),
-  })
 });
