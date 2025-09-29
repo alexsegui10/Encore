@@ -3,10 +3,10 @@ import * as concerts from '../controllers/evento.controller.js';
 
 const api = Router();
 
-api.get('/eventos', concerts.list);
-api.get('/eventos/:slug', concerts.getOne);
-api.post('/eventos', concerts.create);
-api.put('/eventos/:slug', concerts.update);
-api.delete('/eventos/:slug', concerts.remove);
+api.get('/eventos', concerts.listEvents);
+api.get('/eventos/:slug', concerts.getOneEvent);
+api.post('/eventos', concerts.createEvent);
+api.put('/eventos/:slug', concerts.updateEvent);
+api.delete('/eventos/:slug', concerts.deleteEvent);
 
 export default api;

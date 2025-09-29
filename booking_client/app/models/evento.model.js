@@ -33,8 +33,7 @@ const EventSchema = new mongoose.Schema(
       maxlength: 2000
     },
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
+      type: String,
       required: true
     },
     slug: {
@@ -47,7 +46,6 @@ const EventSchema = new mongoose.Schema(
       enum: ['draft', 'published', 'cancelled'],
       default: 'draft'
     },
-
     mainImage: {
       type: String,
       trim: true,
@@ -91,21 +89,21 @@ EventSchema.pre('validate', function (next) {
 
 //serializer para carousel
 EventSchema.methods.toEventoCarouselResponse = async function () {
-    return {
-        id: this._id,
-        title: this.title,
-        date: this.date,
-        price: this.price,
-        currency: this.currency,
-        location: this.location,
-        description: this.description,
-        category: this.category,
-        slug: this.slug,
-        status: this.status,
-        images: this.images,
-        createdAt: this.createdAt,
-        updatedAt: this.updatedAt
-    }
+  return {
+    id: this._id,
+    title: this.title,
+    date: this.date,
+    price: this.price,
+    currency: this.currency,
+    location: this.location,
+    description: this.description,
+    category: this.category,
+    slug: this.slug,
+    status: this.status,
+    images: this.images,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
+  }
 }
 
 export default mongoose.model('Event', EventSchema);
