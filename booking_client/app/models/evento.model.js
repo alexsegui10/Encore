@@ -102,6 +102,7 @@ EventSchema.methods.toEventoCarouselResponse = async function () {
         category: this.category,
         slug: this.slug,
         status: this.status,
+        images: this.images,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt
     }
