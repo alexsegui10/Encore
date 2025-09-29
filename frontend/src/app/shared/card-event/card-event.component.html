@@ -1,22 +1,32 @@
-<div class="event-card">
-    <!-- Título del evento -->
-    <h3>{{ event.title }}</h3>
+<article class="event-card">
+  <div class="media">
+    <img
+      [src]="event.mainImage || '/assets/default-event.jpg'"
+      [alt]="event.title || 'Evento'"
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="date-badge" *ngIf="event.date">
+      <span class="day">{{ event.date | date:'dd' }}</span>
+      <span class="mon">{{ event.date | date:'MMM' }}</span>
+    </span>
+  </div>
 
-    <!-- Fecha -->
-    <p><strong>Fecha:</strong> {{ event.date }}</p>
+  <div class="content">
+    <h3 class="title">{{ event.title }}</h3>
 
-    <!-- Ubicación -->
-    <p *ngIf="event.location"><strong>Ubicación:</strong> {{ event.location }}</p>
+    <p class="meta">
+      <span *ngIf="event.location" class="loc">{{ event.location }}</span>
+      <span class="sep" *ngIf="event.location && (event.price || event.currency)">·</span>
+      <span class="price" *ngIf="event.price !== undefined">
+        {{ event.price | number:'1.0-2' }}{{ event.currency || '€' }}
+      </span>
+    </p>
 
-    <!-- Precio -->
-    <p><strong>Precio:</strong> {{ event.price }}{{ event.currency || '€' }}</p>
+    <p class="desc" *ngIf="event.description">{{ event.description }}</p>
 
-    <!-- Descripción -->
-    <p *ngIf="event.description">{{ event.description }}</p>
-
-    <!-- Botones de acción -->
-    <div class="actions">
-        <button>Editar</button>
-        <button>Eliminar</button>
+    <div class="cta-row">
+      <a class="cta" href="#" (click)="$event.preventDefault()">Comprar entradas</a>
     </div>
-</div>
+  </div>
+</article>

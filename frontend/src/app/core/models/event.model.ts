@@ -1,17 +1,20 @@
 export interface Event {
-    _id?: string;
-    title: string;
-    date: Date;
-    price: number;
-    currency: string;
-    location?: string;
-    description?: string;
-    category: string; // ObjectId as string
-    slug?: string;
-    status: 'draft' | 'published' | 'cancelled';
-    createdAt?: Date;
-    updatedAt?: Date;
+  _id?: string;
+  title: string;
+  date: Date | string;
+  price: number;
+  currency: string;
+  location?: string;
+  description?: string;
+  category: string;
+  slug?: string;
+  status: 'draft' | 'published' | 'cancelled';
+  mainImage?: string;
+  images?: string[];
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }
+
 
 export interface CreateEventRequest {
     title: string;

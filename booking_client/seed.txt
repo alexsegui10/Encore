@@ -1,53 +1,88 @@
-/* 🔹 Ejemplo: Crear una categoría
-
-Método: POST
-URL: http://127.0.0.1:4000/api/category
-Body (raw JSON):
+1. Crear evento – Coldplay en Barcelona
+POST http://localhost:4000/api/eventos
+Content-Type: application/json
 
 {
-  "name": "Conciertos",
-  "description": "Eventos musicales en directo de todos los géneros",
-  "image": "https://example.com/images/conciertos.jpg"
+  "title": "Coldplay - Barcelona",
+  "date": "2025-07-21T20:30:00.000Z",
+  "price": 89.90,
+  "currency": "EUR",
+  "location": "Estadi Olímpic Lluís Companys, Barcelona",
+  "description": "Concierto de la gira mundial Music of the Spheres en Barcelona.",
+  "category": "66fd1b8c4a7c3a0b2af0c123",
+  "status": "published",
+  "slug": "coldplay-barcelona-2025",
+  "mainImage": "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
+  "images": [
+    "https://images.unsplash.com/photo-1497032205916-ac775f0649ae",
+    "https://images.unsplash.com/photo-1525182008055-f88b95ff7980",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30"
+  ]
 }
 
-🔹 Crear otra categoría
+2. Crear evento – Tomorrowland 2025
+POST http://localhost:4000/api/eventos
+Content-Type: application/json
+
 {
-  "name": "Teatro",
-  "description": "Obras clásicas y modernas en diferentes teatros",
-  "image": "https://example.com/images/teatro.jpg"
+  "title": "Tomorrowland 2025",
+  "date": "2025-07-26T18:00:00.000Z",
+  "price": 350,
+  "currency": "EUR",
+  "location": "Boom, Bélgica",
+  "description": "El festival de música electrónica más grande del mundo.",
+  "category": "66fd1b8c4a7c3a0b2af0c456",
+  "status": "published",
+  "slug": "tomorrowland-2025",
+  "mainImage": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+  "images": [
+    "https://images.unsplash.com/photo-1518972559570-7cc1309f3229",
+    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
+    "https://images.unsplash.com/photo-1506157786151-b8491531f063"
+  ]
 }
 
-🔹 Crear un evento
-
-⚠️ Aquí en category debes pasar el _id de la categoría (que obtienes al hacer GET /api/category).
-
-Método: POST
-URL: http://127.0.0.1:4000/api/eventos
-Body (raw JSON):
+3. Crear evento – Rock in Rio Lisboa
+POST http://localhost:4000/api/eventos
+Content-Type: application/json
 
 {
-  "title": "Coldplay en Madrid",
-  "date": "2025-07-15T21:00:00.000Z",
+  "title": "Rock in Rio Lisboa",
+  "date": "2025-06-20T19:00:00.000Z",
+  "price": 120,
+  "currency": "EUR",
+  "location": "Lisboa, Portugal",
+  "description": "Festival de música internacional con artistas de rock y pop.",
+  "category": "66fd1b8c4a7c3a0b2af0c789",
+  "status": "published",
+  "slug": "rock-in-rio-lisboa-2025",
+  "mainImage": "https://images.unsplash.com/photo-1525286116112-b59af11adad1",
+  "images": [
+    "https://images.unsplash.com/photo-1526470498-6e6a8c4e6d1b",
+    "https://images.unsplash.com/photo-1526470608268-f674ce90ebd4",
+    "https://images.unsplash.com/photo-1515187029135-18ee286d815b"
+  ]
+}
+
+4. Crear evento – Ed Sheeran en Madrid
+POST http://localhost:4000/api/eventos
+Content-Type: application/json
+
+{
+  "title": "Ed Sheeran - Madrid",
+  "date": "2025-09-12T21:00:00.000Z",
   "price": 75,
   "currency": "EUR",
-  "location": "Estadio Santiago Bernabéu, Madrid",
-  "description": "Concierto de Coldplay con su gira mundial 2025",
-  "category": "66f9a2c8b1d7e2b7d4c9f123", 
-  "status": "published"
+  "location": "Wanda Metropolitano, Madrid",
+  "description": "Ed Sheeran regresa a España con su gira internacional.",
+  "category": "66fd1b8c4a7c3a0b2af0c999",
+  "status": "published",
+  "slug": "ed-sheeran-madrid-2025",
+  "mainImage": "https://images.unsplash.com/photo-1525182008055-f88b95ff7980",
+  "images": [
+    "https://images.unsplash.com/photo-1526470608268-f674ce90ebd4",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+    "https://images.unsplash.com/photo-1526470498-6e6a8c4e6d1b"
+  ]
 }
-
-
-(Reemplaza 66f9a2c8b1d7e2b7d4c9f123 con el _id real que te devuelva tu categoría “Conciertos”)
-
-🔹 Otro evento
-{
-  "title": "Obra de Teatro: La vida es sueño",
-  "date": "2025-05-20T19:30:00.000Z",
-  "price": 25,
-  "currency": "EUR",
-  "location": "Teatro Español, Madrid",
-  "description": "Una representación clásica de Calderón de la Barca",
-  "category": "66f9a2c8b1d7e2b7d4c9f124",
-  "status": "published"
-}
- */
+a
