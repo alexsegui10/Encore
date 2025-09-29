@@ -85,4 +85,50 @@ Content-Type: application/json
     "https://images.unsplash.com/photo-1526470498-6e6a8c4e6d1b"
   ]
 }
-a
+
+// Categorias
+  {
+    "name": "Conciertos",
+    "description": "Eventos musicales en directo de todos los géneros y artistas",
+    "image": "https://example.com/images/conciertos.jpg",
+    "slug": "conciertos",
+    "events": [],
+    "createdAt": "2025-09-29T15:00:00.000Z",
+    "updatedAt": "2025-09-29T15:00:00.000Z"
+  },
+  {
+    "name": "Festivales",
+    "description": "Festivales de música, arte, cine y cultura en diferentes ciudades",
+    "image": "https://example.com/images/festivales.jpg",
+    "slug": "festivales",
+    "events": [],
+    "createdAt": "2025-09-29T15:00:00.000Z",
+    "updatedAt": "2025-09-29T15:00:00.000Z"
+  },
+  {
+    "name": "Teatro",
+    "description": "Obras teatrales, musicales y espectáculos escénicos",
+    "image": "https://example.com/images/teatro.jpg",
+    "slug": "teatro",
+    "events": [],
+    "createdAt": "2025-09-29T15:00:00.000Z",
+    "updatedAt": "2025-09-29T15:00:00.000Z"
+  },
+  {
+    "name": "Deportes",
+    "description": "Partidos, torneos y competiciones deportivas en vivo",
+    "image": "https://example.com/images/deportes.jpg",
+    "slug": "deportes",
+    "events": [],
+    "createdAt": "2025-09-29T15:00:00.000Z",
+    "updatedAt": "2025-09-29T15:00:00.000Z"
+  },
+  {
+    "name": "Conferencias",
+    "description": "Charlas, ponencias y eventos de networking profesional",
+    "image": "https://example.com/images/conferencias.jpg",
+    "slug": "conferencias",
+    "events": [],
+    "createdAt": "2025-09-29T15:00:00.000Z",
+    "updatedAt": "2025-09-29T15:00:00.000Z"
+  }
