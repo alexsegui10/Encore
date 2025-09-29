@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { Event } from '../../core/models/event.model';
 import { EventService } from '../../core/services/event.service';
 import { CardEventComponent } from '../card-event/card-event.component';
@@ -9,71 +9,75 @@ import { CardEventComponent } from '../card-event/card-event.component';
 @Component({
   selector: 'list-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, CardEventComponent],
+  imports: [CommonModule, HttpClientModule, CardEventComponent],
   templateUrl: './list-events.component.html',
   styleUrls: ['./list-events.component.css']
 })
 export class ListEventsComponent implements OnInit {
   events: Event[] = [];
 
-  // Filtros UI
-  q = '';
-  city = '';
-  dateFrom?: string;
-  dateTo?: string;
+  // Params de routing
+  private routeFilters: string | null = null;
+  private slug_Category: string | null = null;
 
-  // Opciones de ciudades (derivadas)
-  get cities(): string[] {
-    const set = new Set(
-      this.events
-        .map(e => (e.location || '').trim())
-        .filter(Boolean)
-    );
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }
-
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.loadEvents();
+    // Este componente va dentro de ShopComponent, así que leemos de "self" y "parent"
+    const self = this.route.snapshot.paramMap;
+    const parent = this.route.parent?.snapshot.paramMap;
+
+    this.slug_Category = self.get('slug') || parent?.get('slug') || null;
+    this.routeFilters  = self.get('filters') || parent?.get('filters') || null;
+
+    if (this.slug_Category !== null) {
+      // /shop/categories/:slug
+      this.loadByCategory(this.slug_Category);
+    } else if (this.routeFilters !== null) {
+      // /shop/:filters (base64 con JSON)
+/*       const filters = this.decodeFilters(this.routeFilters);
+      this.loadByFilters(filters); */
+    } else {
+      // /shop
+      this.loadAll();
+    }
   }
 
-  loadEvents(): void {
+  private loadAll(): void {
     this.eventService.getAllEvents().subscribe({
-      next: (events) => { this.events = events || []; },
-      error: (error) => { console.error('Error loading events:', error); }
+      next: (data: any) => {
+        this.events = data?.events ?? data?.items ?? data ?? [];
+      },
+      error: (err) => console.error('Error getAllEvents:', err)
     });
   }
 
-  // Lógica de filtrado en memoria
-  filtered(): Event[] {
-    const q = this.q.trim().toLowerCase();
-    const from = this.dateFrom ? new Date(this.dateFrom) : undefined;
-    const to = this.dateTo ? new Date(this.dateTo) : undefined;
-
-    return this.events.filter(ev => {
-      const title = (ev.title || '').toLowerCase();
-      const location = (ev.location || '').toLowerCase();
-      const matchQ = !q || title.includes(q) || location.includes(q);
-
-      const matchCity = !this.city || location === this.city.toLowerCase();
-
-      const d = ev.date ? new Date(ev.date) : undefined;
-      const matchFrom = !from || (d && d >= from);
-      const matchTo = !to || (d && d <= to);
-
-      return matchQ && matchCity && matchFrom && matchTo;
+  private loadByCategory(slug: string): void {
+    this.eventService.getEventsByCategory(slug).subscribe({
+      next: (data: any) => {
+        this.events = data?.events ?? data?.items ?? data ?? [];
+      },
+      error: (err) => console.error('Error getEventsByCategory:', err)
     });
   }
 
-  applyFilters(): void {
-    // Aquí solo forzamos cambio de detección si quisieras añadir algo más
-  }
+/*   private loadByFilters(filters: any): void {
+    this.eventService.getEventsByFilters(filters).subscribe({
+      next: (data: any) => {
+        this.events = data?.events ?? data?.items ?? data ?? [];
+      },
+      error: (err) => console.error('Error getEventsByFilters:', err)
+    });
+  } */
 
-  clearFilters(): void {
-    this.q = '';
-    this.city = '';
-    this.dateFrom = undefined;
-    this.dateTo = undefined;
+  private decodeFilters(encoded: string): any {
+    try {
+      return JSON.parse(atob(encoded));
+    } catch {
+      return {};
+    }
   }
 }

@@ -19,7 +19,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
     radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.01) 0%, transparent 50%);
   animation: subtleShift 20s ease-in-out infinite alternate;
@@ -249,29 +249,29 @@
     height: 50vh;
     min-height: 400px;
   }
-  
+
   .carousel-item-container {
     height: 50vh;
     min-height: 400px;
   }
-  
+
   .carousel-caption h3 {
     font-size: 2rem;
     letter-spacing: 1px;
     padding: 0 1rem;
   }
-  
+
   .carousel-caption {
     padding: 2rem 1rem 2rem;
   }
-  
+
   ::ng-deep .p-carousel .p-carousel-prev,
   ::ng-deep .p-carousel .p-carousel-next {
     width: 45px !important;
     height: 45px !important;
     margin: 0 1rem !important;
   }
-  
+
   ::ng-deep .p-carousel .p-carousel-indicators {
     bottom: 20px;
   }
@@ -282,32 +282,32 @@
     height: 40vh;
     min-height: 350px;
   }
-  
+
   .carousel-item-container {
     height: 40vh;
     min-height: 350px;
   }
-  
+
   .carousel-caption h3 {
     font-size: 1.5rem;
     letter-spacing: 0.5px;
   }
-  
+
   .carousel-caption {
     padding: 1.5rem 0.5rem 1.5rem;
   }
-  
+
   ::ng-deep .p-carousel .p-carousel-prev,
   ::ng-deep .p-carousel .p-carousel-next {
     width: 35px !important;
     height: 35px !important;
     margin: 0 0.5rem !important;
   }
-  
+
   ::ng-deep .p-carousel .p-carousel-indicators {
     bottom: 15px;
   }
-  
+
   .carousel-caption h3::after {
     width: 60px;
     height: 3px;
@@ -343,9 +343,132 @@
   .carousel-caption h3::after {
     animation: none !important;
   }
-  
+
   .img_carousel,
   .carousel-caption {
     transition: none !important;
+  }
+}
+:host {
+  --bg: #0b0e14;
+  --card: #111520;
+  --card-2: #0e1220;
+  --text: #e6e9ef;
+  --muted: #a0a6b1;
+  --brand: #1273e6;
+  --brand-2: #3aa0ff;
+  --border: #1b2231;
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+/* Wrapper del carrusel */
+.detailscrsl {
+  max-width: 100%;
+  margin: 0 auto 18px;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) padding-box,
+    linear-gradient(180deg, rgba(18,115,230,.18), rgba(58,160,255,.1)) border-box,
+    linear-gradient(180deg, var(--card), var(--card-2));
+  border: 1px solid color-mix(in oklab, var(--border), white 6%);
+  box-shadow: var(--shadow);
+  overflow: hidden; /* oculta overflow del slide */
+}
+
+/* Item del carrusel */
+.detailscrsl__item {
+  padding: clamp(8px, 1.2vw, 14px);
+}
+
+/* Marco con ratio 16:9 */
+.detailscrsl__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: calc(var(--radius) - 8px);
+  overflow: hidden;
+  background: #0c1324;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--border), white 6%);
+}
+
+/* Imagen */
+.detailscrsl__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.02) saturate(1.02);
+  transform: translateZ(0);
+  transition: transform .35s ease, filter .35s ease;
+}
+
+/* Efecto sutil al pasar el ratón */
+.detailscrsl__frame:hover .detailscrsl__img {
+  transform: scale(1.02);
+  filter: contrast(1.05) saturate(1.05);
+}
+
+/* ====== Ajustes PrimeNG (scoped con ::ng-deep para este componente) ====== */
+:host ::ng-deep .detailscrsl .p-carousel {
+  background: transparent;
+  border: 0;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-content {
+  padding: 0;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-items-content {
+  /* elimina posibles barras y mejora scroll */
+  scrollbar-width: none;
+}
+:host ::ng-deep .detailscrsl .p-carousel-items-content::-webkit-scrollbar {
+  display: none;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-item {
+  /* asegura que el item use todo el ancho */
+  width: 100%;
+}
+
+/* Si en algún momento activas indicadores o navegadores, te quedan ya bonitos */
+:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator button {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--border), white 12%);
+  transition: transform .2s ease, background .2s ease;
+}
+:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  transform: scale(1.15);
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-prev,
+:host ::ng-deep .detailscrsl .p-carousel-next {
+  background: #0c1220cc;
+  border: 1px solid color-mix(in oklab, var(--border), white 10%);
+  color: var(--text);
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+:host ::ng-deep .detailscrsl .p-carousel-prev:hover,
+:host ::ng-deep .detailscrsl .p-carousel-next:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--brand), var(--border) 55%);
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 640px) {
+  .detailscrsl {
+    border-radius: 14px;
+  }
+  .detailscrsl__frame {
+    border-radius: 12px;
   }
 }

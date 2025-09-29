@@ -1,13 +1,15 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Category } from '../../core/models/category.model';
+
 @Component({
   selector: 'app-card-category',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './card-category.component.html',
   styleUrls: ['./card-category.component.css'],
-  encapsulation: ViewEncapsulation.None // <— importante
+  encapsulation: ViewEncapsulation.None
 })
 export class CardCategoryComponent {
   @Input() category!: Category;

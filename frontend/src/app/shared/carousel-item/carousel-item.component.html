@@ -17,19 +17,29 @@
     </p-carousel>
 
     <!-- Carousel para imágenes de detalles -->
-    <div *ngIf="page === 'details'">
-        <ng-container *ngFor="let detailItem of items_details">
-            <p-carousel [value]="detailItem.images" [numVisible]="1" [numScroll]="1"
-                [responsiveOptions]="[{breakpoint: '1024px', numVisible: 1, numScroll: 1}]" [autoplayInterval]="3000"
-                [circular]="true" [showIndicators]="false" [showNavigators]="false">
-                <ng-template let-imageSrc pTemplate="item">
-                    <div class="carousel-item-container">
-                        <div class="contenedor">
-                            <img class="img_carousel" [src]="imageSrc" [alt]="'Detail image'"/>
-                        </div>
-                    </div>
-                </ng-template>
-            </p-carousel>
-        </ng-container>
+<div *ngIf="page === 'details'">
+  <ng-container *ngFor="let detailItem of items_details">
+    <div class="detailscrsl">
+      <p-carousel
+        [value]="detailItem.images"
+        [numVisible]="1"
+        [numScroll]="1"
+        [responsiveOptions]="[{breakpoint: '1024px', numVisible: 1, numScroll: 1}]"
+        [autoplayInterval]="3000"
+        [circular]="true"
+        [showIndicators]="false"
+        [showNavigators]="false"
+      >
+        <ng-template let-imageSrc pTemplate="item">
+          <div class="detailscrsl__item">
+            <div class="detailscrsl__frame">
+              <img class="detailscrsl__img" [src]="imageSrc" [alt]="'Detail image'" />
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
     </div>
+  </ng-container>
+</div>
+
 </div>
