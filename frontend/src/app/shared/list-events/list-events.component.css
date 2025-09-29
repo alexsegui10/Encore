@@ -1,0 +1,89 @@
+:host {
+  --bg-page: #0b0e14;
+  --text: #e6e9ef;
+  --muted: #a0a6b1;
+  --card: #111520;
+  --card-2: #0e1220;
+  --border: #1b2231;
+  --brand: #1273e6;
+  --brand-2: #3aa0ff;
+  --radius: 16px;
+  --gap: 24px;
+}
+
+.list-events-container {
+  min-height: 100%;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 800px at 20% -10%, rgba(18,115,230,.15), transparent 60%),
+    radial-gradient(800px 600px at 110% 10%, rgba(58,160,255,.12), transparent 60%),
+    var(--bg-page);
+  padding: clamp(16px, 2vw, 32px);
+}
+
+/* Toolbar */
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.toolbar h2 {
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 800;
+  margin: 0;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 220px 160px 160px auto auto;
+  gap: 10px;
+}
+
+.filters input[type="search"],
+.filters input[type="date"],
+.filters select {
+  background: linear-gradient(180deg, #141a2a, #101626);
+  border: 1px solid color-mix(in oklab, var(--border), white 6%);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--text);
+  outline: none;
+}
+
+.filters input::placeholder { color: var(--muted); }
+
+.btn {
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in oklab, var(--brand), #000 35%);
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--brand), white 10%),
+    color-mix(in oklab, var(--brand), black 10%));
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,0,0,.35); }
+
+.btn.ghost {
+  background: linear-gradient(180deg, #141a2a, #101626);
+  border: 1px solid color-mix(in oklab, var(--border), white 6%);
+  color: var(--text);
+}
+
+/* Grid de tarjetas */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: var(--gap);
+}
+
+@media (max-width: 900px) {
+  .filters {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .btn, .btn.ghost { width: 100%; }
+}

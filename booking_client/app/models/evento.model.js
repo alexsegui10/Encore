@@ -3,18 +3,70 @@ import mongoose from 'mongoose';
 
 const EventSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, trim: true, maxlength: 160 },
-    date: { type: Date, required: true },
-    price: { type: Number, required: true, min: 0 },
-    currency: { type: String, default: 'EUR' },
-    location: { type: String, trim: true, maxlength: 200 },
-    description: { type: String, trim: true, maxlength: 2000 },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
-    slug: { type: String, unique: true, index: true },
-    status: { type: String, enum: ['draft', 'published', 'cancelled'], default: 'draft' },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 160
+    },
+    date: {
+      type: Date,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+    currency: {
+      type: String,
+      default: 'EUR'
+    },
+    location: {
+      type: String,
+      trim: true,
+      maxlength: 200
+    },
+    description: {
+      type: String,
+      trim: true,
+      maxlength: 2000
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true
+    },
+    slug: {
+      type: String,
+      unique: true,
+      index: true
+    },
+    status: {
+      type: String,
+      enum: ['draft', 'published', 'cancelled'],
+      default: 'draft'
+    },
+
+    mainImage: {
+      type: String,
+      trim: true,
+      maxlength: 500
+    },
+    images: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: function (arr) {
+          return arr.every(url => typeof url === 'string' && url.length <= 500);
+        },
+        message: 'Cada URL de imagen debe ser un string de máximo 500 caracteres'
+      }
+    }
   },
   { timestamps: true }
 );
+
 
 function slugify(text) {
   return String(text || '')
