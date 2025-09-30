@@ -4,11 +4,11 @@
   width: 100%;
   height: 60vh;
   min-height: 500px;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
 
 /* Subtle animated background */
@@ -19,9 +19,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.01) 0%, transparent 50%);
+
   animation: subtleShift 20s ease-in-out infinite alternate;
   z-index: 0;
 }
@@ -349,126 +347,322 @@
     transition: none !important;
   }
 }
+
+/* =====================================================
+   DETAILS CAROUSEL - ESTILO COMPLETAMENTE DIFERENTE
+   ===================================================== */
+/* =====================================================
+   DETAILS CAROUSEL - ESTILO COMPLETAMENTE DIFERENTE
+   ===================================================== */
+
+/* Variables CSS para el carrusel de details */
 :host {
-  --bg: #0b0e14;
-  --card: #111520;
-  --card-2: #0e1220;
-  --text: #e6e9ef;
-  --muted: #a0a6b1;
-  --brand: #1273e6;
-  --brand-2: #3aa0ff;
-  --border: #1b2231;
-  --radius: 18px;
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --details-primary: #667eea;
+  --details-secondary: #764ba2;
+  --details-accent: #f093fb;
+  --details-bg: #f8fafc;
+  --details-card-bg: #ffffff;
+  --details-text: #2d3748;
+  --details-border: #e2e8f0;
+  --details-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --details-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --details-radius: 16px;
+  --details-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Wrapper del carrusel */
+/* Contenedor principal del carrusel de details */
 .detailscrsl {
-  max-width: 100%;
-  margin: 0 auto 18px;
-  border-radius: var(--radius);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) padding-box,
-    linear-gradient(180deg, rgba(18,115,230,.18), rgba(58,160,255,.1)) border-box,
-    linear-gradient(180deg, var(--card), var(--card-2));
-  border: 1px solid color-mix(in oklab, var(--border), white 6%);
-  box-shadow: var(--shadow);
-  overflow: hidden; /* oculta overflow del slide */
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: var(--details-card-bg);
+  border-radius: var(--details-radius);
+  box-shadow: var(--details-shadow-lg);
+  border: 1px solid var(--details-border);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Item del carrusel */
+/* Efecto de fondo animado para el contenedor */
+.detailscrsl::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.03) 0%,
+    rgba(118, 75, 162, 0.02) 50%,
+    rgba(240, 147, 251, 0.03) 100%
+  );
+  z-index: 0;
+  transition: var(--details-transition);
+}
+
+.detailscrsl:hover::before {
+  opacity: 0.7;
+}
+
+/* Item individual del carrusel */
 .detailscrsl__item {
-  padding: clamp(8px, 1.2vw, 14px);
+  padding: 0;
+  position: relative;
+  z-index: 1;
 }
 
-/* Marco con ratio 16:9 */
+/* Marco de la imagen con nuevo diseño */
 .detailscrsl__frame {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   width: 100%;
-  border-radius: calc(var(--radius) - 8px);
+  border-radius: calc(var(--details-radius) - 8px);
   overflow: hidden;
-  background: #0c1324;
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--border), white 6%);
+  background: linear-gradient(135deg, var(--details-primary), var(--details-secondary));
+  box-shadow: var(--details-shadow);
+  transition: var(--details-transition);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
-/* Imagen */
+/* Efecto hover en el marco */
+.detailscrsl__frame:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--details-shadow-lg);
+  border-color: var(--details-accent);
+}
+
+/* Imagen del carrusel de details */
 .detailscrsl__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: contrast(1.02) saturate(1.02);
-  transform: translateZ(0);
-  transition: transform .35s ease, filter .35s ease;
+  transition: var(--details-transition);
+  filter: saturate(1.1) contrast(1.05);
 }
 
-/* Efecto sutil al pasar el ratón */
+/* Efecto hover en la imagen */
 .detailscrsl__frame:hover .detailscrsl__img {
-  transform: scale(1.02);
-  filter: contrast(1.05) saturate(1.05);
+  transform: scale(1.05);
+  filter: saturate(1.2) contrast(1.1) brightness(1.05);
 }
 
-/* ====== Ajustes PrimeNG (scoped con ::ng-deep para este componente) ====== */
+/* Overlay decorativo */
+.detailscrsl__frame::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(102, 126, 234, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(240, 147, 251, 0.1) 100%
+  );
+  opacity: 0;
+  transition: var(--details-transition);
+  pointer-events: none;
+}
+
+.detailscrsl__frame:hover::after {
+  opacity: 1;
+}
+
+/* ====== Estilos específicos de PrimeNG para Details ====== */
 :host ::ng-deep .detailscrsl .p-carousel {
   background: transparent;
-  border: 0;
+  border: none;
+  border-radius: var(--details-radius);
 }
 
 :host ::ng-deep .detailscrsl .p-carousel-content {
   padding: 0;
+  background: transparent;
 }
 
 :host ::ng-deep .detailscrsl .p-carousel-items-content {
-  /* elimina posibles barras y mejora scroll */
   scrollbar-width: none;
+  background: transparent;
 }
+
 :host ::ng-deep .detailscrsl .p-carousel-items-content::-webkit-scrollbar {
   display: none;
 }
 
 :host ::ng-deep .detailscrsl .p-carousel-item {
-  /* asegura que el item use todo el ancho */
   width: 100%;
+  background: transparent;
 }
 
-/* Si en algún momento activas indicadores o navegadores, te quedan ya bonitos */
-:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator button {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--border), white 12%);
-  transition: transform .2s ease, background .2s ease;
-}
-:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator.p-highlight button {
-  background: linear-gradient(90deg, var(--brand), var(--brand-2));
-  transform: scale(1.15);
-}
-
+/* Botones de navegación para Details */
 :host ::ng-deep .detailscrsl .p-carousel-prev,
 :host ::ng-deep .detailscrsl .p-carousel-next {
-  background: #0c1220cc;
-  border: 1px solid color-mix(in oklab, var(--border), white 10%);
-  color: var(--text);
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.35);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-:host ::ng-deep .detailscrsl .p-carousel-prev:hover,
-:host ::ng-deep .detailscrsl .p-carousel-next:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in oklab, var(--brand), var(--border) 55%);
-  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+  background: linear-gradient(135deg, var(--details-primary), var(--details-secondary)) !important;
+  border: 2px solid var(--details-card-bg) !important;
+  color: white !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  box-shadow: var(--details-shadow-lg) !important;
+  transition: var(--details-transition) !important;
+  backdrop-filter: blur(10px) !important;
+  z-index: 10 !important;
 }
 
-/* ====== Responsive ====== */
-@media (max-width: 640px) {
+:host ::ng-deep .detailscrsl .p-carousel-prev:hover,
+:host ::ng-deep .detailscrsl .p-carousel-next:hover {
+  background: linear-gradient(135deg, var(--details-accent), var(--details-primary)) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--details-accent) !important;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-prev:active,
+:host ::ng-deep .detailscrsl .p-carousel-next:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+/* Indicadores para Details */
+:host ::ng-deep .detailscrsl .p-carousel-indicators {
+  position: absolute;
+  bottom: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 0 !important;
+  margin: 0 !important;
+  z-index: 10;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator {
+  margin: 0 4px !important;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator button {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: var(--details-border) !important;
+  border: 2px solid var(--details-card-bg) !important;
+  transition: var(--details-transition) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+  background: linear-gradient(135deg, var(--details-primary), var(--details-secondary)) !important;
+  width: 24px !important;
+  border-radius: 12px !important;
+  transform: scale(1.1) !important;
+  box-shadow: var(--details-shadow) !important;
+}
+
+:host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator button:hover {
+  background: var(--details-accent) !important;
+  transform: scale(1.2) !important;
+  box-shadow: var(--details-shadow) !important;
+}
+
+/* ====== Responsive para Details ====== */
+@media (max-width: 768px) {
   .detailscrsl {
-    border-radius: 14px;
-  }
-  .detailscrsl__frame {
+    margin: 1rem auto;
+    padding: 1rem;
     border-radius: 12px;
+  }
+  
+  .detailscrsl__frame {
+    border-radius: 8px;
+    aspect-ratio: 16 / 9;
+  }
+
+  :host ::ng-deep .detailscrsl .p-carousel-prev,
+  :host ::ng-deep .detailscrsl .p-carousel-next {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  :host ::ng-deep .detailscrsl .p-carousel-indicators {
+    bottom: -35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detailscrsl {
+    margin: 0.5rem auto;
+    padding: 0.75rem;
+    border-radius: 8px;
+  }
+  
+  .detailscrsl__frame {
+    border-radius: 6px;
+  }
+
+  :host ::ng-deep .detailscrsl .p-carousel-prev,
+  :host ::ng-deep .detailscrsl .p-carousel-next {
+    width: 35px !important;
+    height: 35px !important;
+  }
+
+  :host ::ng-deep .detailscrsl .p-carousel-indicators {
+    bottom: -30px;
+  }
+
+  :host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator button {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :host ::ng-deep .detailscrsl .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+    width: 20px !important;
+  }
+}
+
+/* ====== Animaciones adicionales para Details ====== */
+@keyframes detailsSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detailscrsl {
+  animation: detailsSlideIn 0.6s ease-out;
+}
+
+/* ====== Modo oscuro para Details (opcional) ====== */
+@media (prefers-color-scheme: dark) {
+  :host {
+    --details-bg: #1a202c;
+    --details-card-bg: #2d3748;
+    --details-text: #e2e8f0;
+    --details-border: #4a5568;
+  }
+}
+
+/* ====== Accesibilidad para Details ====== */
+@media (prefers-reduced-motion: reduce) {
+  .detailscrsl,
+  .detailscrsl__frame,
+  .detailscrsl__img,
+  .detailscrsl::before,
+  .detailscrsl__frame::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .detailscrsl__frame:hover {
+    transform: none !important;
+  }
+  
+  .detailscrsl__frame:hover .detailscrsl__img {
+    transform: none !important;
   }
 }
