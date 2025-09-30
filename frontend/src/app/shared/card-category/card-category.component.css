@@ -73,3 +73,9 @@
 .actions button:hover{
   background:rgba(255,255,255,0.25);
 }
+/* ✅ Aquí sí: dentro del hijo */
+.card.dim .card__background{
+  filter: brightness(0.5) saturate(0) contrast(1.2) blur(20px);
+  transform: scale(1) translateZ(0);
+  transition: filter 200ms linear, transform 200ms linear;
+}

@@ -1,10 +1,23 @@
 <section class="hero-section">
-  <div class="card-grid" *ngIf="categories && categories.length; else empty">
-    <app-card-category
-      *ngFor="let category of categories"
-      [category]="category">
-    </app-card-category>
-  </div>
+  <ng-container *ngIf="categories?.length; else empty">
+    <div #grid
+         class="card-grid categorias"
+         infinite-scroll
+         [infiniteScrollDistance]="1"
+         [infiniteScrollThrottle]="50"
+         (scrolled)="scroll()"
+         (mouseover)="onHover($event)"
+         (mouseleave)="clearHover()">
+
+      <app-card-category
+        *ngFor="let category of categories"
+        [category]="category">
+      </app-card-category>
+
+<!--       <p *ngIf="!loading && !categories.length">No hay categorías aún.</p>
+      <p *ngIf="loading">Cargando…</p> -->
+    </div>
+  </ng-container>
 
   <ng-template #empty>
     <p>No hay categorías aún.</p>
