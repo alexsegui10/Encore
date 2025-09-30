@@ -1,15 +1,17 @@
 <div class="details" *ngIf="event">
-    <!-- Carousel de imágenes del evento -->
-    <app-carousel></app-carousel>
-    <div class="details_content">
-        <h1>{{ event.title }}</h1>
-        <p>{{ event.description }}</p>
-        <p>Fecha: {{ event.date | date:'dd/MM/yyyy HH:mm' }}</p>
-        <p>Precio: {{ event.price | currency:event.currency:'symbol':'1.2-2' }}</p>
-        <p *ngIf="event.location">Ubicación: {{ event.location }}</p>
-    </div>
+  <app-carousel></app-carousel>
 
-    <div *ngIf="!event">
-        <p>Cargando evento...</p>
-    </div>
+  <div class="details_content">
+    <h1>{{ event.title }}</h1>
+    <p>{{ event.description }}</p>
+    <p>Fecha: {{ event.date | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p>Precio: {{ event.price | currency:event.currency:'symbol':'1.2-2' }}</p>
+    <p *ngIf="event.location">Ubicación: {{ event.location }}</p>
+  </div>
+  <h2 class="map-title">Ubicación del evento</h2>
+
+  <app-mapa></app-mapa>
+
+
+  <div *ngIf="!event"><p>Cargando evento...</p></div>
 </div>

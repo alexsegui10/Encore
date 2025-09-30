@@ -5,13 +5,14 @@ import { CarouselModule } from 'primeng/carousel';
 import { CarouselComponent } from '../../shared/carrusel/carousel.component';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
+import {MapaComponent} from '../../shared/map/map.component';
 
 @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent]
+    imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent, MapaComponent],
 })
 
 export class DetailsComponent implements OnInit {

@@ -1,3 +1,4 @@
+/* @import 'leaflet/dist/leaflet.css'; */
 :root{
   --background-dark: #2d3548;
   --text-light: rgba(255,255,255,0.6);
