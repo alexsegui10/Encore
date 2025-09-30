@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Category } from '../models/category.model';
-
+import { ApiService } from './api.service';
 @Injectable({
     providedIn: 'root'
 })
 export class CategoryService {
-    private readonly apiUrl = 'http://127.0.0.1:4000/api/category';
 
-    constructor(private http: HttpClient) { }
+    constructor(private apiService: ApiService) { }
+
 
     /**
      * Obtiene todos los Categoryos
@@ -27,7 +27,7 @@ export class CategoryService {
             });
         }
 
-        return this.http.get<Category[]>(this.apiUrl, { params: httpParams });
+        return this.apiService.get("/api/category", httpParams, 4000);
     }
 
     /**
@@ -36,7 +36,7 @@ export class CategoryService {
      * @returns Observable con el Categoryo
      */
     getCategoryBySlug(slug: string): Observable<Category> {
-        return this.http.get<Category>(`${this.apiUrl}/${slug}`);
+                return this.apiService.get(`/api/category/${slug}`, undefined, 4000);
     }
 
 

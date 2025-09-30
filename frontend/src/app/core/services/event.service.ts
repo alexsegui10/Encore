@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event, CreateEventRequest, UpdateEventRequest } from '../models/event.model';
+import { ApiService } from './api.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EventService {
-    private readonly apiUrl = 'http://127.0.0.1:4000/api/eventos';
 
-    constructor(private http: HttpClient) { }
+    constructor(private apiService: ApiService) { }
 
     /**
      * Obtiene todos los eventos
@@ -27,7 +27,7 @@ export class EventService {
             });
         }
 
-        return this.http.get<Event[]>(this.apiUrl, { params: httpParams });
+        return this.apiService.get("/api/eventos", httpParams, 4000);
     }
 
     /**
@@ -36,7 +36,7 @@ export class EventService {
      * @returns Observable con el evento
      */
     getEventBySlug(slug: string): Observable<Event> {
-        return this.http.get<Event>(`${this.apiUrl}/${slug}`);
+        return this.apiService.get(`/api/eventos/${slug}`, undefined, 4000);
     }
 
     /**
@@ -45,7 +45,7 @@ export class EventService {
      * @returns Observable con el evento
      */
     getEventById(id: string): Observable<Event> {
-        return this.http.get<Event>(`${this.apiUrl}/${id}`);
+        return this.apiService.get(`/api/eventos/${id}`, undefined, 4000);
     }
 
     /**
@@ -54,7 +54,7 @@ export class EventService {
      * @returns Observable con el evento creado
      */
     createEvent(eventData: CreateEventRequest): Observable<Event> {
-        return this.http.post<Event>(this.apiUrl, eventData);
+        return this.apiService.post('/api/eventos', eventData, 4000);
     }
 
     /**
@@ -64,7 +64,7 @@ export class EventService {
      * @returns Observable con el evento actualizado
      */
     updateEvent(slug: string, eventData: UpdateEventRequest): Observable<Event> {
-        return this.http.put<Event>(`${this.apiUrl}/${slug}`, eventData);
+        return this.apiService.put(`/api/eventos/${slug}`, eventData, 4000);
     }
 
     /**
@@ -73,7 +73,7 @@ export class EventService {
      * @returns Observable con el resultado de la operación
      */
     deleteEvent(slug: string): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/${slug}`);
+        return this.apiService.delete(`/api/eventos/${slug}`, 4000);
     }
 
     /**
@@ -83,7 +83,7 @@ export class EventService {
      */
     searchEventsByTitle(title: string): Observable<Event[]> {
         const params = new HttpParams().set('title', title);
-        return this.http.get<Event[]>(this.apiUrl, { params });
+        return this.apiService.get('/api/eventos', params, 4000);
     }
 
     /**
@@ -92,7 +92,7 @@ export class EventService {
      * @returns Observable con la lista de eventos de la categoría
      */
     getEventsByCategory(categorySlug: string): Observable<Event[]> {
-        return this.http.get<Event[]>(`${this.apiUrl}/category/${categorySlug}`);
+        return this.apiService.get(`/api/eventos/category/${categorySlug}`, undefined, 4000);
     }
 
     /**
@@ -102,7 +102,7 @@ export class EventService {
      */
     getEventsByStatus(status: 'draft' | 'published' | 'cancelled'): Observable<Event[]> {
         const params = new HttpParams().set('status', status);
-        return this.http.get<Event[]>(this.apiUrl, { params });
+        return this.apiService.get('/api/eventos', params, 4000);
     }
 
     /**
@@ -119,7 +119,7 @@ export class EventService {
      */
     getUpcomingEvents(): Observable<Event[]> {
         const params = new HttpParams().set('upcoming', 'true');
-        return this.http.get<Event[]>(this.apiUrl, { params });
+        return this.apiService.get('/api/eventos', params, 4000);
     }
 
     /**
@@ -132,6 +132,6 @@ export class EventService {
         const params = new HttpParams()
             .set('startDate', startDate.toISOString())
             .set('endDate', endDate.toISOString());
-        return this.http.get<Event[]>(this.apiUrl, { params });
+        return this.apiService.get('/api/eventos', params, 4000);
     }
 }
