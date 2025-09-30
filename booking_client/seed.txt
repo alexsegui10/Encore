@@ -98,7 +98,7 @@ Content-Type: application/json
 {
   "name": "Festivales",
   "description": "Festivales de música",
-  "image": "https://example.com/images/festivales.jpg",
+  "image": "https://www.valenciaextra.com/uploads/s1/16/37/80/62/fetsival-de-les-arts.jpeg",
   "slug": "festivales",
   "events": [],
   "createdAt": "2025-09-29T15:00:00.000Z",
@@ -125,7 +125,7 @@ Content-Type: application/json
 {
   "name": "Conferencias",
   "description": "Charlas, ponencias",
-  "image": "https://example.com/images/conferencias.jpg",
+  "image": "https://enriccompany.com/wp-content/uploads/2022/05/Contratar-conferenciantes.jpeg",
   "slug": "conferencias",
   "events": [],
   "createdAt": "2025-09-29T15:00:00.000Z",
