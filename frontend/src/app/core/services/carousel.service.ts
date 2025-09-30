@@ -20,7 +20,7 @@ export class CarouselService {
       );
   }
 
-  // Para obtener las imágenes del carousel de detalles del evento
+  // Para obtener las imágenes del carousel de detalles del eventos
   getCarouselDetails(slug: string | null): Observable<CarouselDetails> {
     if (!slug) {
       throw new Error('Slug is required');
