@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,6 +19,7 @@ export class ListCategoryComponent implements OnInit {
   offset = 0;
   limit = 4;
   categories: Category[] = [];
+  @ViewChild('grid', { static: false }) gridRef?: ElementRef<HTMLElement>;
 
   constructor(private categoryService: CategoryService) {}
 
@@ -45,5 +46,37 @@ export class ListCategoryComponent implements OnInit {
   }
     scroll(): void {
     this.loadCategories();
+  }
+
+
+
+
+
+  //difuminado fila (Codigo de ChatGPT)
+  onHover(evt: MouseEvent): void {
+    const grid = this.gridRef?.nativeElement;
+    if (!grid) return;
+
+    const target = (evt.target as HTMLElement).closest('.card') as HTMLElement | null;
+    if (!target) return;
+
+    const rowTop = target.offsetTop;
+    const hosts = Array.from(grid.querySelectorAll('app-card-category')) as HTMLElement[];
+
+    for (const host of hosts) {
+      const cardEl = host.querySelector('.card') as HTMLElement | null;
+      if (!cardEl) continue;
+
+      const sameRow = cardEl.offsetTop === rowTop;
+      const isHovered = cardEl === target;
+
+      cardEl.classList.toggle('dim', sameRow && !isHovered);
+    }
+  }
+
+  clearHover(): void {
+    const grid = this.gridRef?.nativeElement;
+    if (!grid) return;
+    grid.querySelectorAll('.card.dim').forEach(el => el.classList.remove('dim'));
   }
 }

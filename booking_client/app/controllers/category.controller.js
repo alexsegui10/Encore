@@ -3,7 +3,13 @@ import Category from '../models/category.model.js';
 // GET /categorias
 export const list = async (req, res, next) => {
   try {
-    const items = await Category.find().sort('name').lean();
+    const offset = parseInt(req.query.offset, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 4;
+    const items = await Category.find()
+      .sort('name')
+      .skip(offset)
+      .limit(limit)
+      .lean();
     res.json(items);
   } catch (err) {
     next(err);
