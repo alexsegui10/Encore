@@ -32,21 +32,21 @@ export class EventService {
 
     get_products_filter(filters: Filters): Observable<Event[]> {
         let httpParams = new HttpParams();
-        
+
         if (filters.category) {
             httpParams = httpParams.set('category', filters.category);
         }
-        
+
         // Solo enviar price_min si tiene un valor válido mayor que 0
         if (filters.price_min !== undefined && filters.price_min !== null && filters.price_min > 0) {
             httpParams = httpParams.set('price_min', filters.price_min.toString());
         }
-        
+
         // Solo enviar price_max si tiene un valor válido
         if (filters.price_max !== undefined && filters.price_max !== null && filters.price_max > 0) {
             httpParams = httpParams.set('price_max', filters.price_max.toString());
         }
-        
+
         if (filters.name && filters.name.trim() !== '') {
             httpParams = httpParams.set('name', filters.name.trim());
         }
@@ -56,7 +56,7 @@ export class EventService {
         if (filters.offset) {
             httpParams = httpParams.set('offset', filters.offset.toString());
         }
-        
+
         console.log('Sending HTTP params:', httpParams.toString());
         return this.apiService.get("/api/eventos", httpParams, 4000);
     }
@@ -135,10 +135,10 @@ export class EventService {
         const params = new HttpParams().set('status', status);
         return this.apiService.get('/api/eventos', params, 4000);
     }
-  // Buscar eventos por nombre
+    // Buscar eventos por nombre
     getEventByName(name: string): Observable<Event[]> {
-      const params = new HttpParams().set('name', name.trim());
-      return this.apiService.get(`/api/eventos`, params, 4000);
+        const params = new HttpParams().set('name', name.trim());
+        return this.apiService.get(`/api/eventos`, params, 4000);
     }
     /**
      * Obtiene eventos publicados únicamente

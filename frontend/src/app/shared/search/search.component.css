@@ -1,73 +1,43 @@
-/* Contenedor general */
-.container.subheader {
-  padding: 2rem 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Bloque oscuro compartido para search y filters */
+.dark-header {
+  background: linear-gradient(180deg, #0b0e14 0%, #111520 100%);
+  padding: 2rem 1rem 1rem;
 }
 
-/* Formulario del buscador */
+/* Ajuste de buscador para integrarse */
 form.search {
-  background: var(--card, #111520);
+  background: #111520;
   border: 1px solid var(--border, #1b2231);
-  border-radius: 18px;
-  box-shadow: var(--shadow, 0 10px 30px rgba(0,0,0,.35));
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
   display: flex;
   align-items: center;
   gap: 0.8rem;
   padding: 0.8rem 1.2rem;
   width: 100%;
   max-width: 650px;
-  transition: all 0.3s ease;
+  margin: 0 auto;
 }
 
-form.search:focus-within {
-  border-color: var(--brand, #1273e6);
-  box-shadow: 0 0 10px rgba(18, 115, 230, 0.5);
-}
-
-/* Icono de lupa */
-form.search i.fa-search {
-  color: var(--muted, #a0a6b1);
-  font-size: 1.2rem;
-}
-
-/* Input del buscador */
-form.search .input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text, #e6e9ef);
-  font-size: 1rem;
-}
-
-form.search .input::placeholder {
-  color: var(--muted, #7c8595);
-}
-
-/* Botón de búsqueda */
+/* Botón igual al filters */
 form.search button {
   background: var(--brand, #1273e6);
-  border: none;
-  border-radius: 12px;
+  border-radius: 999px;
   padding: 0.6rem 1.2rem;
-  color: #fff;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  font-weight: 600;
+  transition: 0.3s;
 }
-
 form.search button:hover {
   background: var(--brand-2, #3aa0ff);
-  transform: translateY(-2px);
 }
 
-form.search button:active {
-  transform: scale(0.95);
+/* Input */
+form.search .input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text, #e6e9ef);
 }
-
-/* Segundo icono de búsqueda */
-form.search i.fas.fa-search {
-  display: none; /* Oculto si ya tienes uno al inicio */
+form.search .input::placeholder {
+  color: var(--muted, #7c8595);
 }
