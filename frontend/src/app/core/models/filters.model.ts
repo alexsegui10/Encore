@@ -14,7 +14,7 @@ export class Filters {
         category?: string,
         name?: string,
     ) {
-        this.limit = limit || 3;
+        this.limit = limit || 4;
         this.offset = offset || 0;
         this.price_min = price_min;
         this.price_max = price_max;

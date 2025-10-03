@@ -4,54 +4,69 @@ import Category from '../models/category.model.js';
 // GET /eventos 
 export const listEvents = async (req, res, next) => {
   try {
-    const { category, price_min, price_max, limit, offset, name } = req.query;
+    // Función helper para transformar "undefined" string y valores vacíos
+    let transUndefined = (varQuery, otherResult) => {
+        return varQuery != "undefined" && varQuery ? varQuery : otherResult;
+    };
+
+    // Extraer y procesar parámetros con valores por defecto
+    let limit = transUndefined(req.query.limit, 4);
+    let offset = transUndefined(req.query.offset, 0);
+    let category = transUndefined(req.query.category, "");
+    let name = transUndefined(req.query.name, "");
+    let price_min = transUndefined(req.query.price_min, 0);
+    let price_max = transUndefined(req.query.price_max, Number.MAX_SAFE_INTEGER);
     
-    // Construir filtros
-    let filters = {};
-    
-    // Filtro por categoría
-    if (category) {
-      filters.category = category;
+    // Crear regex para búsqueda de nombre/título
+    let nameReg = new RegExp(name, 'i');
+
+    console.log('Query params processed:', {
+      limit, offset, category, name, price_min, price_max
+    });
+
+    // Construir query base - SIEMPRE incluye filtros de precio y nombre
+    let query = {
+        title: { $regex: nameReg },
+        $and: [
+            { price: { $gte: parseFloat(price_min) } }, 
+            { price: { $lte: parseFloat(price_max) } }
+        ],
+    };
+
+    // Agregar filtro de categoría si está presente
+    if (category != "") {
+        query.category = category;
     }
+
+    console.log('MongoDB query:', JSON.stringify(query, null, 2));
+
+    // Ejecutar query con paginación
+    const events = await Event.find(query)
+        .limit(Number(limit))
+        .skip(Number(offset))
+        .sort('-date')
+        .lean();
     
-    // Filtros por precio
-    if (price_min || price_max) {
-      filters.price = {};
-      if (price_min) {
-        filters.price.$gte = parseFloat(price_min);
-      }
-      if (price_max) {
-        filters.price.$lte = parseFloat(price_max);
-      }
+    // Obtener conteo total con los mismos filtros
+    const event_count = await Event.find(query).countDocuments();
+
+    console.log(`Found ${events.length} events, total: ${event_count}`);
+
+    if (!events) {
+        return res.status(404).json({ msg: "No se encontraron eventos" });
     }
-    
-    // Filtro por nombre/título
-    if (name) {
-      filters.title = { $regex: name, $options: 'i' };
-    }
-    
-    console.log('Applied filters:', filters);
-    
-    // Construir query
-    let query = Event.find(filters).sort('-date').lean();
-    
-    // Aplicar paginación si se proporciona
-    if (offset) {
-      query = query.skip(parseInt(offset));
-    }
-    if (limit) {
-      query = query.limit(parseInt(limit));
-    }
-    
-    const items = await query;
-    
-    // También obtener el conteo total para paginación
-    const total = await Event.countDocuments(filters);
-    
-    res.json({
-      events: items,
-      event_count: total,
-      filters_applied: filters
+
+    return res.status(200).json({
+        events: events,
+        event_count: event_count,
+        filters_applied: {
+            category,
+            price_min: parseFloat(price_min),
+            price_max: parseFloat(price_max),
+            name,
+            limit: Number(limit),
+            offset: Number(offset)
+        }
     });
   } catch (err) {
     console.error('Error in listEvents:', err);
@@ -186,3 +201,55 @@ export const GetProductsByCategory = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 });
+
+// Ruta temporal para testing - verificar datos
+export const testEventData = async (req, res, next) => {
+  try {
+    console.log('=== TESTING EVENT DATA ===');
+    
+    // Obtener todos los eventos
+    const allEvents = await Event.find().lean();
+    console.log(`Total events found: ${allEvents.length}`);
+    
+    // Verificar tipos de datos
+    allEvents.forEach((event, index) => {
+      console.log(`Event ${index + 1}:`, {
+        title: event.title,
+        price: event.price,
+        priceType: typeof event.price,
+        category: event.category,
+        categoryType: typeof event.category
+      });
+    });
+    
+    // Test query específica con precio
+    const priceTestQuery = {
+      $and: [
+        { price: { $gte: 1 } }, 
+        { price: { $lte: 1000 } }
+      ]
+    };
+    
+    const priceTestResults = await Event.find(priceTestQuery).lean();
+    console.log(`Events with price between 1-1000: ${priceTestResults.length}`);
+    
+    priceTestResults.forEach(event => {
+      console.log(`- ${event.title}: ${event.price} (${typeof event.price})`);
+    });
+    
+    res.json({
+      message: 'Check console for detailed output',
+      totalEvents: allEvents.length,
+      priceRangeResults: priceTestResults.length,
+      sampleEvents: allEvents.slice(0, 3).map(e => ({
+        title: e.title,
+        price: e.price,
+        priceType: typeof e.price
+      }))
+    });
+    
+  } catch (err) {
+    console.error('Error in testEventData:', err);
+    next(err);
+  }
+};

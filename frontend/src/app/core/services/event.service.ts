@@ -36,14 +36,19 @@ export class EventService {
         if (filters.category) {
             httpParams = httpParams.set('category', filters.category);
         }
-        if (filters.price_min !== undefined && filters.price_min !== null) {
+        
+        // Solo enviar price_min si tiene un valor válido mayor que 0
+        if (filters.price_min !== undefined && filters.price_min !== null && filters.price_min > 0) {
             httpParams = httpParams.set('price_min', filters.price_min.toString());
         }
-        if (filters.price_max !== undefined && filters.price_max !== null) {
+        
+        // Solo enviar price_max si tiene un valor válido
+        if (filters.price_max !== undefined && filters.price_max !== null && filters.price_max > 0) {
             httpParams = httpParams.set('price_max', filters.price_max.toString());
         }
-        if (filters.name) {
-            httpParams = httpParams.set('name', filters.name);
+        
+        if (filters.name && filters.name.trim() !== '') {
+            httpParams = httpParams.set('name', filters.name.trim());
         }
         if (filters.limit) {
             httpParams = httpParams.set('limit', filters.limit.toString());
@@ -52,6 +57,7 @@ export class EventService {
             httpParams = httpParams.set('offset', filters.offset.toString());
         }
         
+        console.log('Sending HTTP params:', httpParams.toString());
         return this.apiService.get("/api/eventos", httpParams, 4000);
     }
 

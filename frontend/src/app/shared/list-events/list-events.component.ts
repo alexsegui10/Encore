@@ -23,7 +23,7 @@ export class ListEventsComponent implements OnInit, OnDestroy {
   listCategories: Category[] = [];
   filters = new Filters();
   offset: number = 0;
-  limit: number = 3;
+  limit: number = 4;
   totalPages: Array<number> = [];
   currentPage: number = 1;
 
