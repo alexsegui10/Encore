@@ -1,0 +1,61 @@
+
+
+    body{
+        background-color:#eee;
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+    }
+
+    .height{
+        height: 100vh;
+    }
+
+
+    .search{
+    position: relative;
+    box-shadow: #1E262D;
+    width: 100%; /* Hacer que la barra de búsqueda ocupe el 100% del ancho */
+    margin-top: 20px;
+    }
+
+    .search input{
+        border-radius: 10px;
+        height: 60px;
+        text-indent: 25px;
+        border: 2px solid #65707a;
+        width: 100%; /* Hacer que el input ocupe el 100% del ancho de su contenedor */
+
+    }
+
+    .subheader{
+        max-width: 80%; /* Ajusta el ancho máximo según tus preferencias */
+        margin: 0 auto; /* Centra el contenido en la página */
+        text-align: center; /* Alinea el texto al centro dentro de la clase */
+    }
+
+    .search input:focus{
+
+        box-shadow: none;
+        border: 2px solid rgb(0, 0, 0);
+
+
+    }
+
+    .search .fa-search{
+
+        position: absolute;
+        top: 20px;
+        left: 16px;
+
+    }
+
+    .search button{
+
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        height: 50px;
+        width: 110px;
+        background: blue;
+
+    }

@@ -135,7 +135,11 @@ export class EventService {
         const params = new HttpParams().set('status', status);
         return this.apiService.get('/api/eventos', params, 4000);
     }
-
+  // Buscar eventos por nombre
+    getEventByName(name: string): Observable<Event[]> {
+      const params = new HttpParams().set('name', name.trim());
+      return this.apiService.get(`/api/eventos`, params, 4000);
+    }
     /**
      * Obtiene eventos publicados únicamente
      * @returns Observable con la lista de eventos publicados

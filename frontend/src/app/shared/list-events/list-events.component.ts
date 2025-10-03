@@ -9,11 +9,12 @@ import { CardEventComponent } from '../card-event/card-event.component';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
 import { Filters } from '../../core/models/filters.model';
+import { SearchComponent } from '../search/search.component';
 import { FiltersComponent } from '../filters/filters.component';
 @Component({
   selector: 'list-events',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, CardEventComponent, FiltersComponent],
+  imports: [CommonModule, HttpClientModule, CardEventComponent, FiltersComponent, SearchComponent],
   templateUrl: './list-events.component.html',
   styleUrls: ['./list-events.component.css']
 })
@@ -89,12 +90,12 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     this.eventService.get_products_filter(filters).subscribe(
       (data: any) => {
         this.events = data.events;
-        
+
         // Validate data before creating array
         const eventCount = data.event_count || 0;
         const limit = this.limit > 0 ? this.limit : 1;
         const totalPagesCount = Math.max(1, Math.ceil(eventCount / limit));
-        
+
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
         console.log(this.events);
       });
