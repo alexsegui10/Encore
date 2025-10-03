@@ -4,9 +4,57 @@ import Category from '../models/category.model.js';
 // GET /eventos 
 export const listEvents = async (req, res, next) => {
   try {
-    const items = await Event.find().sort('-date').lean();
-    res.json(items);
+    const { category, price_min, price_max, limit, offset, name } = req.query;
+    
+    // Construir filtros
+    let filters = {};
+    
+    // Filtro por categoría
+    if (category) {
+      filters.category = category;
+    }
+    
+    // Filtros por precio
+    if (price_min || price_max) {
+      filters.price = {};
+      if (price_min) {
+        filters.price.$gte = parseFloat(price_min);
+      }
+      if (price_max) {
+        filters.price.$lte = parseFloat(price_max);
+      }
+    }
+    
+    // Filtro por nombre/título
+    if (name) {
+      filters.title = { $regex: name, $options: 'i' };
+    }
+    
+    console.log('Applied filters:', filters);
+    
+    // Construir query
+    let query = Event.find(filters).sort('-date').lean();
+    
+    // Aplicar paginación si se proporciona
+    if (offset) {
+      query = query.skip(parseInt(offset));
+    }
+    if (limit) {
+      query = query.limit(parseInt(limit));
+    }
+    
+    const items = await query;
+    
+    // También obtener el conteo total para paginación
+    const total = await Event.countDocuments(filters);
+    
+    res.json({
+      events: items,
+      event_count: total,
+      filters_applied: filters
+    });
   } catch (err) {
+    console.error('Error in listEvents:', err);
     next(err);
   }
 };

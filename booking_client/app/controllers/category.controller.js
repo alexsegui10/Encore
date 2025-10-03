@@ -89,3 +89,16 @@ export const remove = async (req, res, next) => {
   }
 };
 
+// GET /categories_select_filter
+export const findCategoriesSelect = async (req, res, next) => {
+  try {
+    const items = await Category.find()
+      .select('_id name slug')
+      .sort('name')
+      .lean();
+    res.json({ categories: items });
+  } catch (err) {
+    next(err);
+  }
+};
+

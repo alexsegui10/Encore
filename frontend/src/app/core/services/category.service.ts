@@ -36,8 +36,11 @@ export class CategoryService {
      * @returns Observable con el Categoryo
      */
     getCategoryBySlug(slug: string): Observable<Category> {
-                return this.apiService.get(`/api/category/${slug}`, undefined, 4000);
+        return this.apiService.get(`/api/category/${slug}`, undefined, 4000);
     }
 
+    all_categories_select(): Observable<Category[]> {
+        return this.apiService.get("/api/categories_select_filter", undefined, 4000);
+    }
 
 }

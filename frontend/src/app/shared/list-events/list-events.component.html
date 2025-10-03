@@ -1,5 +1,6 @@
-<!-- <app-search (searchEvent)="get_list_filtered($event)"></app-search>
- --><div class="list-events-container">
+ <app-search (searchEvent)="get_list_filtered($event)"></app-search>
+<app-filters (eventofiltros)="get_list_filtered($event)" [listCategories]="listCategories"></app-filters>
+<div class="list-events-container">
   <h2>Lista de Eventos</h2>
 
   <ng-container *ngIf="events?.length; else empty">

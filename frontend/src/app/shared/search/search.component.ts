@@ -1,19 +1,23 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Filters } from '../../core/models/filter.model';
+import { Filters } from '../../core/models/filters.model';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+  styleUrls: ['./search.component.css'],
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class SearchComponent implements OnInit {
   @Output() searchEvent: EventEmitter<Filters> = new EventEmitter();
 
   search_value: string | undefined = '';
-  listProducts: Event[] = [];
+  listEvents: Event[] = [];
   filters: Filters = new Filters();
   routeFilters!: string | null;
   search: any;
@@ -49,7 +53,7 @@ export class SearchComponent implements OnInit {
           this.Location.replaceState('/shop/' + btoa(JSON.stringify(this.filters)));
 
         if (this.search.length != 0){
-          this.getListProducts()
+          this.getListEvents()
       }
     }, 150);
     this.filters.name = this.search;
@@ -58,11 +62,11 @@ export class SearchComponent implements OnInit {
 
 
 
-    getListProducts() {
+    getListEvents() {
       this.EventService.getEventByName(this.search).subscribe(
         (data: any) => {
-          this.listProducts = data.products;
-          console.log(this.listProducts);
+          this.listEvents = data.events;
+          console.log(this.listEvents);
           if(data === null ){
             console.log('error')
           }
