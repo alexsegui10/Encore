@@ -100,7 +100,6 @@ h3::after {
 .form-control:hover,
 .form-control select:hover {
     border-color: var(--filter-brand-hover);
-    background: color-mix(in oklab, var(--filter-bg), white 3%);
 }
 
 /* Placeholder styling */
@@ -285,9 +284,6 @@ input[type="number"].form-control::-webkit-inner-spin-button {
     }
 }
 
-.container-fluid.subheader {
-    animation: slideInDown 0.4s ease-out;
-}
 
 /* Focus visible para accesibilidad */
 .form-control:focus-visible,
