@@ -60,7 +60,7 @@ h3::after {
 .row {
     margin: 0;
     gap: 12px;
-    display: flex !important;    
+    display: flex !important;
     justify-content: center;
 
 }
@@ -224,7 +224,7 @@ input[type="number"].form-control::-webkit-inner-spin-button {
     .container-fluid.subheader {
         padding: 12px 0;
     }
-    
+
     h3 {
         font-size: 20px;
         margin-bottom: 12px;
@@ -253,13 +253,13 @@ input[type="number"].form-control::-webkit-inner-spin-button {
     .container-fluid.subheader {
         padding: 8px 0;
     }
-    
+
     h3 {
         font-size: 18px;
         margin-bottom: 8px;
         letter-spacing: 0.5px;
     }
-    
+
     h3::after {
         width: 40px;
         height: 2px;
