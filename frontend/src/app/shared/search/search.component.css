@@ -1,61 +1,73 @@
+/* Contenedor general */
+.container.subheader {
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+/* Formulario del buscador */
+form.search {
+  background: var(--card, #111520);
+  border: 1px solid var(--border, #1b2231);
+  border-radius: 18px;
+  box-shadow: var(--shadow, 0 10px 30px rgba(0,0,0,.35));
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  width: 100%;
+  max-width: 650px;
+  transition: all 0.3s ease;
+}
 
-    body{
-        background-color:#eee;
-        font-family: "Poppins", sans-serif;
-        font-weight: 300;
-    }
+form.search:focus-within {
+  border-color: var(--brand, #1273e6);
+  box-shadow: 0 0 10px rgba(18, 115, 230, 0.5);
+}
 
-    .height{
-        height: 100vh;
-    }
+/* Icono de lupa */
+form.search i.fa-search {
+  color: var(--muted, #a0a6b1);
+  font-size: 1.2rem;
+}
 
+/* Input del buscador */
+form.search .input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text, #e6e9ef);
+  font-size: 1rem;
+}
 
-    .search{
-    position: relative;
-    box-shadow: #1E262D;
-    width: 100%; /* Hacer que la barra de búsqueda ocupe el 100% del ancho */
-    margin-top: 20px;
-    }
+form.search .input::placeholder {
+  color: var(--muted, #7c8595);
+}
 
-    .search input{
-        border-radius: 10px;
-        height: 60px;
-        text-indent: 25px;
-        border: 2px solid #65707a;
-        width: 100%; /* Hacer que el input ocupe el 100% del ancho de su contenedor */
+/* Botón de búsqueda */
+form.search button {
+  background: var(--brand, #1273e6);
+  border: none;
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
 
-    }
+form.search button:hover {
+  background: var(--brand-2, #3aa0ff);
+  transform: translateY(-2px);
+}
 
-    .subheader{
-        max-width: 80%; /* Ajusta el ancho máximo según tus preferencias */
-        margin: 0 auto; /* Centra el contenido en la página */
-        text-align: center; /* Alinea el texto al centro dentro de la clase */
-    }
+form.search button:active {
+  transform: scale(0.95);
+}
 
-    .search input:focus{
-
-        box-shadow: none;
-        border: 2px solid rgb(0, 0, 0);
-
-
-    }
-
-    .search .fa-search{
-
-        position: absolute;
-        top: 20px;
-        left: 16px;
-
-    }
-
-    .search button{
-
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        height: 50px;
-        width: 110px;
-        background: blue;
-
-    }
+/* Segundo icono de búsqueda */
+form.search i.fas.fa-search {
+  display: none; /* Oculto si ya tienes uno al inicio */
+}
