@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event, CreateEventRequest, UpdateEventRequest } from '../models/event.model';
 import { ApiService } from './api.service';
-
+import { Filters } from '../models/filters.model';
 @Injectable({
     providedIn: 'root'
 })
@@ -27,6 +27,31 @@ export class EventService {
             });
         }
 
+        return this.apiService.get("/api/eventos", httpParams, 4000);
+    }
+
+    get_products_filter(filters: Filters): Observable<Event[]> {
+        let httpParams = new HttpParams();
+        
+        if (filters.category) {
+            httpParams = httpParams.set('category', filters.category);
+        }
+        if (filters.price_min !== undefined && filters.price_min !== null) {
+            httpParams = httpParams.set('price_min', filters.price_min.toString());
+        }
+        if (filters.price_max !== undefined && filters.price_max !== null) {
+            httpParams = httpParams.set('price_max', filters.price_max.toString());
+        }
+        if (filters.name) {
+            httpParams = httpParams.set('name', filters.name);
+        }
+        if (filters.limit) {
+            httpParams = httpParams.set('limit', filters.limit.toString());
+        }
+        if (filters.offset) {
+            httpParams = httpParams.set('offset', filters.offset.toString());
+        }
+        
         return this.apiService.get("/api/eventos", httpParams, 4000);
     }
 
