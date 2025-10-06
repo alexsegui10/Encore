@@ -1,0 +1,125 @@
+/* ====== Base container ====== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #131313;
+}
+/* ====== Zard theme tokens (ajústalos a tu paleta) ====== */
+.pagination .pg-zard {
+  --z-bg: rgba(20, 22, 26, 0.6);        /* surface traslúcida */
+  --z-bg-hover: rgba(28, 30, 36, 0.7);
+  --z-fg: #e8eaed;                      /* texto principal */
+  --z-muted: #9aa0a6;                   /* texto secundario */
+  --z-border: rgba(255,255,255,0.08);
+  --z-ring: 0 0 0 3px rgba(255, 122, 0, 0.25);   /* foco naranja Zard */
+  --z-accent: #ff7a00;                  /* acento naranja */
+  --z-accent-2: #ffb36b;                /* acento degradado */
+  --z-disabled-bg: rgba(255,255,255,0.06);
+  --z-disabled-fg: #8b8f93;
+
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  margin: 0;
+  list-style: none;
+
+  /* Mobile: scroll horizontal si hay muchas páginas */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+/* ====== Items ====== */
+.pagination .pg-zard .page-item {
+  scroll-snap-align: center;
+}
+
+/* ====== Links (pills) ====== */
+.pagination .pg-zard .page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 40px;
+  height: 36px;
+  padding: 0 14px;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  color: var(--z-fg);
+  background: linear-gradient(180deg, var(--z-bg), rgba(20, 22, 26, 0.45));
+  border: 1px solid var(--z-border);
+  border-radius: 999px; /* pill */
+
+  backdrop-filter: saturate(120%) blur(6px);
+  -webkit-backdrop-filter: saturate(120%) blur(6px);
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: transform .06s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+
+/* Hover y active */
+.pagination .pg-zard .page-link:hover {
+  background: linear-gradient(180deg, var(--z-bg-hover), rgba(20, 22, 26, 0.55));
+  transform: translateY(-1px);
+}
+.pagination .pg-zard .page-link:active {
+  transform: translateY(0);
+}
+
+/* Estado activo (página actual) */
+.pagination .pg-zard .page-item.active .page-link {
+  color: #0f0f10;
+  background: linear-gradient(180deg, var(--z-accent), var(--z-accent-2));
+  border-color: transparent;
+  box-shadow:
+    0 4px 18px rgba(255, 122, 0, 0.35),
+    inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+/* Disabled */
+.pagination .pg-zard .page-item.disabled .page-link {
+  pointer-events: none;
+  opacity: 0.6;
+  color: var(--z-disabled-fg);
+  background: var(--z-disabled-bg);
+  border-color: var(--z-border);
+  transform: none;
+}
+
+/* Focus visible (accesible) */
+.pagination .pg-zard .page-link:focus {
+  outline: none;
+  box-shadow: var(--z-ring);
+}
+
+/* Compactación en pantallas estrechas */
+@media (max-width: 480px) {
+  .pagination .pg-zard {
+    gap: 6px;
+    padding: 6px;
+  }
+  .pagination .pg-zard .page-link {
+    min-width: 36px;
+    height: 34px;
+    padding: 0 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Variante clara (opcional): añade .light a un contenedor superior si usas un toggle de tema */
+.light .pagination .pg-zard {
+  --z-bg: rgba(255,255,255,0.75);
+  --z-bg-hover: rgba(255,255,255,0.9);
+  --z-fg: #1f2328;
+  --z-muted: #5f6368;
+  --z-border: rgba(31,35,40,0.12);
+  --z-disabled-bg: rgba(31,35,40,0.06);
+  --z-disabled-fg: #7a7f85;
+  --z-ring: 0 0 0 3px rgba(255, 122, 0, 0.3);
+}

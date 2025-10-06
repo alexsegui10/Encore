@@ -1,15 +1,16 @@
- <app-search (searchEvent)="get_list_filtered($event)"></app-search>
+<app-search (searchEvent)="get_list_filtered($event)"></app-search>
 <app-filters (eventofiltros)="get_list_filtered($event)" [listCategories]="listCategories"></app-filters>
 <div class="list-events-container">
   <h2>Lista de Eventos</h2>
-
   <ng-container *ngIf="events?.length; else empty">
     <div *ngFor="let event of events">
       <app-card-event [event]="event"></app-card-event>
     </div>
   </ng-container>
-
   <ng-template #empty>
     <p>No hay eventos para mostrar.</p>
   </ng-template>
 </div>
+<app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="setPageTo($event)">
+</app-pagination>
+
