@@ -51,13 +51,7 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     if (this.slug_Category !== null) {
       this.getListForCategory();
     }
-    else if (this.routeFilters !== null) {
-      this.refreshRouteFilter();
-      this.get_list_filtered(this.filters);
-    } else {
-      // console.log(window.location.href);
-      this.loadEvents();
-    }
+
   }
 
   ngOnDestroy(): void {
