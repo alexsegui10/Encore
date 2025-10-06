@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -10,11 +10,12 @@ import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
 import { Filters } from '../../core/models/filters.model';
 import { SearchComponent } from '../search/search.component';
+import { PaginationComponent } from  '../pagination/pagination.component';
 import { FiltersComponent } from '../filters/filters.component';
 @Component({
   selector: 'list-events',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, CardEventComponent, FiltersComponent, SearchComponent],
+  imports: [CommonModule, HttpClientModule, CardEventComponent, FiltersComponent, SearchComponent, PaginationComponent],
   templateUrl: './list-events.component.html',
   styleUrls: ['./list-events.component.css']
 })
@@ -37,6 +38,7 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private route: ActivatedRoute,
     private CategoryService: CategoryService,
+   private Location: Location
   ) { }
 
   ngOnInit(): void {
@@ -70,6 +72,10 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     console.log('Loading all events');
     this.eventService.getAllEvents().subscribe({
       next: (data: any) => {
+        const eventCount = data.event_count || 0;
+        const limit = this.limit > 0 ? this.limit : 1;
+        const totalPagesCount = Math.max(1, Math.ceil(eventCount / limit));
+        this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
         console.log('All events data received:', data);
         this.events = data?.events ?? data?.items ?? data ?? [];
         console.log('Processed events (all):', this.events);
@@ -108,6 +114,10 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     console.log('Loading events by category:', slug);
     this.eventService.getEventsByCategory(slug).subscribe({
       next: (data: any) => {
+        const eventCount = data.event_count || 0;
+        const limit = this.limit > 0 ? this.limit : 1;
+        const totalPagesCount = Math.max(1, Math.ceil(eventCount / limit));
+        this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
         console.log('Events data received:', data);
         this.events = data?.events ?? data?.items ?? data ?? [];
         console.log('Processed events:', this.events);
@@ -125,6 +135,29 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     } else {
       this.filters = new Filters();
     }
+  }
+    setPageTo(pageNumber: number) {
+
+    this.currentPage = pageNumber;
+
+    if (typeof this.routeFilters === 'string') {
+      this.refreshRouteFilter();
+    }
+
+    if (this.limit) {
+      this.filters.limit = this.limit;
+      this.filters.offset = this.limit * (this.currentPage - 1);
+    }
+
+    if (this.currentPage == null || this.currentPage == 1) {
+      this.Location.replaceState('/shop/');
+    } else {
+      this.Location.replaceState('/shop/' + btoa(JSON.stringify(this.filters)));
+    }
+    // console.log(this.Location);
+
+    this.get_list_filtered(this.filters);
+    console.log(`Current page: ${this.currentPage}`);
   }
 
   /*   private loadByFilters(filters: any): void {
