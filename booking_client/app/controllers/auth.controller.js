@@ -10,7 +10,7 @@ import asyncHandler from 'express-async-handler';
 export const refreshToken = asyncHandler(async (req, res) => {
     // Get the token from the Authorization header
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.startsWith('Token ') ? authHeader.split(' ')[1] : null;
+    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
 
     if (!token) {
         return res.status(403).json({ message: 'Refresh Token is required!' });
