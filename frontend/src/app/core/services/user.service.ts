@@ -80,7 +80,7 @@ attemptAuth(type: any, credentials: any): Observable<User> {
     .pipe(map(data => {
       // Update the currentUser observable
       this.currentUserSubject.next(data.user);
-      return data.user;
+      return data.user as User;
     }));
   }
 

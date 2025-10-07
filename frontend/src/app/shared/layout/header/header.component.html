@@ -17,8 +17,8 @@
 
       <div class="actions">
         <ng-container *ngIf="!isLogged; else loggedIn">
-          <a routerLink="/login" class="btn login">Ingresar</a>
-          <a routerLink="/register" class="btn primary">Registrarse</a>
+          <a routerLink="/auth/login/" class="btn login">Ingresar</a>
+          <a routerLink="/auth/register" class="btn primary">Registrarse</a>
         </ng-container>
 
         <ng-template #loggedIn>

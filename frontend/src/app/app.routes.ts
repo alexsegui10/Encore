@@ -18,8 +18,8 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsComponent)
     },
     {
-        path: 'auth',
-        loadChildren: () => import('./pages/auth/auth-routing.module').then(m => m.AuthRoutingModule)
+         path: 'auth',
+         loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule)
     }
     // {
     //     path: 'products',
