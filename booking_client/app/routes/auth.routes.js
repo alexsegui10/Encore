@@ -1,19 +1,14 @@
-module.exports = (app) => {
-    const express = require('express');
-    const userController = require('../controllers/user.controller');
-    const { refreshToken } = require('../controllers/auth.controller');
+import express from 'express';
+import { registerUser, userLogin } from '../controllers/user.controller.js';
+import { refreshToken, logout } from '../controllers/auth.controller.js';
+import verifyJWT from '../middleware/verifyJWT.js';
 
-    const router = express.Router();
+const router = express.Router();
 
-    // Public routes
-    // router.post('/login', userLogin);
-    // router.post('/register', registerUser);
+// Authentication routes
+router.post('/users/login', userLogin);
+router.post('/users', registerUser);
+router.post('/users/refresh-token', refreshToken);
+router.post('/users/logout', verifyJWT, logout);
 
-    // Authentication
-    app.post('/users/login', userController.userLogin);
-
-    // Registration
-    app.post('/users', userController.registerUser);
-
-    app.post('/refresh-token', refreshToken);
-}
+export default router;

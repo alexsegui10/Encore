@@ -1,17 +1,28 @@
-const User = require('../models/user.model');
-const asyncHandler = require('express-async-handler');
-const argon2 = require('argon2');
-const { generateAccessToken, generateRefreshToken } = require('../middleware/authService');
-const RefreshToken = require('../models/refreshToken.model');
+import User from '../models/user.model.js';
+import RefreshToken from '../models/refreshToken.model.js';
+import asyncHandler from 'express-async-handler';
+import argon2 from 'argon2';
+import { generateAccessToken, generateRefreshToken } from '../middleware/authService.js';
 
 // @desc Register a new user
 // @route POST /api/users
 // @access Public
-const registerUser = asyncHandler(async (req, res) => {
+export const registerUser = asyncHandler(async (req, res) => {
     const { user } = req.body;
 
     if (!user || !user.email || !user.username || !user.password) {
         return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({
+        $or: [{ email: user.email }, { username: user.username }]
+    });
+
+    if (existingUser) {
+        return res.status(409).json({ 
+            message: "User already exists with this email or username" 
+        });
     }
 
     const hashedPwd = await argon2.hash(user.password);
@@ -20,13 +31,16 @@ const registerUser = asyncHandler(async (req, res) => {
         username: user.username,
         password: hashedPwd,
         email: user.email,
+        bio: user.bio || "",
+        image: user.image || "https://static.productionready.io/images/smiley-cyrus.jpg"
     };
 
     const createdUser = await User.create(newUser);
 
     if (createdUser) {
+        const accessToken = generateAccessToken(createdUser);
         res.status(201).json({
-            user: createdUser.toUserResponse()
+            user: createdUser.toUserResponse(accessToken)
         });
     } else {
         res.status(422).json({
@@ -38,7 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc Login user and return tokens
 // @route POST /api/users/login
 // @access Public
-const userLogin = asyncHandler(async (req, res) => {
+export const userLogin = asyncHandler(async (req, res) => {
     const { user } = req.body;
 
     if (!user || !user.email || !user.password) {
@@ -47,78 +61,86 @@ const userLogin = asyncHandler(async (req, res) => {
 
     const loginUser = await User.findOne({ email: user.email }).exec();
 
-    if (!loginUser) return res.status(404).json({ message: "User Not Found" });
+    if (!loginUser) {
+        return res.status(404).json({ message: "User not found" });
+    }
 
     const match = await argon2.verify(loginUser.password, user.password);
-    if (!match) return res.status(401).json({ message: 'Unauthorized' });
+    if (!match) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
     // Generate tokens
     const accessToken = generateAccessToken(loginUser);
-    const refreshToken = await RefreshToken.findOne({ userId: loginUser._id }).exec();
+    const refreshTokenValue = generateRefreshToken(loginUser);
 
-    if (!refreshToken) {
-        const refreshToken = generateRefreshToken(loginUser);
+    // Remove existing refresh token for this user
+    await RefreshToken.deleteMany({ userId: loginUser._id });
 
-        await new RefreshToken({
-            token: refreshToken,
-            userId: loginUser._id,
-            expiryDate: new Date(Date.now() + 2 * 60 * 60 * 1000),
-        }).save();
-    }
+    // Create new refresh token
+    await RefreshToken.create({
+        token: refreshTokenValue,
+        userId: loginUser._id,
+        expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    });
 
     res.status(200).json({
-        // user: loginUser.toUserResponse(accessToken, refreshToken.token)
         user: loginUser.toUserResponse(accessToken)
-        // accessToken,
-        // refreshToken
     });
 });
 
 // @desc Get current user
 // @route GET /api/user
 // @access Private
-const getCurrentUser = asyncHandler(async (req, res) => {
+export const getCurrentUser = asyncHandler(async (req, res) => {
     const email = req.userEmail;
     const user = await User.findOne({ email }).exec();
 
     if (!user) {
-        return res.status(404).json({ message: "User Not Found" });
+        return res.status(404).json({ message: "User not found" });
     }
 
-    console.log(user);
     const accessToken = req.newAccessToken;
-    const refreshToken = await RefreshToken.findOne({ userId: user._id }).exec();
-
-    // if(refreshToken.expiryDate )
 
     res.status(200).json({
-        user: user.toUserResponse(accessToken, refreshToken.token)
+        user: user.toUserResponse(accessToken)
     });
 });
 
-// @desc update currently logged-in user
-// Warning: if password or email is updated, client-side must update the token
+// @desc Update currently logged-in user
 // @route PUT /api/user
 // @access Private
-// @return User
-const updateUser = asyncHandler(async (req, res) => {
+export const updateUser = asyncHandler(async (req, res) => {
     const { user } = req.body;
 
-    // confirm data
     if (!user) {
         return res.status(400).json({ message: "Required a User object" });
     }
 
     const email = req.userEmail;
-
     const target = await User.findOne({ email }).exec();
 
-    if (user.email) {
+    if (!target) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if email or username already exists (if being updated)
+    if (user.email && user.email !== target.email) {
+        const existingEmailUser = await User.findOne({ email: user.email });
+        if (existingEmailUser) {
+            return res.status(409).json({ message: "Email already in use" });
+        }
         target.email = user.email;
     }
-    if (user.username) {
+
+    if (user.username && user.username !== target.username) {
+        const existingUsernameUser = await User.findOne({ username: user.username });
+        if (existingUsernameUser) {
+            return res.status(409).json({ message: "Username already in use" });
+        }
         target.username = user.username;
     }
+
     if (user.password) {
         const hashedPwd = await argon2.hash(user.password);
         target.password = hashedPwd;
@@ -129,17 +151,12 @@ const updateUser = asyncHandler(async (req, res) => {
     if (typeof user.bio !== 'undefined') {
         target.bio = user.bio;
     }
+
     await target.save();
 
+    const accessToken = generateAccessToken(target);
+
     return res.status(200).json({
-        user: target.toUserResponse()
+        user: target.toUserResponse(accessToken)
     });
-
 });
-
-module.exports = {
-    registerUser,
-    getCurrentUser,
-    userLogin,
-    updateUser
-}

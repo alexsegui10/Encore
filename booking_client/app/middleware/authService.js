@@ -1,7 +1,14 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-// Generate Access Token (expires in 15 mins)
-const generateAccessToken = (user) => {
+// Verify environment variables are loaded
+if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
+    console.error('⚠️  WARNING: JWT secrets not configured. Please check your .env file.');
+    console.log('Current ACCESS_TOKEN_SECRET:', process.env.ACCESS_TOKEN_SECRET ? 'Set' : 'Not set');
+    console.log('Current REFRESH_TOKEN_SECRET:', process.env.REFRESH_TOKEN_SECRET ? 'Set' : 'Not set');
+}
+
+// Generate Access Token (expires in 30 mins)
+export const generateAccessToken = (user) => {
     return jwt.sign(
         { user: { id: user._id, email: user.email } },
         process.env.ACCESS_TOKEN_SECRET,
@@ -10,12 +17,10 @@ const generateAccessToken = (user) => {
 };
 
 // Generate Refresh Token (expires in 7 days)
-const generateRefreshToken = (user) => {
+export const generateRefreshToken = (user) => {
     return jwt.sign(
         { user: { id: user._id, email: user.email } },
         process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: '2h' }
+        { expiresIn: '7d' }
     );
 };
-
-module.exports = { generateAccessToken, generateRefreshToken };
