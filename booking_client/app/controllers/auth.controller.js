@@ -1,13 +1,13 @@
-const { generateAccessToken } = require('../middleware/authService');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user.model'); // Your User model
-const RefreshToken = require('../models/refreshToken.model');
-const asyncHandler = require('express-async-handler');
+import { generateAccessToken } from '../middleware/authService.js';
+import jwt from 'jsonwebtoken';
+import User from '../models/user.model.js';
+import RefreshToken from '../models/refreshToken.model.js';
+import asyncHandler from 'express-async-handler';
 
 // @desc Refresh access token
 // @route POST /api/users/refresh-token
 // @access Public
-const refreshToken = asyncHandler(async (req, res) => {
+export const refreshToken = asyncHandler(async (req, res) => {
     // Get the token from the Authorization header
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.startsWith('Token ') ? authHeader.split(' ')[1] : null;
@@ -25,7 +25,7 @@ const refreshToken = asyncHandler(async (req, res) => {
 
     // Check if the refresh token has expired
     if (refreshTokenRecord.expiryDate < new Date()) {
-        await RefreshToken.findByIdAndDelete(refreshTokenRecord._id);  // Delete expired token
+        await RefreshToken.findByIdAndDelete(refreshTokenRecord._id);
         return res.status(403).json({ message: 'Refresh Token expired!' });
     }
 
@@ -35,13 +35,31 @@ const refreshToken = asyncHandler(async (req, res) => {
             return res.status(403).json({ message: 'Invalid Refresh Token' });
         }
 
-        const user = await User;
+        // Get user from decoded token
+        const user = await User.findById(decoded.user.id).exec();
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
         // Generate a new access token
-        const newAccessToken = generateAccessToken({ _id: user._id }); // Adjust as needed
+        const newAccessToken = generateAccessToken(user);
 
-        res.status(200).json({ accessToken: newAccessToken });
+        res.status(200).json({ 
+            accessToken: newAccessToken,
+            user: user.toUserResponse(newAccessToken)
+        });
     });
 });
 
-module.exports = { refreshToken };
+// @desc Logout user
+// @route POST /api/users/logout
+// @access Private
+export const logout = asyncHandler(async (req, res) => {
+    const userId = req.userId;
+    
+    // Remove all refresh tokens for this user
+    await RefreshToken.deleteMany({ userId });
+    
+    res.status(200).json({ message: 'Logged out successfully' });
+});

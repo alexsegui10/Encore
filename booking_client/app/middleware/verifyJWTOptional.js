@@ -1,29 +1,31 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+import User from '../models/user.model.js';
 
-const verifyJWTOptional = (req, res, next) => {
-    const authHeader = req.headers.authorization || req.headers.Authorization
+const verifyJWTOptional = async (req, res, next) => {
+    const authHeader = req.headers.authorization || req.headers.Authorization;
 
-    if (!authHeader || !authHeader?.startsWith('Token ') || !authHeader.split(' ')[1].length) {
-        req.loggedin = false;
+    if (!authHeader || !authHeader.startsWith('Token ')) {
+        // No token provided, continue without user info
         return next();
     }
 
     const token = authHeader.split(' ')[1];
 
-    jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_SECRET,
-        (err, decoded) => {
-            if (err) {
-                return res.status(403).json({ message: 'Forbidden' });
-            }
-            req.loggedin = true;
-            req.userId = decoded.user.id;
-            req.userEmail = decoded.user.email;
-            req.userHashedPwd = decoded.user.password;
-            next();
+    try {
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        
+        const user = await User.findOne({ email: decoded.user.email }).exec();
+        
+        if (user) {
+            req.userId = user._id;
+            req.userEmail = user.email;
         }
-    )
+    } catch (error) {
+        // Invalid token, but continue without user info
+        console.log('Invalid token in optional verification:', error.message);
+    }
+
+    next();
 };
 
-module.exports = verifyJWTOptional;
+export default verifyJWTOptional;

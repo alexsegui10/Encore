@@ -1,16 +1,11 @@
-module.exports = (app) => {
-    const userController = require('../controllers/user.controller');
-    const verifyJWT = require('../middleware/verifyJWT');
+import express from 'express';
+import { getCurrentUser, updateUser } from '../controllers/user.controller.js';
+import verifyJWT from '../middleware/verifyJWT.js';
 
-    // Authentication
-    // app.post('/users/login', userController.userLogin);
+const router = express.Router();
 
-    // Registration
-    // app.post('/users', userController.registerUser);
+// Protected routes
+router.get('/user', verifyJWT, getCurrentUser);
+router.put('/user', verifyJWT, updateUser);
 
-    // Get Current User
-    app.get('/user', verifyJWT, userController.getCurrentUser);
-
-    // Update User
-    app.put('/user', verifyJWT, userController.updateUser);
-}
+export default router;

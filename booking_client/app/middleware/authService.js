@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-// Generate Access Token (expires in 15 mins)
-const generateAccessToken = (user) => {
+// Generate Access Token (expires in 30 mins)
+export const generateAccessToken = (user) => {
     return jwt.sign(
         { user: { id: user._id, email: user.email } },
         process.env.ACCESS_TOKEN_SECRET,
@@ -10,12 +10,10 @@ const generateAccessToken = (user) => {
 };
 
 // Generate Refresh Token (expires in 7 days)
-const generateRefreshToken = (user) => {
+export const generateRefreshToken = (user) => {
     return jwt.sign(
         { user: { id: user._id, email: user.email } },
         process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: '2h' }
+        { expiresIn: '7d' }
     );
 };
-
-module.exports = { generateAccessToken, generateRefreshToken };
