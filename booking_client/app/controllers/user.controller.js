@@ -38,7 +38,17 @@ export const registerUser = asyncHandler(async (req, res) => {
     const createdUser = await User.create(newUser);
 
     if (createdUser) {
+        // Generate tokens
         const accessToken = generateAccessToken(createdUser);
+        const refreshTokenValue = generateRefreshToken(createdUser);
+
+        // Create refresh token for the new user
+        await RefreshToken.create({
+            token: refreshTokenValue,
+            userId: createdUser._id,
+            expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        });
+
         res.status(201).json({
             user: createdUser.toUserResponse(accessToken)
         });

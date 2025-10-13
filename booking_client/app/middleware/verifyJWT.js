@@ -39,7 +39,7 @@ const verifyJWT = async (req, res, next) => {
         if (decoded.exp < Date.now() / 1000) {
             // Token has expired, generate a new access token
             accessToken = generateAccessToken(loginUser);
-            res.setHeader('Authorization', `Token ${accessToken}`);
+            res.setHeader('Authorization', `Bearer ${accessToken}`);
         }
 
         req.userId = loginUser._id;
