@@ -1,41 +1,28 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { JwtService } from '../services/jwt.service';
-import { jwtDecode } from 'jwt-decode';
+import { UserService } from '../services/user.service';
+import { Observable, map, take } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserTypeGuard implements CanActivate {
-    constructor(private jwtService: JwtService, private router: Router) { }
+    constructor(private userService: UserService, private router: Router) { }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        const token = this.jwtService.getToken();
-        if (token) {
-            try {
-                // Decodificar el token
-                const decodedToken: any = jwtDecode(token);
-                console.log('decodedToken:', decodedToken);
-                const userType = decodedToken?.user?.typeuser || decodedToken?.typeuser;
-                console.log('userType:', userType);
-                const requiredTypeUser = route.data['typeuser'] as string;
-                console.log('requiredTypeUser:', requiredTypeUser);
-
-                // Verificar si el usuario tiene el tipo requerido
-                if (userType && userType === requiredTypeUser) {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        // Simplificado: solo verificar autenticación
+        // Tu backend no maneja tipos de usuario específicos
+        return this.userService.isAuthenticated.pipe(
+            take(1),
+            map(isAuthenticated => {
+                if (isAuthenticated) {
                     return true;
                 } else {
-                    // Redirigir si no es del tipo correcto
-                    this.router.navigate(['/home']);
+                    // Redirigir al home si no está autenticado
+                    this.router.navigate(['/']);
                     return false;
                 }
-            } catch (error) {
-                console.error('Error decodificando el token:', error);
-            }
-        }
-
-        // Si no hay token, redirigir al login
-        this.router.navigate(['/login']);
-        return false;
+            })
+        );
     }
 }
