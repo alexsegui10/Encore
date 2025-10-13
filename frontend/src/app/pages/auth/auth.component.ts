@@ -9,14 +9,15 @@ interface Errors { errors: { [k: string]: string } }
 @Component({
   selector: 'app-auth-page',
   standalone: true,
+  styleUrls: ['./auth.component.css'],
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './auth.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent implements OnInit {
-  authType: String = '';
-  title: String = '';
-  errors: Errors = {errors: {}};
+  authType: 'login' | 'register' = 'login';
+  title: string = '';
+  errors: Errors = { errors: {} };
   isSubmitting = false;
   authForm: FormGroup;
 
@@ -27,40 +28,51 @@ export class AuthComponent implements OnInit {
     private fb: FormBuilder,
     private cd: ChangeDetectorRef
   ) {
-    // use FormBuilder to create a form group
     this.authForm = this.fb.group({
-      'email': ['', Validators.required],
-      'password': ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    this.route.url.subscribe(data => {
-      // Get the last piece of the URL (it's either 'login' or 'register')
-      this.authType = data[data.length - 1].path;
-      // Set a title for the page accordingly
+  ngOnInit(): void {
+    (this.route.firstChild ?? this.route).url.subscribe(segments => {
+      const last = segments[segments.length - 1]?.path as 'login' | 'register';
+      this.authType = (last === 'register') ? 'register' : 'login';
+
       this.title = (this.authType === 'login') ? 'Sign in' : 'Sign up';
-      // add form control for username if this is the register page
-      if (this.authType === 'register') {
-        this.authForm.addControl('username', new FormControl());
+
+      if (this.authType === 'register' && !this.authForm.contains('username')) {
+        this.authForm.addControl('username', new FormControl('', Validators.required));
+      } else if (this.authType === 'login' && this.authForm.contains('username')) {
+        this.authForm.removeControl('username');
       }
+
       this.cd.markForCheck();
     });
   }
 
-  submitForm() {
+  submitForm(): void {
+    if (this.authForm.invalid) {
+      this.authForm.markAllAsTouched();
+      return;
+    }
+
     this.isSubmitting = true;
-    this.errors = {errors: {}};
+    this.errors = { errors: {} };
+
     const credentials = this.authForm.value;
-    this.userService
-      .attemptAuth(this.authType, credentials)
-      .subscribe({
-        next: () => this.router.navigateByUrl('/'),
-        error: err => {
-          this.errors = err?.error ?? { errors: { general: 'Error de autenticación' } };
-          this.isSubmitting = false;
-          this.cd.markForCheck();
-        }
-      });
+
+    this.userService.attemptAuth(this.authType, credentials).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        const body = err ?? {};
+        this.errors = body.errors ? body as Errors : { errors: { general: 'Error de autenticación' } };
+        this.isSubmitting = false;
+        this.cd.markForCheck();
+      }
+    });
   }
 }
