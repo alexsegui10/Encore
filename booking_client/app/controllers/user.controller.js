@@ -32,7 +32,7 @@ export const registerUser = asyncHandler(async (req, res) => {
         password: hashedPwd,
         email: user.email,
         bio: user.bio || "",
-        image: user.image || "https://static.productionready.io/images/smiley-cyrus.jpg"
+        image: user.image || ""
     };
 
     const createdUser = await User.create(newUser);
