@@ -27,7 +27,7 @@ export class UserService {
     
     if (token) {
       console.log('✅ Token encontrado, verificando con servidor...');
-      this.apiService.get('/user', undefined, 4000, true).subscribe({
+      this.apiService.get('/api/user', undefined, 4000, true).subscribe({
         next: (data) => {
           console.log('✅ Usuario verificado exitosamente', data);
           this.setAuth({ ...data.user, token });
