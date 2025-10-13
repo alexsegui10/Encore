@@ -1,0 +1,141 @@
+/* ===== Auth Page Styles (scoped) ===== */
+.auth-page {
+  min-height: calc(100dvh - 120px);
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(1000px 600px at 10% -10%, rgba(99, 102, 241, .15), transparent 60%),
+    radial-gradient(900px 500px at 110% 110%, rgba(16, 185, 129, .12), transparent 60%),
+    #0f172a; /* slate-900 */
+  padding: 32px 16px;
+  color: #e5e7eb; /* text-slate-200 */
+}
+
+.auth-page .container.page {
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-page .col-md-6.offset-md-3.col-xs-12 {
+  margin: 0;
+  width: 100%;
+}
+
+/* Card */
+.auth-card {
+  background: rgba(2, 6, 23, .6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, .15);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Título */
+.auth-page h1 {
+  font-size: clamp(24px, 3.2vw, 32px);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  text-align: center;
+  margin: 0 0 8px;
+  color: #f8fafc; /* slate-50 */
+}
+.auth-page .text-xs-center a {
+  color: #a5b4fc; /* indigo-300 */
+  text-decoration: none;
+  transition: color .15s ease, opacity .2s ease;
+}
+.auth-page .text-xs-center a:hover {
+  color: #c7d2fe; /* indigo-200 */
+}
+
+/* Formulario */
+.auth-page form {
+  margin-top: 18px;
+}
+.auth-page fieldset.form-group {
+  margin-bottom: 16px;
+}
+.auth-page input.form-control {
+  background: #0b1220; /* dark field */
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, .25);
+  border-radius: 12px;
+  padding: 14px 14px;
+  font-size: 15px;
+  transition: border-color .15s ease, box-shadow .15s ease, background .2s ease;
+  outline: none;
+}
+.auth-page input.form-control::placeholder {
+  color: #94a3b8; /* slate-400 */
+}
+.auth-page input.form-control:focus {
+  border-color: #818cf8; /* indigo-400 */
+  box-shadow: 0 0 0 4px rgba(99,102,241,.18);
+  background: #0d1426;
+}
+
+/* Estados inválidos (Angular touched + invalid) */
+.auth-page .ng-invalid.ng-touched.form-control {
+  border-color: #f43f5e; /* rose-500 */
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, .18);
+}
+
+/* Botón */
+.auth-page .btn.btn-primary {
+  width: 100%;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, #6366f1, #22c55e);
+  color: #0b1220;
+  transition: transform .06s ease, filter .2s ease, opacity .2s ease;
+}
+.auth-page .btn.btn-primary:hover {
+  filter: brightness(1.05);
+}
+.auth-page .btn.btn-primary:active {
+  transform: translateY(1px);
+}
+.auth-page .btn.btn-primary[disabled],
+.auth-page fieldset[disabled] .btn.btn-primary {
+  opacity: .6 !important;
+  cursor: not-allowed;
+}
+
+/* Errores de API */
+.auth-page .alert.alert-danger {
+  background: rgba(244, 63, 94, .1);
+  border: 1px solid rgba(244, 63, 94, .35);
+  color: #fecdd3; /* rose-200 */
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+/* Helper para compactar el card dentro de Bootstrap grid */
+.auth-page .col-md-6.offset-md-3.col-xs-12 > .auth-card {
+  margin-top: 8px;
+}
+
+/* Accesibilidad: enfoque visible para enlaces */
+.auth-page a:focus-visible {
+  outline: 3px solid #a5b4fc;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Responsive pequeños */
+@media (max-width: 420px) {
+  .auth-card { padding: 22px; border-radius: 16px; }
+  .auth-page h1 { font-size: 24px; }
+}
+
+/* Animación sutil de entrada */
+@keyframes authFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.auth-card { animation: authFadeUp .25s ease both; }
