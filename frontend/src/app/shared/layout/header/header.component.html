@@ -17,7 +17,7 @@
 
       <div class="actions">
         <ng-container *ngIf="!isLogged; else loggedIn">
-          <a routerLink="/auth/login/" class="btn login">Ingresar</a>
+          <a routerLink="/auth/login" class="btn login">Ingresar</a>
           <a routerLink="/auth/register" class="btn primary">Registrarse</a>
         </ng-container>
 
@@ -29,8 +29,8 @@
               class="avatar"
             />
             <span class="username">{{ currentUser?.username }}</span>
-<!--             <button class="btn logout" (click)="logout()">Cerrar sesión</button>
- -->          </div>
+            <button class="btn logout" (click)="logout()">Cerrar sesión</button>
+          </div>
         </ng-template>
       </div>
     </nav>

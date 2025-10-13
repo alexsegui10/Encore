@@ -31,5 +31,13 @@ export class HeaderComponent implements OnInit {
       this.isLogged = status;
       this.cd.markForCheck();
     });
+
+  }
+  logout(): void {
+      this.userService.purgeAuth();
+      this.currentUser = null;
+      this.isLogged = false;
+      this.cd.markForCheck();
+
   }
 }
