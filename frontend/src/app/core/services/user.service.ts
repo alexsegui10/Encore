@@ -22,31 +22,47 @@ export class UserService {
   ) {}
 
   populate(): void {
+    console.log('🔍 Verificando token guardado en localStorage...');
     const token = this.jwtService.getToken();
+    
     if (token) {
-      this.apiService.get('/api/user', undefined, 4000, true).subscribe({
+      console.log('✅ Token encontrado, verificando con servidor...');
+      this.apiService.get('/user', undefined, 4000, true).subscribe({
         next: (data) => {
+          console.log('✅ Usuario verificado exitosamente', data);
           this.setAuth({ ...data.user, token });
         },
-        error: () => this.purgeAuth()
+        error: (err) => {
+          console.warn('❌ Token inválido o expirado, limpiando sesión...', err);
+          this.purgeAuth();
+        }
       });
     } else {
+      console.log('❌ No hay token guardado');
       this.purgeAuth();
     }
   }
 
   setAuth(user: User): void {
+    console.log('🔐 Guardando autenticación para usuario:', user.username);
+    
     if (user?.token) {
       this.jwtService.saveToken(user.token);
+      console.log('💾 Token guardado en localStorage');
     }
+    
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
+    
+    console.log('✅ Usuario autenticado correctamente');
   }
 
   purgeAuth(): void {
+    console.log('🔓 Cerrando sesión y limpiando datos...');
     this.jwtService.destroyToken();
     this.currentUserSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
+    console.log('✅ Sesión cerrada correctamente');
   }
 
   attemptAuth(type: 'login' | 'register', credentials: Partial<User>): Observable<User> {
