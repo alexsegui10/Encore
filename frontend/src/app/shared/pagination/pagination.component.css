@@ -3,7 +3,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #131313;
+      margin-bottom: 20px;
+
 }
 /* ====== Zard theme tokens (ajústalos a tu paleta) ====== */
 .pagination .pg-zard {
@@ -25,7 +26,6 @@
   list-style: none;
 
   /* Mobile: scroll horizontal si hay muchas páginas */
-  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
 }

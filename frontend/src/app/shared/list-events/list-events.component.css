@@ -13,14 +13,10 @@
 
 /* Contenedor general y layout en grid */
 .list-events-container {
-  min-height: 100%;
   color: var(--text);
-  background:
-    radial-gradient(1200px 800px at 20% -10%, rgba(18,115,230,.15), transparent 60%),
-    radial-gradient(800px 600px at 110% 10%, rgba(58,160,255,.12), transparent 60%),
-    var(--bg-page);
-  padding: clamp(16px, 2vw, 32px);
 
+  padding: clamp(16px, 2vw, 32px);
+margin: 30px;
   /* Nuevo: grid responsivo directo */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));

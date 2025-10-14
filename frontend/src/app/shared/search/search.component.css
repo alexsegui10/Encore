@@ -1,6 +1,5 @@
 /* Bloque oscuro compartido para search y filters */
 .dark-header {
-  background: linear-gradient(180deg, #0b0e14 0%, #111520 100%);
   padding: 2rem 1rem 1rem;
 }
 

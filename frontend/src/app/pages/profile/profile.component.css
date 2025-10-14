@@ -13,10 +13,7 @@
 /* ====== CONTENEDOR GENERAL ====== */
 .profile-page.container {
   color: var(--zard-text);
-  background:
-    radial-gradient(1200px 800px at 10% -20%, rgba(124,92,255,0.10), transparent 70%),
-    radial-gradient(1000px 700px at 110% 10%, rgba(36,213,139,0.06), transparent 70%),
-    var(--zard-bg);
+  background: white;
   border-radius: 20px;
   padding: 40px 30px;
   box-shadow: var(--zard-shadow);

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
+import Swal from 'sweetalert2';
 
 interface Errors { errors: { [k: string]: string } }
 
@@ -65,13 +66,33 @@ export class AuthComponent implements OnInit {
     this.userService.attemptAuth(this.authType, credentials).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.router.navigateByUrl('/');
+        const message = this.authType === 'login' ? '¡Bienvenido de nuevo!' : '¡Cuenta creada exitosamente!';
+        
+        Swal.fire({
+          icon: 'success',
+          title: message,
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => {
+          this.router.navigateByUrl('/');
+        });
       },
       error: (err) => {
         const body = err ?? {};
         this.errors = body.errors ? body as Errors : { errors: { general: 'Error de autenticación' } };
         this.isSubmitting = false;
         this.cd.markForCheck();
+        
+        const errorMessage = this.errors.errors['general'] || 
+                            this.errors.errors['email'] || 
+                            'Error de autenticación. Por favor, verifica tus credenciales.';
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorMessage,
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }

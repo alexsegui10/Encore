@@ -18,9 +18,7 @@
 
 /* Container principal */
 .container-fluid.subheader {
-    background: linear-gradient(135deg, var(--filter-bg) 0%, var(--filter-bg-2) 100%) !important;
-    border-bottom: 1px solid var(--filter-border);
-    box-shadow: var(--filter-shadow);
+
     padding: var(--filter-spacing) 0;
 }
 

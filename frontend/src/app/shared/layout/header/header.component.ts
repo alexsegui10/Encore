@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
@@ -34,10 +35,30 @@ export class HeaderComponent implements OnInit {
 
   }
   logout(): void {
-      this.userService.purgeAuth();
-      this.currentUser = null;
-      this.isLogged = false;
-      this.cd.markForCheck();
-
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Deseas cerrar sesión?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.purgeAuth();
+        this.currentUser = null;
+        this.isLogged = false;
+        this.cd.markForCheck();
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Sesión cerrada',
+          text: '¡Hasta pronto!',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
   }
 }

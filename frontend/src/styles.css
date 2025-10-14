@@ -9,6 +9,8 @@
   --spacing-xl: 32px;
   --spacing-xxl: 64px;
   --width-container: 1200px;
+  --bg-page: #0b0e14;
+
 }
 
 *{
@@ -26,4 +28,5 @@ html{
 
 body{
   height: 100%;
+  background: radial-gradient(1200px 800px at 20% -10%, rgba(18, 115, 230, .15), transparent 60%), radial-gradient(800px 600px at 110% 10%, rgba(58, 160, 255, .12), transparent 60%), var(--bg-page);
 }
