@@ -21,18 +21,25 @@
           <a routerLink="/auth/register" class="btn primary">Registrarse</a>
         </ng-container>
 
-        <ng-template #loggedIn>
-          <div class="user-info">
-            <img
-              [src]="currentUser?.image || 'assets/default-avatar.png'"
-              alt="Avatar"
-              class="avatar"
-              routerLink="/profile"
-            />
-            <span class="username">{{ currentUser?.username }}</span>
-            <button class="btn logout" (click)="logout()">Cerrar sesión</button>
-          </div>
-        </ng-template>
+          <ng-template #loggedIn>
+            <div class="user-info-pill">
+              <a class="avatar-wrap" routerLink="/profile" aria-label="Ir al perfil">
+                <img
+                  [src]="currentUser?.image || 'assets/default-avatar.png'"
+                  alt="Avatar"
+                  class="avatar"                />
+              </a>
+
+<!--               <span class="username" title="{{ currentUser?.username }}">
+                {{ currentUser?.username }}
+              </span> -->
+
+              <button class="btn logout" (click)="logout()" aria-label="Cerrar sesión">
+                Cerrar sesión
+              </button>
+            </div>
+          </ng-template>
+
       </div>
     </nav>
   </div>

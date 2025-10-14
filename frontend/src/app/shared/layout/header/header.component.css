@@ -138,3 +138,59 @@
   }
   .actions { width:100%; justify-content:flex-start; }
 }
+/* Pildora compacta a la derecha del header */
+.user-info-pill{
+  margin-left:auto;                     /* empuja a la derecha */
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  height:40px;
+  padding:.25rem .5rem;
+  background:rgba(255,255,255,.03);
+  border:1px solid #24242e;
+  border-radius:9999px;
+  box-shadow:0 1px 0 rgba(0,0,0,.25) inset;
+}
+
+.avatar-wrap{ display:inline-flex; line-height:0; border-radius:50%; }
+.avatar{
+  width:32px; height:32px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid #34343f;
+  background:#2a2a36;
+  transition:transform .2s ease, box-shadow .25s ease;
+  cursor:pointer;
+}
+.avatar-wrap:hover .avatar,
+.avatar-wrap:focus .avatar{
+  box-shadow:0 0 0 2px #1b1b24, 0 0 0 4px rgba(255,122,24,.45);
+  transform:translateY(-1px);
+}
+
+.username{
+  max-width:140px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:#e6e6ec; font-weight:600; letter-spacing:.2px; font-size:.9rem;
+}
+
+/* Botón de logout como “ghost pill” */
+.btn.logout{
+  padding:.35rem .7rem;
+  border-radius:9999px;
+  border:1px solid #34343f;
+  background:transparent;
+  color:#d7d7de;
+  font-size:.8rem;
+}
+.btn.logout:hover{ background:#262633; color:#fff; }
+
+/* Integración móvil: oculta el texto para ahorrar espacio */
+@media (max-width:560px){
+  .username{ display:none; }
+  .btn.logout{ padding:.35rem .55rem; }
+  .btn.logout::after{ content:"Salir"; } /* sigue mostrando una palabra corta */
+}
+
+/* Asegura que dentro del header mantenga la misma altura */
+.encore-header .container{ height:64px; }
