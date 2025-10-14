@@ -1,0 +1,88 @@
+<div class="settings-page">
+  <div class="container page">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h1 class="text-center mb-4">Configuración de perfil</h1>
+        
+        <form [formGroup]="settingsForm" (ngSubmit)="submitForm()">
+          <fieldset [disabled]="isSubmitting">
+            
+            <fieldset class="form-group">
+              <label for="image">Imagen de perfil (URL)</label>
+              <input 
+                id="image"
+                class="form-control form-margin" 
+                type="text" 
+                placeholder="URL de la imagen de perfil"
+                formControlName="image" />
+            </fieldset>
+            
+            <fieldset class="form-group">
+              <label for="username">Nombre de usuario</label>
+              <input 
+                id="username"
+                class="form-control form-control-lg form-margin" 
+                type="text" 
+                placeholder="Nombre de usuario"
+                formControlName="username" />
+            </fieldset>
+            
+            <fieldset class="form-group">
+              <label for="bio">Biografía</label>
+              <textarea 
+                id="bio"
+                class="form-control form-control-lg form-margin" 
+                rows="8" 
+                placeholder="Breve biografía sobre ti"
+                formControlName="bio">
+              </textarea>
+            </fieldset>
+            
+            <fieldset class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input 
+                id="email"
+                class="form-control form-control-lg form-margin" 
+                type="email" 
+                placeholder="Correo electrónico"
+                formControlName="email" />
+            </fieldset>
+            
+            <fieldset class="form-group">
+              <label for="password">Nueva contraseña</label>
+              <input 
+                id="password"
+                class="form-control form-control-lg form-margin" 
+                type="password" 
+                placeholder="Nueva contraseña (déjalo en blanco para no cambiarla)"
+                formControlName="password" />
+              <small class="form-text text-muted">
+                Deja este campo vacío si no deseas cambiar tu contraseña
+              </small>
+            </fieldset>
+            
+            <button 
+              class="btn btn-lg btn-primary btn-block w-100" 
+              type="submit"
+              [disabled]="isSubmitting">
+              <span *ngIf="!isSubmitting">Actualizar ajustes</span>
+              <span *ngIf="isSubmitting">
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Actualizando...
+              </span>
+            </button>
+          </fieldset>
+        </form>
+        
+        <hr class="my-4" />
+        
+        <button 
+          class="btn btn-outline-danger btn-block w-100" 
+          (click)="logout()"
+          [disabled]="isSubmitting">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

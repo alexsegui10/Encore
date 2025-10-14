@@ -5,13 +5,13 @@ import { User } from '../../core/models/user.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
+import { SettingsComponent } from '../../shared/settings/settings.component';
 @Component({
     selector: 'app-profile-page',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, SettingsComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit, OnDestroy {
