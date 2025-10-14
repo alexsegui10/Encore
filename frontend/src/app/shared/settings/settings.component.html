@@ -3,66 +3,91 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <h1 class="text-center mb-4">Configuración de perfil</h1>
-        
+
         <form [formGroup]="settingsForm" (ngSubmit)="submitForm()">
           <fieldset [disabled]="isSubmitting">
-            
+
             <fieldset class="form-group">
               <label for="image">Imagen de perfil (URL)</label>
-              <input 
+              <input
                 id="image"
-                class="form-control form-margin" 
-                type="text" 
+                class="form-control form-margin"
+                type="text"
                 placeholder="URL de la imagen de perfil"
                 formControlName="image" />
             </fieldset>
-            
+
+            <!-- ⬇️ AÑADIDO: preview + dropzone/selector -->
+            <div class="avatar-preview">
+              <img [src]="previewUrl || settingsForm.get('image')?.value || 'assets/default-avatar.png'"
+                   alt="Preview">
+            </div>
+
+            <div class="dropzone"
+                 [class.over]="dragOver"
+                 (drop)="onDrop($event)"
+                 (dragover)="onDragOver($event)"
+                 (dragleave)="onDragLeave()">
+              <input type="file" accept="image/*" (change)="onFilePicked($event)" hidden #fileInput>
+              <div class="dz-content">
+                <p class="dz-title">Arrastra y suelta una imagen aquí</p>
+                <p class="dz-sub">o</p>
+                <button type="button" class="btn btn-sm btn-secondary" (click)="fileInput.click()">
+                  Seleccionar archivo
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="isUploading" class="upload-hint">
+              Subiendo imagen… ⏳
+            </div>
+
             <fieldset class="form-group">
               <label for="username">Nombre de usuario</label>
-              <input 
+              <input
                 id="username"
-                class="form-control form-control-lg form-margin" 
-                type="text" 
+                class="form-control form-control-lg form-margin"
+                type="text"
                 placeholder="Nombre de usuario"
                 formControlName="username" />
             </fieldset>
-            
+
             <fieldset class="form-group">
               <label for="bio">Biografía</label>
-              <textarea 
+              <textarea
                 id="bio"
-                class="form-control form-control-lg form-margin" 
-                rows="8" 
+                class="form-control form-control-lg form-margin"
+                rows="8"
                 placeholder="Breve biografía sobre ti"
                 formControlName="bio">
               </textarea>
             </fieldset>
-            
+
             <fieldset class="form-group">
               <label for="email">Correo electrónico</label>
-              <input 
+              <input
                 id="email"
-                class="form-control form-control-lg form-margin" 
-                type="email" 
+                class="form-control form-control-lg form-margin"
+                type="email"
                 placeholder="Correo electrónico"
                 formControlName="email" />
             </fieldset>
-            
+
             <fieldset class="form-group">
               <label for="password">Nueva contraseña</label>
-              <input 
+              <input
                 id="password"
-                class="form-control form-control-lg form-margin" 
-                type="password" 
+                class="form-control form-control-lg form-margin"
+                type="password"
                 placeholder="Nueva contraseña (déjalo en blanco para no cambiarla)"
                 formControlName="password" />
               <small class="form-text text-muted">
                 Deja este campo vacío si no deseas cambiar tu contraseña
               </small>
             </fieldset>
-            
-            <button 
-              class="btn btn-lg btn-primary btn-block w-100" 
+
+            <button
+              class="btn btn-lg btn-primary btn-block w-100"
               type="submit"
               [disabled]="isSubmitting">
               <span *ngIf="!isSubmitting">Actualizar ajustes</span>
@@ -73,11 +98,11 @@
             </button>
           </fieldset>
         </form>
-        
+
         <hr class="my-4" />
-        
-        <button 
-          class="btn btn-outline-danger btn-block w-100" 
+
+        <button
+          class="btn btn-outline-danger btn-block w-100"
           (click)="logout()"
           [disabled]="isSubmitting">
           Cerrar Sesión
