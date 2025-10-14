@@ -27,6 +27,7 @@
               [src]="currentUser?.image || 'assets/default-avatar.png'"
               alt="Avatar"
               class="avatar"
+              routerLink="/profile"
             />
             <span class="username">{{ currentUser?.username }}</span>
             <button class="btn logout" (click)="logout()">Cerrar sesión</button>
