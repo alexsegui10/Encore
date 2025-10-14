@@ -212,3 +212,75 @@ hr {
 .col-md-6 {
   animation: fadeInUp 0.5s ease-out;
 }
+/* Imagen de previsualización del perfil */
+.avatar-preview {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.avatar-preview img {
+  width: 120px;          /* tamaño controlado */
+  height: 120px;
+  border-radius: 50%;    /* forma redonda */
+  object-fit: cover;     /* recorta sin deformar */
+  border: 3px solid #e1e8ed;
+  background: #f8f9fa;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.avatar-preview img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Dropzone para subir imagen */
+.dropzone {
+  border: 2px dashed #cdd9e5;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.dropzone.over {
+  border-color: #667eea;
+  background-color: #f0f3ff;
+}
+
+.dz-title {
+  font-weight: 600;
+  color: #34495e;
+  margin: 0;
+}
+
+.dz-sub {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+.btn.btn-secondary {
+  background-color: #667eea;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn.btn-secondary:hover {
+  background-color: #5a67d8;
+  transform: translateY(-2px);
+}
+
+.upload-hint {
+  text-align: center;
+  font-size: 14px;
+  color: #6c757d;
+  margin-top: 8px;
+}

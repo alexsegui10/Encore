@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpErrorResponse
+} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap, take } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { JwtService } from '../services/jwt.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
@@ -12,15 +18,17 @@ export class HttpTokenInterceptor implements HttpInterceptor {
     private jwtService: JwtService,
     private userService: UserService,
     private router: Router
-  ) { }
+  ) {}
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.jwtService.getToken();
 
-    // Clonar la solicitud y añadir el encabezado de autorización si el token existe
+    // ⬇️ EVITAR añadir Authorization a ImgBB u otros dominios externos
+    if (req.url.includes('imgbb.com')) {
+      return next.handle(req);
+    }
+
+    // Clonar la solicitud y añadir el encabezado Authorization si el token existe
     let authReq = req;
     if (token) {
       authReq = req.clone({
@@ -38,7 +46,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
           console.warn('Token expirado o inválido, cerrando sesión...');
           this.handleAuthError();
         }
-        
+
         // Si el error es un 403 (Prohibido) - token expirado
         if (error.status === 403) {
           console.warn('Acceso prohibido, posible token expirado...');
@@ -52,7 +60,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
   // Manejar la redirección y purga de autenticación cuando los tokens son inválidos
   private handleAuthError() {
-    this.userService.purgeAuth(); // Purgar la autenticación
-    this.router.navigate(['/']); // Redirigir al home en lugar del login
+    this.userService.purgeAuth(); // Purgar autenticación
+    this.router.navigate(['/']);  // Redirigir al home
   }
 }

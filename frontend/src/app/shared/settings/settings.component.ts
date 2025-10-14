@@ -6,117 +6,181 @@ import { User } from '../../core/models/user.model';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+
 @Component({
-    selector: 'app-settings-user',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
-    templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-settings-user',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsComponent implements OnInit {
-    user: User = {} as User;
-    settingsForm: FormGroup;
-    errors: Object = {};
-    isSubmitting = false;
+  user: User = {} as User;
+  settingsForm: FormGroup;
+  errors: Object = {};
+  isSubmitting = false;
 
-    constructor(
-        private router: Router,
-        private userService: UserService,
-        private fb: FormBuilder,
-        private cd: ChangeDetectorRef
-    ) {
-        this.settingsForm = this.fb.group({
-            image: '',
-            username: '',
-            bio: '',
-            email: '',
-            password: ''
-        });
-    }
+  isUploading = false;
+  previewUrl: string | null = null;
+  dragOver = false;
+  private readonly imgbbKey = 'f25a39c5f0cfea2e96c07d88342f6f90';
 
-    ngOnInit() {
-        // Obtener el usuario actual del servicio
-        Object.assign(this.user, this.userService.getCurrentUser());
-        // Rellenar el formulario con los datos del usuario
-        this.settingsForm.patchValue(this.user);
-        this.cd.markForCheck();
-    }
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private fb: FormBuilder,
+    private cd: ChangeDetectorRef,
+    private http: HttpClient
+  ) {
+    this.settingsForm = this.fb.group({
+      image: '',
+      username: '',
+      bio: '',
+      email: '',
+      password: ''
+    });
+  }
 
-    logout() {
+  ngOnInit() {
+    Object.assign(this.user, this.userService.getCurrentUser());
+    this.settingsForm.patchValue(this.user);
+    this.previewUrl = this.user?.image || null;
+    this.cd.markForCheck();
+  }
+
+  logout() {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Deseas cerrar sesión?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.purgeAuth();
+
         Swal.fire({
-            title: '¿Estás seguro?',
-            text: '¿Deseas cerrar sesión?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, cerrar sesión',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Cerrar sesión
-                this.userService.purgeAuth();
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Sesión cerrada',
-                    text: '¡Hasta pronto!',
-                    timer: 1500,
-                    showConfirmButton: false
-                }).then(() => {
-                    this.router.navigateByUrl('/');
-                });
-            }
+          icon: 'success',
+          title: 'Sesión cerrada',
+          text: '¡Hasta pronto!',
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => {
+          this.router.navigateByUrl('/');
         });
-    }
+      }
+    });
+  }
 
-    submitForm() {
-        this.isSubmitting = true;
+  submitForm() {
+    this.isSubmitting = true;
+    this.cd.markForCheck();
+
+    this.updateUser(this.settingsForm.value);
+
+    this.userService.update(this.user).subscribe({
+      next: (updatedUser) => {
+        this.isSubmitting = false;
         this.cd.markForCheck();
 
-        // Actualizar los datos del usuario con los valores del formulario
-        this.updateUser(this.settingsForm.value);
-
-        // Enviar la actualización al servidor
-        this.userService.update(this.user).subscribe({
-            next: (updatedUser) => {
-                this.isSubmitting = false;
-                this.cd.markForCheck();
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: 'Tus datos se han actualizado correctamente',
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    this.router.navigateByUrl('/profile/' + updatedUser.username);
-                });
-            },
-            error: (err) => {
-                this.isSubmitting = false;
-                this.errors = err.error?.errors || {};
-                this.cd.markForCheck();
-                
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudieron actualizar los datos. Por favor, inténtalo de nuevo.',
-                    confirmButtonText: 'Aceptar'
-                });
-            }
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Tus datos se han actualizado correctamente',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => {
+          this.router.navigateByUrl('/profile/' + updatedUser.username);
         });
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        this.errors = err.error?.errors || {};
+        this.cd.markForCheck();
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron actualizar los datos. Por favor, inténtalo de nuevo.',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  }
+
+  updateUser(values: Object) {
+    // Actualizar solo los campos que no están vacíos
+    Object.keys(values).forEach(key => {
+      const value = (values as any)[key];
+      // Si el campo no está vacío, actualizar el usuario
+      if (value !== '' && value !== null && value !== undefined) {
+        (this.user as any)[key] = value;
+      }
+    });
+  }
+
+  /* ==========================
+     imgbb Uploader
+     ========================== */
+  onFilePicked(ev: Event) {
+    const input = ev.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) this.handleFile(file);
+  }
+
+  onDrop(ev: DragEvent) {
+    ev.preventDefault();
+    this.dragOver = false;
+    const file = ev.dataTransfer?.files?.[0];
+    if (file) this.handleFile(file);
+  }
+  onDragOver(ev: DragEvent) { ev.preventDefault(); this.dragOver = true; }
+  onDragLeave() { this.dragOver = false; }
+
+  private handleFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      Swal.fire('Archivo inválido', 'Debes seleccionar una imagen.', 'warning');
+      return;
+    }
+    if (file.size > 32 * 1024 * 1024) {
+      Swal.fire('Archivo demasiado grande', 'Máximo 32 MB.', 'warning');
+      return;
     }
 
-    updateUser(values: Object) {
-        // Actualizar solo los campos que no están vacíos
-        Object.keys(values).forEach(key => {
-            const value = (values as any)[key];
-            // Si el campo no está vacío, actualizar el usuario
-            if (value !== '' && value !== null && value !== undefined) {
-                (this.user as any)[key] = value;
-            }
-        });
-    }
+    // Preview local inmediata
+    const reader = new FileReader();
+    reader.onload = () => { this.previewUrl = reader.result as string; this.cd.markForCheck(); };
+    reader.readAsDataURL(file);
+
+    // Subir a ImgBB
+    this.isUploading = true; this.cd.markForCheck();
+    this.uploadToImgbb(file)
+      .then(url => {
+        if (url) {
+          this.settingsForm.get('image')?.setValue(url); // rellena tu campo existente
+          this.previewUrl = url;                          // preview final con URL pública
+        }
+      })
+      .catch(() => {
+        Swal.fire('Error al subir', 'No se pudo subir la imagen. Inténtalo de nuevo.', 'error');
+      })
+      .finally(() => {
+        this.isUploading = false; this.cd.markForCheck();
+      });
+  }
+
+  private async uploadToImgbb(file: File): Promise<string> {
+    const endpoint = `https://api.imgbb.com/1/upload?key=${this.imgbbKey}`;
+    const fd = new FormData();
+    fd.append('image', file);
+    // fd.append('name', file.name.replace(/\.[^.]+$/, '')); // opcional
+
+    const res: any = await this.http.post(endpoint, fd).toPromise();
+    return res?.data?.display_url || '';
+  }
 }
