@@ -25,6 +25,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Inicializar el usuario autenticado
+    this.userService.populate();
+
     // Suscribirse a los observables globales (con $)
     this.userService.currentUser$
       .pipe(takeUntil(this.destroy$))

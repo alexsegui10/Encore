@@ -15,6 +15,5 @@ export class App {
     constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.populate();
   }
 }

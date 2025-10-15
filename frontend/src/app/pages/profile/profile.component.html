@@ -1,11 +1,11 @@
-<div class="profile-page container mt-5" *ngIf="isAuthenticated">
+<div class="profile-page container mt-5">
     <div class="row">
         <!-- Sidebar -->
         <aside class="col-md-3 profile-sidebar">
             <div class="user-info text-center">
-                <img class="user-photo" [src]="user.image || 'assets/images/user/photo.jpg'" alt="User Photo">
-                <h3 class="user-name">{{ user.username }}</h3>
-                <!-- <p class="user-following">Seguidos: {{ user.followingCount }}</p> Added line -->
+                <img class="user-photo" [src]="user().image || 'assets/images/user/photo.jpg'" alt="User Photo">
+                <h3 class="user-name">{{ user().username }}</h3>
+                <!-- <p class="user-following">Seguidos: {{ user().followingCount }}</p> Added line -->
             </div>
             <nav class="profile-nav">
                 <ul class="nav flex-column">
@@ -29,9 +29,9 @@
             <div *ngIf="currentView() === 'profile'" class="profile-details">
                 <h2>Mi perfil</h2>
                 <hr>
-                <p class="profile-details-item"><strong>Nombre de usuario:</strong> {{ user.username }}</p>
-                <p class="profile-details-item"><strong>Email:</strong> {{ user.email }}</p>
-                <p class="profile-details-item"><strong>Biografía:</strong> {{ user.bio }}</p>
+                <p class="profile-details-item"><strong>Nombre de usuario:</strong> {{ user().username }}</p>
+                <p class="profile-details-item"><strong>Email:</strong> {{ user().email }}</p>
+                <p class="profile-details-item"><strong>Biografía:</strong> {{ user().bio }}</p>
             </div>
             <!-- <div *ngIf="currentView() === 'favorites'">
                 <h2>Mis eventos favoritos</h2>
@@ -50,11 +50,4 @@
             </div> -->
         </main>
     </div>
-</div>
-
-<!-- Mensaje si no está autenticado -->
-<div *ngIf="!isAuthenticated$()" class="container mt-5 text-center">
-    <h2>Acceso restringido</h2>
-    <p>Debes iniciar sesión para ver tu perfil.</p>
-    <a routerLink="/" class="btn btn-primary">Volver al inicio</a>
 </div>

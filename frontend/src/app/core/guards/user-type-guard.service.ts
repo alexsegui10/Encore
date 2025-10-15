@@ -12,7 +12,7 @@ export class UserTypeGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         // Simplificado: solo verificar autenticación
         // Tu backend no maneja tipos de usuario específicos
-        return this.userService.isAuthenticated.pipe(
+        return this.userService.isAuthenticated$.pipe(
             take(1),
             map(isAuthenticated => {
                 if (isAuthenticated) {

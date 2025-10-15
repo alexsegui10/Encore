@@ -19,30 +19,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private router = inject(Router);
     private userService = inject(UserService);
     
-    // Variables reactivas para observables globales
-    user: User = {} as User;
-    isAuthenticated = false;
-    
-    // Signal local del componente
+    // Signals locales del componente
+    user = signal<User>({} as User);
     currentView = signal<string>('profile');
 
     private destroy$ = new Subject<void>();
 
     ngOnInit() {
-        // Suscribirse a los observables globales ($)
+        // Suscribirse al observable global del usuario para actualizar el signal local
         this.userService.currentUser$
             .pipe(takeUntil(this.destroy$))
             .subscribe((user) => {
-                this.user = user;
-            });
-
-        this.userService.isAuthenticated$
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((isAuth) => {
-                this.isAuthenticated = isAuth;
-                if (!isAuth) {
-                    this.router.navigate(['/']);
-                }
+                this.user.set(user); // Actualizar signal local con datos del observable global
             });
     }
 
