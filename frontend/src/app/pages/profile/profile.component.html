@@ -26,26 +26,26 @@
         </aside>
         <!-- Main Content -->
         <main class="col-md-9 profile-content">
-            <div *ngIf="currentView === 'profile'" class="profile-details">
+            <div *ngIf="currentView() === 'profile'" class="profile-details">
                 <h2>Mi perfil</h2>
                 <hr>
                 <p class="profile-details-item"><strong>Nombre de usuario:</strong> {{ user.username }}</p>
                 <p class="profile-details-item"><strong>Email:</strong> {{ user.email }}</p>
                 <p class="profile-details-item"><strong>Biografía:</strong> {{ user.bio }}</p>
             </div>
-            <!-- <div *ngIf="currentView === 'favorites'">
+            <!-- <div *ngIf="currentView() === 'favorites'">
                 <h2>Mis eventos favoritos</h2>
                 <hr>
-                <div *ngFor="let event of user.favoriteEvents">
+                <div *ngFor="let event of user$().favoriteEvents">
                     <app-card-event [event]="event"></app-card-event>
                 </div>
             </div> -->
-            <div *ngIf="currentView === 'settings'">
+            <div *ngIf="currentView() === 'settings'">
                 <h2>Ajustes de mi perfil</h2>
                 <hr>
                 <app-settings-user></app-settings-user>
             </div>
-            <!-- <div *ngIf="currentView === 'offers'">
+            <!-- <div *ngIf="currentView() === 'offers'">
                 Offers content goes here
             </div> -->
         </main>
@@ -53,7 +53,7 @@
 </div>
 
 <!-- Mensaje si no está autenticado -->
-<div *ngIf="!isAuthenticated" class="container mt-5 text-center">
+<div *ngIf="!isAuthenticated$()" class="container mt-5 text-center">
     <h2>Acceso restringido</h2>
     <p>Debes iniciar sesión para ver tu perfil.</p>
     <a routerLink="/" class="btn btn-primary">Volver al inicio</a>

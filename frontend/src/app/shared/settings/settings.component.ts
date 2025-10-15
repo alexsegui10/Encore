@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal, effect, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
+import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
@@ -16,11 +17,14 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
   styleUrls: ['./settings.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsComponent implements OnInit {
-  user: User = {} as User;
+export class SettingsComponent implements OnInit, OnDestroy {
+  // Signal local para el usuario - se actualiza automáticamente
+  user = signal<User>({} as User);
+  
   settingsForm: FormGroup;
   errors: Object = {};
   isSubmitting = false;
+  private destroy$ = new Subject<void>();
 
   isUploading = false;
   previewUrl: string | null = null;
@@ -41,13 +45,27 @@ export class SettingsComponent implements OnInit {
       email: '',
       password: ''
     });
+
+    // Effect para reaccionar a cambios en el usuario global
+    effect(() => {
+      this.userService.currentUser$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((globalUser) => {
+          this.user.set(globalUser);
+          this.settingsForm.patchValue(globalUser);
+          this.previewUrl = globalUser?.image || null;
+          this.cd.markForCheck();
+        });
+    });
   }
 
   ngOnInit() {
-    Object.assign(this.user, this.userService.getCurrentUser());
-    this.settingsForm.patchValue(this.user);
-    this.previewUrl = this.user?.image || null;
-    this.cd.markForCheck();
+    // La inicialización se hace en el effect del constructor
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   logout() {
@@ -81,9 +99,11 @@ export class SettingsComponent implements OnInit {
     this.isSubmitting = true;
     this.cd.markForCheck();
 
-    this.updateUser(this.settingsForm.value);
+    // Obtener el valor actual del usuario y actualizarlo
+    const currentUser = this.user();
+    this.updateUser(this.settingsForm.value, currentUser);
 
-    this.userService.update(this.user).subscribe({
+    this.userService.update(currentUser).subscribe({
       next: (updatedUser) => {
         this.isSubmitting = false;
         this.cd.markForCheck();
@@ -113,15 +133,16 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  updateUser(values: Object) {
+  updateUser(values: Object, user: User): User {
     // Actualizar solo los campos que no están vacíos
     Object.keys(values).forEach(key => {
       const value = (values as any)[key];
       // Si el campo no está vacío, actualizar el usuario
       if (value !== '' && value !== null && value !== undefined) {
-        (this.user as any)[key] = value;
+        (user as any)[key] = value;
       }
     });
+    return user;
   }
 
   /* ==========================

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, signal, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SettingsComponent } from '../../shared/settings/settings.component';
+
 @Component({
     selector: 'app-profile-page',
     templateUrl: './profile.component.html',
@@ -15,36 +16,32 @@ import { SettingsComponent } from '../../shared/settings/settings.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private userService = inject(UserService);
+    
+    // Variables reactivas para observables globales
     user: User = {} as User;
-    currentView: string = 'profile';
     isAuthenticated = false;
+    
+    // Signal local del componente
+    currentView = signal<string>('profile');
+
     private destroy$ = new Subject<void>();
 
-    constructor(
-        private router: Router,
-        private userService: UserService,
-        private cd: ChangeDetectorRef
-    ) {}
-
     ngOnInit() {
-        // Verificar si el usuario está autenticado
-        this.userService.isAuthenticated
+        // Suscribirse a los observables globales ($)
+        this.userService.currentUser$
             .pipe(takeUntil(this.destroy$))
-            .subscribe(authenticated => {
-                this.isAuthenticated = authenticated;
-                if (!authenticated) {
-                    this.router.navigate(['/']);
-                }
-                this.cd.detectChanges();
+            .subscribe((user) => {
+                this.user = user;
             });
 
-        // Obtener datos del usuario actual
-        this.userService.currentUser
+        this.userService.isAuthenticated$
             .pipe(takeUntil(this.destroy$))
-            .subscribe(user => {
-                if (user && user.email) {
-                    this.user = user;
-                    this.cd.detectChanges();
+            .subscribe((isAuth) => {
+                this.isAuthenticated = isAuth;
+                if (!isAuth) {
+                    this.router.navigate(['/']);
                 }
             });
     }
@@ -55,21 +52,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     showProfile() {
-        this.currentView = 'profile';
-        this.cd.detectChanges();
+        this.currentView.set('profile');
     }
 
     showFavorites() {
-        this.currentView = 'favorites';
-        this.cd.detectChanges();
+        this.currentView.set('favorites');
     }
 
     showSettings() {
-        this.currentView = 'settings';
-        this.cd.detectChanges();
+        this.currentView.set('settings');
     }
 
     isActive(view: string): boolean {
-        return this.currentView === view;
+        return this.currentView() === view;
     }
 }

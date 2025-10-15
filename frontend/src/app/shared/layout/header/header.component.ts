@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
+import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,9 +14,10 @@ import Swal from 'sweetalert2';
   styleUrls: ['./header.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isLogged = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private userService: UserService,
@@ -23,16 +25,25 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.currentUser.subscribe((userData) => {
-      this.currentUser = userData;
-      this.cd.markForCheck();
-    });
+    // Suscribirse a los observables globales (con $)
+    this.userService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((userData) => {
+        this.currentUser = userData;
+        this.cd.markForCheck();
+      });
 
-    this.userService.isAuthenticated.subscribe((status) => {
-      this.isLogged = status;
-      this.cd.markForCheck();
-    });
+    this.userService.isAuthenticated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((status) => {
+        this.isLogged = status;
+        this.cd.markForCheck();
+      });
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   logout(): void {
     Swal.fire({
@@ -47,9 +58,6 @@ export class HeaderComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.userService.purgeAuth();
-        this.currentUser = null;
-        this.isLogged = false;
-        this.cd.markForCheck();
         
         Swal.fire({
           icon: 'success',
