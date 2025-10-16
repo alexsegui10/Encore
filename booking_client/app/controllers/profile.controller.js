@@ -1,7 +1,7 @@
-const User = require('../models/user.model');
-const asyncHandler = require('express-async-handler');
+import User from '../models/user.model.js';
+import asyncHandler from 'express-async-handler';
 
-const getProfile = asyncHandler(async (req, res) => {
+export const getProfile = asyncHandler(async (req, res) => {
     const { username } = req.params;
     const loggedin = req.loggedin;
 
@@ -26,7 +26,7 @@ const getProfile = asyncHandler(async (req, res) => {
 
 });
 
-const followUser = asyncHandler(async (req, res) => {
+export const followUser = asyncHandler(async (req, res) => {
     const { username } = req.params;
 
     const loginUser = await User.findOne({ email: req.userEmail }).exec();
@@ -45,7 +45,7 @@ const followUser = asyncHandler(async (req, res) => {
 
 });
 
-const unFollowUser = asyncHandler(async (req, res) => {
+export const unFollowUser = asyncHandler(async (req, res) => {
     const { username } = req.params;
 
     const loginUser = await User.findOne({ email: req.userEmail }).exec();
@@ -63,9 +63,3 @@ const unFollowUser = asyncHandler(async (req, res) => {
     })
 
 });
-
-module.exports = {
-    getProfile,
-    followUser,
-    unFollowUser
-}

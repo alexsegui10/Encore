@@ -1,14 +1,18 @@
-module.exports = (app) => {
-    const profileController = require('../controllers/profile.controller');
-    const verifyJWT = require('../middleware/verifyJWT');
-    const verifyJWTOptional = require('../middleware/verifyJWTOptional');
+import { Router } from 'express';
+import * as profileController from '../controllers/profile.controller.js';
+import verifyJWTOptional from '../middleware/verifyJWTOptional.js';
+import verifyJWT from '../middleware/verifyJWT.js';
 
-    // Get profile - authentication optional
-    app.get('/profile/:username', verifyJWTOptional, profileController.getProfile);
+const api = Router();
 
-    // Follow a user
-    app.post('/:username/follow', verifyJWT, profileController.followUser);
+// Get profile - authentication optional
+api.get('/profile/:username', verifyJWTOptional, profileController.getProfile);
 
-    // unfollow a user
-    app.delete('/:username/follow', verifyJWT, profileController.unFollowUser);
-}
+// Follow a user
+api.post('/:username/follow', verifyJWT, profileController.followUser);
+
+// unfollow a user
+api.delete('/:username/follow', verifyJWT, profileController.unFollowUser);
+
+
+export default api;

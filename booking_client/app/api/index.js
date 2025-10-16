@@ -16,6 +16,7 @@ import categoryRoutes from "../routes/category.routes.js";
 import carouselRoutes from "../routes/carousel.routes.js";
 import authRoutes from "../routes/auth.routes.js";
 import userRoutes from "../routes/user.routes.js";
+import profileRoutes from "../routes/profile.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -33,6 +34,7 @@ app.use("/api", categoryRoutes);
 app.use("/api", carouselRoutes);
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
+app.use("/api", profileRoutes);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ error: "Not found" }));

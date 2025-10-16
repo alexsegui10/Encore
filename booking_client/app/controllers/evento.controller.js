@@ -1,12 +1,13 @@
 import Event from '../models/evento.model.js';
 import asyncHandler from 'express-async-handler';
 import Category from '../models/category.model.js';
+import User from '../models/user.model.js';
 // GET /eventos 
 export const listEvents = async (req, res, next) => {
   try {
     // Función helper para transformar "undefined" string y valores vacíos
     let transUndefined = (varQuery, otherResult) => {
-        return varQuery != "undefined" && varQuery ? varQuery : otherResult;
+      return varQuery != "undefined" && varQuery ? varQuery : otherResult;
     };
 
     // Extraer y procesar parámetros con valores por defecto
@@ -16,7 +17,7 @@ export const listEvents = async (req, res, next) => {
     let name = transUndefined(req.query.name, "");
     let price_min = transUndefined(req.query.price_min, 0);
     let price_max = transUndefined(req.query.price_max, Number.MAX_SAFE_INTEGER);
-    
+
     // Crear regex para búsqueda de nombre/título
     let nameReg = new RegExp(name, 'i');
 
@@ -26,47 +27,47 @@ export const listEvents = async (req, res, next) => {
 
     // Construir query base - SIEMPRE incluye filtros de precio y nombre
     let query = {
-        title: { $regex: nameReg },
-        $and: [
-            { price: { $gte: parseFloat(price_min) } }, 
-            { price: { $lte: parseFloat(price_max) } }
-        ],
+      title: { $regex: nameReg },
+      $and: [
+        { price: { $gte: parseFloat(price_min) } },
+        { price: { $lte: parseFloat(price_max) } }
+      ],
     };
 
     // Agregar filtro de categoría si está presente
     if (category != "") {
-        query.category = category;
+      query.category = category;
     }
 
     console.log('MongoDB query:', JSON.stringify(query, null, 2));
 
     // Ejecutar query con paginación
     const events = await Event.find(query)
-        .limit(Number(limit))
-        .skip(Number(offset))
-        .sort('-date')
-        .lean();
-    
+      .limit(Number(limit))
+      .skip(Number(offset))
+      .sort('-date')
+      .lean();
+
     // Obtener conteo total con los mismos filtros
     const event_count = await Event.find(query).countDocuments();
 
     console.log(`Found ${events.length} events, total: ${event_count}`);
 
     if (!events) {
-        return res.status(404).json({ msg: "No se encontraron eventos" });
+      return res.status(404).json({ msg: "No se encontraron eventos" });
     }
 
     return res.status(200).json({
-        events: events,
-        event_count: event_count,
-        filters_applied: {
-            category,
-            price_min: parseFloat(price_min),
-            price_max: parseFloat(price_max),
-            name,
-            limit: Number(limit),
-            offset: Number(offset)
-        }
+      events: events,
+      event_count: event_count,
+      filters_applied: {
+        category,
+        price_min: parseFloat(price_min),
+        price_max: parseFloat(price_max),
+        name,
+        limit: Number(limit),
+        offset: Number(offset)
+      }
     });
   } catch (err) {
     console.error('Error in listEvents:', err);
@@ -110,7 +111,7 @@ export const createEvent = async (req, res, next) => {
     });
 
     await ev.save();
-    
+
     // Find the category and add the event to it
     const categoryDoc = await Category.findById(category);
     if (categoryDoc) {
@@ -132,14 +133,14 @@ export const updateEvent = async (req, res, next) => {
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
 
     const oldCategory = doc.category;
-    
+
     const allowed = ['title', 'date', 'price', 'currency', 'location', 'description', 'category', 'status', 'mainImage', 'images'];
     for (const k of allowed) {
       if (k in req.body) doc[k] = req.body[k];
     }
 
     await doc.save();
-    
+
     // If category changed, update the category references
     if (req.body.category && oldCategory && oldCategory.toString() !== req.body.category.toString()) {
       // Remove from old category
@@ -147,14 +148,14 @@ export const updateEvent = async (req, res, next) => {
       if (oldCategoryDoc) {
         await oldCategoryDoc.removeEvent(doc._id);
       }
-      
+
       // Add to new category
       const newCategoryDoc = await Category.findById(req.body.category);
       if (newCategoryDoc) {
         await newCategoryDoc.addEvent(doc._id);
       }
     }
-    
+
     res.json(doc);
   } catch (err) {
     if (err.name === 'ValidationError') return res.status(400).json({ error: err.message });
@@ -167,7 +168,7 @@ export const deleteEvent = async (req, res, next) => {
     const { slug } = req.params;
     const doc = await Event.findOneAndDelete({ slug });
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
-    
+
     // Remove the event from its category
     if (doc.category) {
       const categoryDoc = await Category.findById(doc.category);
@@ -175,7 +176,7 @@ export const deleteEvent = async (req, res, next) => {
         await categoryDoc.removeEvent(doc._id);
       }
     }
-    
+
     res.json({ message: 'Evento eliminado', slug });
   } catch (err) {
     next(err);
@@ -202,54 +203,63 @@ export const GetProductsByCategory = asyncHandler(async (req, res) => {
   }
 });
 
-// Ruta temporal para testing - verificar datos
-export const testEventData = async (req, res, next) => {
-  try {
-    console.log('=== TESTING EVENT DATA ===');
-    
-    // Obtener todos los eventos
-    const allEvents = await Event.find().lean();
-    console.log(`Total events found: ${allEvents.length}`);
-    
-    // Verificar tipos de datos
-    allEvents.forEach((event, index) => {
-      console.log(`Event ${index + 1}:`, {
-        title: event.title,
-        price: event.price,
-        priceType: typeof event.price,
-        category: event.category,
-        categoryType: typeof event.category
-      });
+
+export const favoriteEvent = asyncHandler(async (req, res) => {
+  const id = req.userId;
+
+  const { slug } = req.params;
+
+  const loginUser = await User.findById(id).exec();
+
+  if (!loginUser) {
+    return res.status(401).json({
+      message: "User Not Found"
     });
-    
-    // Test query específica con precio
-    const priceTestQuery = {
-      $and: [
-        { price: { $gte: 1 } }, 
-        { price: { $lte: 1000 } }
-      ]
-    };
-    
-    const priceTestResults = await Event.find(priceTestQuery).lean();
-    console.log(`Events with price between 1-1000: ${priceTestResults.length}`);
-    
-    priceTestResults.forEach(event => {
-      console.log(`- ${event.title}: ${event.price} (${typeof event.price})`);
-    });
-    
-    res.json({
-      message: 'Check console for detailed output',
-      totalEvents: allEvents.length,
-      priceRangeResults: priceTestResults.length,
-      sampleEvents: allEvents.slice(0, 3).map(e => ({
-        title: e.title,
-        price: e.price,
-        priceType: typeof e.price
-      }))
-    });
-    
-  } catch (err) {
-    console.error('Error in testEventData:', err);
-    next(err);
   }
-};
+
+  const event = await Event.findOne({ slug }).exec();
+
+  if (!event) {
+    return res.status(401).json({
+      message: "Event Not Found"
+    });
+  }
+
+  await loginUser.favorite(event._id);
+
+  const updatedEvent = await event.updateFavoriteCount();
+
+  return res.status(200).json({
+    event: await updatedEvent.toEventResponse(loginUser)
+  });
+});
+
+export const unfavoriteEvent = asyncHandler(async (req, res) => {
+  const id = req.userId;
+
+  const { slug } = req.params;
+
+  const loginUser = await User.findById(id).exec();
+
+  if (!loginUser) {
+    return res.status(401).json({
+      message: "User Not Found"
+    });
+  }
+
+  const event = await Event.findOne({ slug }).exec();
+
+  if (!event) {
+    return res.status(401).json({
+      message: "Event Not Found"
+    });
+  }
+
+  await loginUser.unfavorite(event._id);
+
+  await event.updateFavoriteCount();
+
+  return res.status(200).json({
+    event: await event.toEventResponse(loginUser)
+  });
+});

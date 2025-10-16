@@ -1,6 +1,6 @@
 // app/models/evento.model.js
 import mongoose from 'mongoose';
-
+import User from './user.model.js';
 const EventSchema = new mongoose.Schema(
   {
     title: {
@@ -51,6 +51,10 @@ const EventSchema = new mongoose.Schema(
       trim: true,
       maxlength: 500
     },
+    favouritesCount: {
+      type: Number,
+      default: 0
+    },
     images: {
       type: [String],
       default: [],
@@ -87,6 +91,21 @@ EventSchema.pre('validate', function (next) {
   next();
 });
 
+EventSchema.methods.toEventResponse = async function (user) {
+    const authorObj = await User.findById(this.author).exec();
+    return {
+        slug: this.slug,
+        title: this.title,
+        description: this.description,
+        body: this.body,
+        createdAt: this.createdAt,
+        updatedAt: this.updatedAt,
+        tagList: this.tagList,
+        favorited: user ? user.isFavourite(this._id) : false,
+        favoritesCount: this.favouritesCount,
+    }
+}
+
 //serializer para carousel
 EventSchema.methods.toEventoCarouselResponse = async function () {
   return {
@@ -104,6 +123,17 @@ EventSchema.methods.toEventoCarouselResponse = async function () {
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   }
+}
+
+EventSchema.methods.updateFavoriteCount = async function () {
+  const User = mongoose.model('User');
+  const favoriteCount = await User.countDocuments({
+    favouriteEvents: { $in: [this._id] }
+  });
+
+  this.favouritesCount = favoriteCount;
+
+  return this.save();
 }
 
 export default mongoose.model('Event', EventSchema);
