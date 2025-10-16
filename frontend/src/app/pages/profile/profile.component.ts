@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, signal, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SettingsComponent } from '../../shared/settings/settings.component';
+
 @Component({
     selector: 'app-profile-page',
     templateUrl: './profile.component.html',
@@ -15,37 +16,21 @@ import { SettingsComponent } from '../../shared/settings/settings.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-    user: User = {} as User;
-    currentView: string = 'profile';
-    isAuthenticated = false;
+    private router = inject(Router);
+    private userService = inject(UserService);
+    
+    // Signals locales del componente
+    user = signal<User>({} as User);
+    currentView = signal<string>('profile');
+
     private destroy$ = new Subject<void>();
 
-    constructor(
-        private router: Router,
-        private userService: UserService,
-        private cd: ChangeDetectorRef
-    ) {}
-
     ngOnInit() {
-        // Verificar si el usuario está autenticado
-        this.userService.isAuthenticated
+        // Suscribirse al observable global del usuario para actualizar el signal local
+        this.userService.currentUser$
             .pipe(takeUntil(this.destroy$))
-            .subscribe(authenticated => {
-                this.isAuthenticated = authenticated;
-                if (!authenticated) {
-                    this.router.navigate(['/']);
-                }
-                this.cd.detectChanges();
-            });
-
-        // Obtener datos del usuario actual
-        this.userService.currentUser
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(user => {
-                if (user && user.email) {
-                    this.user = user;
-                    this.cd.detectChanges();
-                }
+            .subscribe((user) => {
+                this.user.set(user); // Actualizar signal local con datos del observable global
             });
     }
 
@@ -55,21 +40,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     showProfile() {
-        this.currentView = 'profile';
-        this.cd.detectChanges();
+        this.currentView.set('profile');
     }
 
     showFavorites() {
-        this.currentView = 'favorites';
-        this.cd.detectChanges();
+        this.currentView.set('favorites');
     }
 
     showSettings() {
-        this.currentView = 'settings';
-        this.cd.detectChanges();
+        this.currentView.set('settings');
     }
 
     isActive(view: string): boolean {
-        return this.currentView === view;
+        return this.currentView() === view;
     }
 }

@@ -10,11 +10,12 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class UserService {
+  // Observables globales para reactividad en toda la página (con $)
   private currentUserSubject = new BehaviorSubject<User>({} as User);
-  public currentUser = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
+  public currentUser$ = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
 
   private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
-  public isAuthenticated = this.isAuthenticatedSubject.asObservable();
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
     private apiService: ApiService,
@@ -51,6 +52,7 @@ export class UserService {
       console.log('💾 Token guardado en localStorage');
     }
 
+    // Actualizar observables globales
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
 
@@ -60,8 +62,11 @@ export class UserService {
   purgeAuth(): void {
     console.log('🔓 Cerrando sesión y limpiando datos...');
     this.jwtService.destroyToken();
+    
+    // Actualizar observables globales
     this.currentUserSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
+    
     console.log('✅ Sesión cerrada correctamente');
   }
 
@@ -81,8 +86,8 @@ export class UserService {
       );
   }
 
-  getCurrentUser(): User {
-    return this.currentUserSubject.value;
+  getCurrentUser(): Observable<User> {
+    return this.currentUser$;
   }
 
   update(user: Partial<User>): Observable<User> {
@@ -90,7 +95,9 @@ export class UserService {
       .put('/api/user', { user }, 4000, true) // withAuth: true
       .pipe(
         map((data: { user: User }) => {
+          // Actualizar observables globales - esto causará reactividad automática
           this.currentUserSubject.next(data.user);
+          
           return data.user;
         })
       );
