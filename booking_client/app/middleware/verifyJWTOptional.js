@@ -4,7 +4,7 @@ import User from '../models/user.model.js';
 const verifyJWTOptional = async (req, res, next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization;
 
-    if (!authHeader || !authHeader.startsWith('Token ')) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         // No token provided, continue without user info
         return next();
     }

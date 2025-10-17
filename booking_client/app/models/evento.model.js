@@ -92,17 +92,23 @@ EventSchema.pre('validate', function (next) {
 });
 
 EventSchema.methods.toEventResponse = async function (user) {
-    const authorObj = await User.findById(this.author).exec();
     return {
+        _id: this._id,
         slug: this.slug,
         title: this.title,
+        date: this.date,
+        price: this.price,
+        currency: this.currency,
+        location: this.location,
         description: this.description,
-        body: this.body,
+        category: this.category,
+        status: this.status,
+        mainImage: this.mainImage,
+        images: this.images,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt,
-        tagList: this.tagList,
-        favorited: user ? user.isFavourite(this._id) : false,
-        favoritesCount: this.favouritesCount,
+        isLiked: user ? user.isFavourite(this._id) : false,
+        likesCount: this.favouritesCount,
     }
 }
 

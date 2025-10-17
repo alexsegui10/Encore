@@ -1,0 +1,45 @@
+<div class="event-meta">
+  <div class="info">
+    <h3 class="title">{{ event.title }}</h3>
+    <div class="details">
+      <span *ngIf="event.date" class="date">
+        <i class="ion-calendar"></i>
+        {{ event.date | date:'dd MMM yyyy, HH:mm' }}
+      </span>
+      <span *ngIf="event.location" class="location">
+        <i class="ion-location"></i>
+        {{ event.location }}
+      </span>
+      <span *ngIf="event.price !== undefined" class="price">
+        <i class="ion-cash"></i>
+        {{ event.price | number:'1.0-2' }}{{ event.currency || '€' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="actions" *ngIf="enableUserActions || enableAuthorActions">
+    @if (enableUserActions) {
+      @if (isLiked) {
+        <button class="btn btn-sm btn-primary" (click)="liked.emit(false)">
+          <i class="ion-heart"></i>
+          Me gusta <span class="counter" *ngIf="likesCount > 0">({{ likesCount }})</span>
+        </button>
+      } @else {
+        <button class="btn btn-sm btn-outline-primary" (click)="liked.emit(true)">
+          <i class="ion-heart"></i>
+          Me gusta <span class="counter" *ngIf="likesCount > 0">({{ likesCount }})</span>
+        </button>
+      }
+    }
+
+    @if (enableAuthorActions) {
+      <button class="btn btn-sm btn-outline-secondary" [routerLink]="['/profile/edit-event', event.slug]">
+        <i class="ion-edit"></i> Editar Evento
+      </button>
+      <button class="btn btn-sm btn-outline-danger" (click)="deleted.emit()">
+        <i class="ion-trash-a"></i> Eliminar Evento
+      </button>
+    }
+  </div>
+</div>
+

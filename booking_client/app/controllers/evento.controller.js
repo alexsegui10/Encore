@@ -79,9 +79,19 @@ export const listEvents = async (req, res, next) => {
 export const getOneEvent = async (req, res, next) => {
   try {
     const { slug } = req.params;
-    const doc = await Event.findOne({ slug }).lean();
+    const doc = await Event.findOne({ slug });
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
-    res.json(doc);
+    
+    // Intentar obtener el usuario actual si está autenticado
+    let currentUser = null;
+    if (req.userId) {
+      currentUser = await User.findById(req.userId).exec();
+    }
+    
+    // Usar toEventResponse para incluir isLiked y likesCount
+    const eventResponse = await doc.toEventResponse(currentUser);
+    
+    res.json(eventResponse);
   } catch (err) {
     next(err);
   }

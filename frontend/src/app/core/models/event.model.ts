@@ -13,6 +13,8 @@ export interface Event {
   images?: string[];
   createdAt?: Date | string;
   updatedAt?: Date | string;
+  likesCount?: number;
+  isLiked?: boolean;
 }
 
 
