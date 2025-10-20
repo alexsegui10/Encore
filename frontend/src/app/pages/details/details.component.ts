@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
 import { CarouselComponent } from '../../shared/carrusel/carousel.component';
+import { CommentsComponent } from '../../shared/comments/comments.component';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
 import { MapaComponent } from '../../shared/map/map.component';
@@ -13,7 +14,7 @@ import Swal from 'sweetalert2';
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent, MapaComponent],
+    imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent, MapaComponent, CommentsComponent],
 })
 
 export class DetailsComponent implements OnInit {
@@ -40,7 +41,7 @@ export class DetailsComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Error:', error);
-                
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Evento no encontrado',

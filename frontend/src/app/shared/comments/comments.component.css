@@ -1,0 +1,97 @@
+:host {
+  display: block;
+}
+
+/* Form */
+.comment-form textarea.form-control {
+  min-height: 96px;
+  resize: vertical;
+  border-radius: 12px;
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.comment-form textarea.form-control:focus {
+  border-color: #7c3aed;           /* Primario suave (ajústalo a tu tema Zard) */
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+}
+
+/* Card base */
+.card.comment-card {
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow:
+    0 1px 1px rgba(0,0,0,.02),
+    0 8px 24px rgba(0,0,0,.04);
+  margin-bottom: 14px;
+  transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.card.comment-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.05),
+    0 12px 32px rgba(0,0,0,.06);
+}
+
+/* Destacar tus comentarios */
+.card.comment-card.my-comment {
+  border-color: #7c3aed;                           /* Primario */
+  background:
+    linear-gradient(0deg, rgba(124,58,237,0.03), rgba(124,58,237,0.03)),
+    #fff;
+}
+
+/* Cuerpo */
+.card.comment-card .card-block {
+  padding: 14px 16px 0 16px;
+}
+
+.card.comment-card .card-text {
+  margin: 0;
+  line-height: 1.5;
+  color: #1f2937; /* gris 800 */
+  word-break: break-word;
+}
+
+/* Footer */
+.card.comment-card .card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px 12px 16px;
+  background: transparent;
+  border-top: 1px dashed rgba(0,0,0,.08);
+}
+
+.date-posted {
+  font-size: .85rem;
+  color: #6b7280; /* gris 500 */
+}
+
+/* Botón eliminar (estilo link pero accesible) */
+.btn.btn-link.danger {
+  color: #dc2626; /* rojo 600 */
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0;
+  border: none;
+}
+
+.btn.btn-link.danger:hover {
+  color: #b91c1c; /* rojo 700 */
+  text-decoration: underline;
+}
+
+.btn[disabled] {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* Mensajes vacíos */
+.text-muted.mt-3 {
+  color: #6b7280 !important;
+}

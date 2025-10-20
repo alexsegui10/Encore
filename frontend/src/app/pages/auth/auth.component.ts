@@ -67,7 +67,7 @@ export class AuthComponent implements OnInit {
       next: () => {
         this.isSubmitting = false;
         const message = this.authType === 'login' ? '¡Bienvenido de nuevo!' : '¡Cuenta creada exitosamente!';
-        
+
         Swal.fire({
           icon: 'success',
           title: message,
@@ -82,11 +82,11 @@ export class AuthComponent implements OnInit {
         this.errors = body.errors ? body as Errors : { errors: { general: 'Error de autenticación' } };
         this.isSubmitting = false;
         this.cd.markForCheck();
-        
-        const errorMessage = this.errors.errors['general'] || 
-                            this.errors.errors['email'] || 
+
+        const errorMessage = this.errors.errors['general'] ||
+                            this.errors.errors['email'] ||
                             'Error de autenticación. Por favor, verifica tus credenciales.';
-        
+
         Swal.fire({
           icon: 'error',
           title: 'Error',

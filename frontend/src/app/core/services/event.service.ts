@@ -169,4 +169,26 @@ export class EventService {
             .set('endDate', endDate.toISOString());
         return this.apiService.get('/api/eventos', params, 4000);
     }
+    // ===================== COMENTARIOS DE EVENTO =====================
+
+getEventComments(slug: string) {
+  return this.apiService.get(`/api/${slug}/comments`, undefined, 4000, false);
+}
+
+createEventComment(slug: string, body: string) {
+  return this.apiService.post(
+    `/api/${slug}/comments`,
+    { comment: { body } },
+    4000,
+    true
+  );
+}
+
+deleteEventComment(slug: string, commentId: string) {
+  return this.apiService.delete(
+    `/api/${slug}/comments/${commentId}`,
+    4000,
+    true
+  );
+}
 }
