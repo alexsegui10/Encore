@@ -1,5 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy, computed, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { UserService } from '../../core/services/user.service';
 @Component({
   selector: 'app-comments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

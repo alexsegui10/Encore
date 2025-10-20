@@ -4,18 +4,12 @@
     <!-- Formulario de nuevo comentario -->
     <form class="card comment-form" *ngIf="hasToken(); else loginHint">
       <div class="card-block">
-        <textarea
-          [formControl]="newCommentControl"
-          class="form-control"
-          placeholder="Escribe un comentario..."
+        <textarea [formControl]="newCommentControl" class="form-control" placeholder="Escribe un comentario..."
           rows="3">
         </textarea>
       </div>
       <div class="card-footer">
-        <button
-          type="button"
-          class="btn btn-sm btn-primary"
-          (click)="addComment()"
+        <button type="button" class="btn btn-sm btn-primary" (click)="addComment()"
           [disabled]="posting() || !newCommentControl.value.trim()">
           {{ posting() ? 'Publicando...' : 'Publicar' }}
         </button>
@@ -28,17 +22,16 @@
 
     <!-- Lista de comentarios -->
     <ng-container *ngIf="comments()?.length; else noComments">
-      <div class="card comment-card"
-           *ngFor="let comment of comments(); trackBy: trackById"
-           [ngClass]="{ 'my-comment': isMine(comment) }">
+      <div class="card comment-card" *ngFor="let comment of comments(); trackBy: trackById"
+        [ngClass]="{ 'my-comment': isMine(comment) }">
 
         <!-- Cabecera con avatar y autor -->
         <div class="comment-header">
-          <img
-            [src]="comment.author.image || 'https://api.dicebear.com/7.x/identicon/svg?seed=anon'"
-            alt="{{ comment.author.username || 'Usuario' }}"
-            class="comment-avatar"
-          />
+          <img [src]="comment.author.image || 'https://api.dicebear.com/7.x/identicon/svg?seed=anon'"
+            alt="{{ comment.author.username || 'Usuario' }}" 
+            class="comment-avatar" 
+            [routerLink]="['/profile', comment.author.username]"
+            style="cursor: pointer;" />
           <div class="comment-meta">
             <span class="comment-username">{{ comment.author.username || 'Usuario' }}</span>
             <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
@@ -53,9 +46,7 @@
         <!-- Footer con botón eliminar -->
         <div class="card-footer">
           <span class="mod-options" *ngIf="isMine(comment)">
-            <button
-              class="btn btn-link danger p-0 ms-2"
-              (click)="deleteComment(comment.id)"
+            <button class="btn btn-link danger p-0 ms-2" (click)="deleteComment(comment.id)"
               [disabled]="deletingId() === comment.id">
               {{ deletingId() === comment.id ? 'Eliminando...' : 'Eliminar' }}
             </button>
