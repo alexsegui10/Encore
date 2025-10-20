@@ -10,7 +10,9 @@
                (change)="search_event(this)"
                placeholder="Buscar evento...">
         <datalist id="search">
-          <option *ngFor="let event of listEvents" [value]="event.title">{{event.title}}</option>
+          @for (event of listEvents; track event.title) {
+            <option [value]="event.title">{{event.title}}</option>
+          }
         </datalist>
         <button class="btn btn-primary">Search</button>
       </form>

@@ -2,12 +2,6 @@ import dotenv from "dotenv";
 // Load environment variables FIRST before importing other modules
 dotenv.config();
 
-// Debug: Check if environment variables are loaded
-console.log('🔍 Environment variables check:');
-console.log('ACCESS_TOKEN_SECRET:', process.env.ACCESS_TOKEN_SECRET ? 'Loaded ✅' : 'Missing ❌');
-console.log('REFRESH_TOKEN_SECRET:', process.env.REFRESH_TOKEN_SECRET ? 'Loaded ✅' : 'Missing ❌');
-console.log('MONGO_URI:', process.env.MONGO_URI ? 'Loaded ✅' : 'Missing ❌');
-
 import express from "express";
 import cors from "cors";
 import { connectDB } from "../config/database.config.js";

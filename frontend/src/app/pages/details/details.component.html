@@ -1,12 +1,16 @@
-<div class="details" *ngIf="!isLoading()">
+@if (!isLoading()) {
+  <div class="details">
   <app-carousel></app-carousel>
 
-  <div class="details_content" *ngIf="event()">
+    @if (event()) {
+      <div class="details_content">
     <h1>{{ event()!.title }}</h1>
     <p>{{ event()!.description }}</p>
     <p>Fecha: {{ event()!.date | date:'dd/MM/yyyy HH:mm' }}</p>
     <p>Precio: {{ event()!.price | currency:event()!.currency:'symbol':'1.2-2' }}</p>
-    <p *ngIf="event()!.location">Ubicación: {{ event()!.location }}</p>
+        @if (event()!.location) {
+          <p>Ubicación: {{ event()!.location }}</p>
+        }
 
     <!-- Event Meta Component -->
     <app-event-meta 
@@ -18,12 +22,16 @@
       (liked)="toggleEventLiked($event)"
       (deleted)="deleteEvent()">
     </app-event-meta>
-  </div>
+      </div>
+    }
 
   <h2 class="map-title">Ubicación del evento</h2>
   <app-mapa></app-mapa>
 </div>
 
-<div *ngIf="isLoading()" class="loading">
-  <p>Cargando evento...</p>
-</div>
+}
+@if (isLoading()) {
+  <div class="loading">
+    <p>Cargando evento...</p>
+  </div>
+}

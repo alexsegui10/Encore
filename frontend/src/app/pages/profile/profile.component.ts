@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, signal, effect, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
-import { Subject, takeUntil } from 'rxjs';
+import { switchMap, finalize, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SettingsComponent } from '../../shared/settings/settings.component';
@@ -15,28 +15,57 @@ import { SettingsComponent } from '../../shared/settings/settings.component';
     imports: [CommonModule, RouterModule, SettingsComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileComponent implements OnInit, OnDestroy {
-    private router = inject(Router);
-    private userService = inject(UserService);
+export class ProfileComponent {
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    private readonly userService = inject(UserService);
     
-    // Signals locales del componente
-    user = signal<User>({} as User);
-    currentView = signal<string>('profile');
+    private readonly _profileUsername: string;
+    
+    // Signals
+    public user = signal<User | null>(null);
+    public currentView = signal<string>('profile');
+    public isOwnProfile = false;
+    public isLoading = signal(true);
+    public profileNotFound = signal(false);
 
-    private destroy$ = new Subject<void>();
+    constructor() {
+        this._profileUsername = this.route.snapshot.params['username'];
+        this._loadProfile();
+    }
 
-    ngOnInit() {
-        // Suscribirse al observable global del usuario para actualizar el signal local
-        this.userService.currentUser$
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((user) => {
-                this.user.set(user); // Actualizar signal local con datos del observable global
+    private _loadProfile(): void {
+        this.isLoading.set(true);
+        this.profileNotFound.set(false);
+
+        this._constructUserProfileRequest()
+            .subscribe({
+                next: (data: { profile: User }) => {
+                    this.user.set(data.profile);
+                },
+                error: (err) => {
+                    console.error('Error al cargar perfil:', err);
+                    this.profileNotFound.set(true);
+                }
             });
     }
 
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
+    private _constructUserProfileRequest(): Observable<{ profile: User }> {
+        return this.userService.currentUser$.pipe(
+            switchMap((currentUser) => {
+                // Si no hay username en la URL o es el mismo que el usuario actual
+                if (!this._profileUsername || currentUser?.username === this._profileUsername) {
+                    this.isOwnProfile = true;
+                    return this.userService.getProfile(currentUser!.username)
+                        .pipe(finalize(() => this.isLoading.set(false)));
+                }
+
+                // Si es el perfil de otro usuario
+                this.isOwnProfile = false;
+                return this.userService.getProfile(this._profileUsername)
+                    .pipe(finalize(() => this.isLoading.set(false)));
+            })
+        );
     }
 
     showProfile() {

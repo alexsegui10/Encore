@@ -5,7 +5,6 @@ export const getProfile = asyncHandler(async (req, res) => {
     const { username } = req.params;
     const loggedin = req.loggedin;
 
-    // console.log(`print out username ${username}`)
     const user = await User.findOne({ username }).exec();
 
     if (!user) {

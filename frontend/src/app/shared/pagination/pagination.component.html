@@ -1,21 +1,25 @@
 <div class="pagination">
-  <nav *ngIf="totalPages?.length && totalPages.length > 1" aria-label="Paginación">
+  @if (totalPages && totalPages.length > 1) {
+    <nav aria-label="Paginación">
     <ul class="pagination pg-zard">
       <li class="page-item" [ngClass]="{'disabled': currentPage === 1}" (click)="changePage(currentPage - 1)">
         <span class="page-link" aria-label="Anterior">Previous</span>
       </li>
 
-      <li class="page-item" [ngClass]="{'active': pageNumber === currentPage}"
-          *ngFor="let pageNumber of totalPages" (click)="changePage(pageNumber)">
-        <span class="page-link" [attr.aria-current]="pageNumber === currentPage ? 'page' : null">
-          {{ pageNumber }}
-        </span>
-      </li>
+      @for (pageNumber of totalPages; track pageNumber) {
+        <li class="page-item" [ngClass]="{'active': pageNumber === currentPage}"
+            (click)="changePage(pageNumber)">
+          <span class="page-link" [attr.aria-current]="pageNumber === currentPage ? 'page' : null">
+            {{ pageNumber }}
+          </span>
+        </li>
+      }
 
       <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages.length}"
           (click)="changePage(currentPage + 1)">
         <span class="page-link" aria-label="Siguiente">Next</span>
       </li>
     </ul>
-  </nav>
+    </nav>
+  }
 </div>

@@ -57,6 +57,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
           this.cd.markForCheck();
         });
     });
+
+    // Effect para reaccionar al signal de logout
+    effect(() => {
+      const logoutCount = this.userService.logoutSignal();
+      if (logoutCount > 0) {
+        console.log('🔄 Detectado logout - actualizando contenido de settings');
+        this.cd.markForCheck();
+      }
+    });
   }
 
   ngOnInit() {
