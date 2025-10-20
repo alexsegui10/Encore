@@ -1,82 +1,99 @@
 <!-- Loading state -->
 @if (isLoading()) {
-    <div class="container mt-5 text-center">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Cargando...</span>
-        </div>
-        <p>Cargando perfil...</p>
+<div class="container mt-5 text-center">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Cargando...</span>
     </div>
+    <p>Cargando perfil...</p>
+</div>
 }
 
 <!-- Profile not found -->
 @else if (profileNotFound()) {
-    <div class="container mt-5 text-center">
-        <h2>Usuario no encontrado</h2>
-        <p>El perfil que buscas no existe.</p>
-        <a routerLink="/" class="btn btn-primary">Volver al inicio</a>
-    </div>
+<div class="container mt-5 text-center">
+    <h2>Usuario no encontrado</h2>
+    <p>El perfil que buscas no existe.</p>
+    <a routerLink="/" class="btn btn-primary">Volver al inicio</a>
+</div>
 }
 
 <!-- Profile content -->
 @else if (user()) {
-    <div class="profile-page container mt-5">
-        <div class="row">
-            <!-- Sidebar -->
-            <aside class="col-md-3 profile-sidebar">
-                <div class="user-info text-center">
-                    <img class="user-photo" [src]="user()?.image || 'assets/images/user/photo.jpg'" alt="User Photo">
-                    <h3 class="user-name">{{ user()?.username }}</h3>
-                    <!-- <p class="user-following">Seguidos: {{ user()?.followingCount }}</p> -->
-                    
-                    <!-- Botón de seguir/dejar de seguir -->
-                    @if (!isOwnProfile) {
-                        <button 
-                            class="btn btn-sm mt-2" 
-                            [class.btn-primary]="!user()?.following"
-                            [class.btn-outline-secondary]="user()?.following"
-                            (click)="toggleFollow()">
-                            {{ user()?.following ? 'Dejar de seguir' : 'Seguir' }}
-                        </button>
+<div class="profile-page container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <aside class="col-md-3 profile-sidebar">
+            <div class="user-info text-center">
+                <img class="user-photo" [src]="user()?.image || 'assets/images/user/photo.jpg'" alt="User Photo">
+                <h3 class="user-name">{{ user()?.username }}</h3>
+                <!-- <p class="user-following">Seguidos: {{ user()?.followingCount }}</p> -->
+
+                <!-- Botón de seguir/dejar de seguir -->
+                @if (!isOwnProfile) {
+                <button class="btn btn-sm mt-2" [class.btn-primary]="!user()?.following"
+                    [class.btn-outline-secondary]="user()?.following" (click)="toggleFollow()">
+                    {{ user()?.following ? 'Dejar de seguir' : 'Seguir' }}
+                </button>
+                }
+            </div>
+            <nav class="profile-nav">
+                <ul class="nav flex-column">
+                    @if (isOwnProfile) {
+                    <li class="nav-item" [class.active]="isActive('profile')">
+                        <a class="nav-link perfil" (click)="showProfile()">Mi perfil</a>
+                    </li>
+                    <li class="nav-item settings" [class.active]="isActive('settings')">
+                        <a class="nav-link" (click)="showSettings()">Settings</a>
+                    </li>
+                    <li class="nav-item likes" [class.active]="isActive('likes')">
+                        <a class="nav-link" (click)="showLikes()">Likes</a>
+                    </li>
+                    <li class="nav-item following" [class.active]="isActive('following')">
+                        <a class="nav-link" (click)="showFollowing()">Siguiendo</a>
+                    </li>
+                    } @else {
+                    <li class="nav-item" [class.active]="isActive('profile')">
+                        <a class="nav-link perfil" (click)="showProfile()">Perfil</a>
+                    </li>
                     }
-                </div>
-                <nav class="profile-nav">
-                    <ul class="nav flex-column">
-                        @if (isOwnProfile) {
-                            <li class="nav-item" [class.active]="isActive('profile')">
-                                <a class="nav-link perfil" (click)="showProfile()">Mi perfil</a>
-                            </li>
-                            <li class="nav-item settings" [class.active]="isActive('settings')">
-                                <a class="nav-link" (click)="showSettings()">Settings</a>
-                            </li>
-                        } @else {
-                            <li class="nav-item" [class.active]="isActive('profile')">
-                                <a class="nav-link perfil" (click)="showProfile()">Perfil</a>
-                            </li>
-                        }
-                    </ul>
-                </nav>
-            </aside>
-            <!-- Main Content -->
-            <main class="col-md-9 profile-content">
-                @if (currentView() === 'profile') {
-                    <div class="profile-details">
-                        <h2>{{ isOwnProfile ? 'Mi perfil' : 'Perfil de ' + user()?.username }}</h2>
-                        <hr>
-                        <p class="profile-details-item"><strong>Nombre de usuario:</strong> {{ user()?.username }}</p>
-                        @if (isOwnProfile) {
-                            <p class="profile-details-item"><strong>Email:</strong> {{ user()?.email }}</p>
-                        }
-                        <p class="profile-details-item"><strong>Biografía:</strong> {{ user()?.bio || 'Sin biografía' }}</p>
-                    </div>
+                </ul>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <main class="col-md-9 profile-content">
+            @if (currentView() === 'profile') {
+            <div class="profile-details">
+                <h2>{{ isOwnProfile ? 'Mi perfil' : 'Perfil de ' + user()?.username }}</h2>
+                <hr>
+                <p class="profile-details-item"><strong>Nombre de usuario:</strong> {{ user()?.username }}</p>
+                @if (isOwnProfile) {
+                <p class="profile-details-item"><strong>Email:</strong> {{ user()?.email }}</p>
                 }
-                @if (currentView() === 'settings' && isOwnProfile) {
-                    <div>
-                        <h2>Ajustes de mi perfil</h2>
-                        <hr>
-                        <app-settings-user></app-settings-user>
-                    </div>
-                }
-            </main>
-        </div>
+                <p class="profile-details-item"><strong>Biografía:</strong> {{ user()?.bio || 'Sin biografía' }}</p>
+            </div>
+            }
+            @if (currentView() === 'settings' && isOwnProfile) {
+            <div>
+                <h2>Ajustes de mi perfil</h2>
+                <hr>
+                <app-settings-user></app-settings-user>
+            </div>
+            }
+            @if (currentView() === 'likes') {
+            <div>
+                <h2>Eventos que me gustan</h2>
+                <hr>
+                <app-list-liked-events></app-list-liked-events>
+            </div>
+            }
+            @if (currentView() === 'following') {
+            <div>
+                <h2>Usuarios que sigo</h2>
+                <hr>
+                <app-list-following-users></app-list-following-users>
+            </div>
+            }
+        </main>
     </div>
+</div>
 }

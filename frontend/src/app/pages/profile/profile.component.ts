@@ -6,20 +6,20 @@ import { switchMap, finalize, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SettingsComponent } from '../../shared/settings/settings.component';
-
+import { ListLikedEventsComponent } from '../../shared/list-liked-events/list-liked-events.component';
+import { ListFollowingUsersComponent } from '../../shared/list-following-users/list-following-users.component';
 @Component({
     selector: 'app-profile-page',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, SettingsComponent],
+    imports: [CommonModule, RouterModule, SettingsComponent, ListLikedEventsComponent, ListFollowingUsersComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly userService = inject(UserService);
-    
     private readonly _profileUsername: string;
     
     // Signals
@@ -103,8 +103,12 @@ export class ProfileComponent {
         this.currentView.set('profile');
     }
 
-    showFavorites() {
-        this.currentView.set('favorites');
+    showLikes() {
+        this.currentView.set('likes');
+    }
+
+    showFollowing() {
+        this.currentView.set('following');
     }
 
     showSettings() {

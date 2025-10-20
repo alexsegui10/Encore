@@ -121,4 +121,9 @@ export class UserService {
   unfollowUser(username: string): Observable<{ profile: User }> {
     return this.apiService.delete(`/api/${username}/follow`, 4000, true);
   }
+
+  // Obtener usuarios que sigue el usuario autenticado
+  getFollowingUsers(): Observable<{ users: User[], usersCount: number }> {
+    return this.apiService.get('/api/user/following', undefined, 4000, true);
+  }
 }

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as profileController from '../controllers/profile.controller.js';
+import * as concerts from '../controllers/evento.controller.js';
 import verifyJWTOptional from '../middleware/verifyJWTOptional.js';
 import verifyJWT from '../middleware/verifyJWT.js';
 

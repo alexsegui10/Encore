@@ -1,12 +1,14 @@
 import { Router } from 'express';
-import  verifyJWT  from '../middleware/verifyJWT.js';
-import  verifyJWTOptional  from '../middleware/verifyJWTOptional.js';
+import verifyJWT from '../middleware/verifyJWT.js';
+import verifyJWTOptional from '../middleware/verifyJWTOptional.js';
 import * as concerts from '../controllers/evento.controller.js';
 
 const api = Router();
 
 api.get('/eventos', verifyJWTOptional, concerts.listEvents);
 api.get('/eventos/category/:slug', concerts.GetProductsByCategory);
+// Events liked by the authenticated user
+api.get('/eventos/liked', verifyJWT, concerts.getFavoriteEvents);
 api.get('/eventos/:slug', verifyJWTOptional, concerts.getOneEvent);
 api.post('/eventos', concerts.createEvent);
 api.put('/eventos/:slug', concerts.updateEvent);

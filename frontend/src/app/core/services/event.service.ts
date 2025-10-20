@@ -202,23 +202,27 @@ export class EventService {
     // ===================== COMENTARIOS DE EVENTO =====================
 
     getEventComments(slug: string) {
-      return this.apiService.get(`/api/${slug}/comments`, undefined, 4000, false);
+        return this.apiService.get(`/api/${slug}/comments`, undefined, 4000, false);
     }
 
     createEventComment(slug: string, body: string) {
-      return this.apiService.post(
-        `/api/${slug}/comments`,
-        { comment: { body } },
-        4000,
-        true
-      );
+        return this.apiService.post(
+            `/api/${slug}/comments`,
+            { comment: { body } },
+            4000,
+            true
+        );
     }
 
     deleteEventComment(slug: string, commentId: string) {
-      return this.apiService.delete(
-        `/api/${slug}/comments/${commentId}`,
-        4000,
-        true
-      );
+        return this.apiService.delete(
+            `/api/${slug}/comments/${commentId}`,
+            4000,
+            true
+        );
     }
+
+    getLikedEvents(): Observable<Event[]> {
+        return this.apiService.get('/api/eventos/liked', undefined, 4000, true);
+    }  
 }

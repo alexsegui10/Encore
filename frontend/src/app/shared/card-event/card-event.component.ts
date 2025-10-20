@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Event } from '../../core/models/event.model';
 import { Router, RouterLink } from '@angular/router';
@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 })
 export class CardEventComponent {
   @Input() event!: Event;
+  @Output() eventUnliked = new EventEmitter<string>(); // Emite el slug del evento cuando se quita el like
 
   constructor(
     private eventService: EventService,
@@ -29,10 +30,17 @@ export class CardEventComponent {
 
     if (!this.event) return;
 
+    const wasLiked = this.event.isLiked; // Guardar el estado anterior
+
     this._constructToggleLikeRequest(liked).subscribe({
       next: (response) => {
         // Actualizar el evento con la respuesta del servidor
         this.event = response;
+        
+        // Si se quitó el like (estaba liked y ahora no lo está), emitir evento
+        if (wasLiked && !this.event.isLiked) {
+          this.eventUnliked.emit(this.event.slug);
+        }
       },
       error: (err) => {
         console.error('❌ Error al dar like:', err);

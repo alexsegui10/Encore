@@ -1,0 +1,22 @@
+<div class="liked-events-container">
+    @if (isLoading()) {
+    <div class="loading">
+        <p>Cargando eventos favoritos...</p>
+    </div>
+    } @else if (errorMessage()) {
+    <div class="error">
+        <p>{{ errorMessage() }}</p>
+    </div>
+    } @else if (likedEvents().length > 0) {
+    <div class="events-grid">
+        @for (event of likedEvents(); track event._id) {
+        <app-card-event [event]="event" (eventUnliked)="onEventUnliked($event)"></app-card-event>
+        }
+    </div>
+    } @else {
+    <div class="empty-state">
+        <p>No tienes eventos favoritos aún.</p>
+        <p class="hint">Explora eventos y marca tus favoritos con ❤️</p>
+    </div>
+    }
+</div>

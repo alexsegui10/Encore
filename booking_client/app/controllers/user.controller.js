@@ -20,8 +20,8 @@ export const registerUser = asyncHandler(async (req, res) => {
     });
 
     if (existingUser) {
-        return res.status(409).json({ 
-            message: "User already exists with this email or username" 
+        return res.status(409).json({
+            message: "User already exists with this email or username"
         });
     }
 
@@ -168,5 +168,33 @@ export const updateUser = asyncHandler(async (req, res) => {
 
     return res.status(200).json({
         user: target.toUserResponse(accessToken)
+    });
+});
+
+export const getFollowingUsers = asyncHandler(async (req, res) => {
+    const userId = req.userId;
+
+    // Buscar el usuario autenticado
+    const currentUser = await User.findById(userId).exec();
+
+    if (!currentUser) {
+        return res.status(401).json({
+            message: "User Not Found"
+        });
+    }
+
+    // Obtener los usuarios que sigue
+    const followingUsers = await User.find({
+        _id: { $in: currentUser.followingUsers }
+    }).exec();
+
+    // Transformar los usuarios usando toProfileJSON
+    const usersProfiles = followingUsers.map(user =>
+        user.toProfileJSON(currentUser)
+    );
+
+    return res.status(200).json({
+        users: usersProfiles,
+        usersCount: usersProfiles.length
     });
 });

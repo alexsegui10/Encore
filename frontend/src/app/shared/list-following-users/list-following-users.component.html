@@ -1,0 +1,40 @@
+<div class="following-users-container">
+    @if (isLoading()) {
+    <div class="loading">
+        <p>Cargando usuarios que sigues...</p>
+    </div>
+    } @else if (errorMessage()) {
+    <div class="error">
+        <p>{{ errorMessage() }}</p>
+    </div>
+    } @else if (followingUsers().length > 0) {
+    <div class="users-grid">
+        @for (user of followingUsers(); track user.username) {
+        <div class="user-card">
+            <a [routerLink]="['/profile', user.username]" class="user-link">
+                <div class="user-avatar">
+                    <img [src]="user.image" [alt]="user.username" />
+                </div>
+                <div class="user-info">
+                    <h3 class="user-username">{{ user.username }}</h3>
+                    @if (user.bio) {
+                    <p class="user-bio">{{ user.bio }}</p>
+                    }
+                    @if (user.email) {
+                    <p class="user-email">{{ user.email }}</p>
+                    }
+                </div>
+            </a>
+            <button class="unfollow-btn" (click)="unfollowUser(user.username, $event)" title="Dejar de seguir">
+                Siguiendo ✓
+            </button>
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="empty-state">
+        <p>No sigues a ningún usuario aún.</p>
+        <p class="hint">Explora perfiles y comienza a seguir a otros usuarios 👥</p>
+    </div>
+    }
+</div>

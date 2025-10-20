@@ -95,16 +95,16 @@ export const getOneEvent = async (req, res, next) => {
     const { slug } = req.params;
     const doc = await Event.findOne({ slug });
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
-    
+
     // Intentar obtener el usuario actual si está autenticado
     let currentUser = null;
     if (req.userId) {
       currentUser = await User.findById(req.userId).exec();
     }
-    
+
     // Usar toEventResponse para incluir isLiked y likesCount
     const eventResponse = await doc.toEventResponse(currentUser);
-    
+
     res.json(eventResponse);
   } catch (err) {
     next(err);
@@ -285,5 +285,41 @@ export const unfavoriteEvent = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     event: await event.toEventResponse(loginUser)
+  });
+});
+
+export const getFavoriteEvents = asyncHandler(async (req, res) => {
+  const id = req.userId;
+
+  const loginUser = await User.findById(id).exec();
+
+  if (!loginUser) {
+    return res.status(401).json({
+      message: "User Not Found"
+    });
+  }
+
+  // Primero obtener los eventos
+  const favoriteEvents = await Event.find({
+    _id: { $in: loginUser.favouriteEvents }
+  }).exec();
+
+  // Luego verificar si está vacío
+  if (favoriteEvents.length === 0) {
+    return res.status(200).json({
+      events: [],
+      eventsCount: 0,
+      message: "No tienes eventos favoritos aún"
+    });
+  }
+
+  // Transformar los eventos
+  const eventsWithDetails = await Promise.all(
+    favoriteEvents.map(event => event.toEventResponse(loginUser))
+  );
+
+  return res.status(200).json({
+    events: eventsWithDetails,
+    eventsCount: eventsWithDetails.length
   });
 });

@@ -65,9 +65,9 @@ const EventSchema = new mongoose.Schema(
         message: 'Cada URL de imagen debe ser un string de máximo 500 caracteres'
       }
     },
-       comments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment'
+    comments: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
     }]
   },
   { timestamps: true }
@@ -96,24 +96,24 @@ EventSchema.pre('validate', function (next) {
 });
 
 EventSchema.methods.toEventResponse = async function (user) {
-    return {
-        _id: this._id,
-        slug: this.slug,
-        title: this.title,
-        date: this.date,
-        price: this.price,
-        currency: this.currency,
-        location: this.location,
-        description: this.description,
-        category: this.category,
-        status: this.status,
-        mainImage: this.mainImage,
-        images: this.images,
-        createdAt: this.createdAt,
-        updatedAt: this.updatedAt,
-        isLiked: user ? user.isFavourite(this._id) : false,
-        likesCount: this.favouritesCount,
-    }
+  return {
+    _id: this._id,
+    slug: this.slug,
+    title: this.title,
+    date: this.date,
+    price: this.price,
+    currency: this.currency,
+    location: this.location,
+    description: this.description,
+    category: this.category,
+    status: this.status,
+    mainImage: this.mainImage,
+    images: this.images,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+    isLiked: user ? user.isFavourite(this._id) : false,
+    likesCount: this.favouritesCount,
+  }
 }
 
 //serializer para carousel
@@ -149,10 +149,10 @@ EventSchema.methods.updateFavoriteCount = async function () {
 
 // Métodos para comments
 EventSchema.methods.addComment = function (commentId) {
-    if(this.comments.indexOf(commentId) === -1){
-        this.comments.push(commentId);
-    }
-    return this.save();
+  if (this.comments.indexOf(commentId) === -1) {
+    this.comments.push(commentId);
+  }
+  return this.save();
 };
 
 EventSchema.methods.removeComment = function (commentId) {
