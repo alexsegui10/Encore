@@ -42,7 +42,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.slug = this._activatedRoute.snapshot.params['slug'];
     this._loadComments();
 
-    this.sub = this._userService.currentUser.subscribe(u => {
+    this.sub = this._userService.currentUser$.subscribe(u => {
       const id = (u as any)?._id ?? (u as any)?.id ?? null;
       const email = (u as any)?.email ?? null;
       this.currentUserId.set(id);
