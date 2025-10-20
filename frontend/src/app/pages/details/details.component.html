@@ -19,8 +19,7 @@
       [enableAuthorActions]="isEventOwner"
       [likesCount]="event()!.likesCount || 0" 
       [isLiked]="event()!.isLiked || false" 
-      (liked)="toggleEventLiked($event)"
-      (deleted)="deleteEvent()">
+      (liked)="toggleEventLiked($event)">
     </app-event-meta>
       </div>
     }

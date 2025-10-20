@@ -36,6 +36,16 @@ export class DetailsComponent implements OnInit {
         effect(() => {
             const logoutCount = this.userService.logoutSignal();
             if (logoutCount > 0 && this.slug) {
+                console.log('🔄 Detectado logout - recargando evento');
+                this.getEvent();
+            }
+        });
+        
+        // Effect para reaccionar al signal de login
+        effect(() => {
+            const loginCount = this.userService.loginSignal();
+            if (loginCount > 0 && this.slug) {
+                console.log('🔄 Detectado login - recargando evento con info de likes');
                 this.getEvent();
             }
         });
@@ -154,43 +164,5 @@ export class DetailsComponent implements OnInit {
         }
 
         return this.eventService.unlikeEvent(currentEvent.slug!);
-    }
-
-    public deleteEvent(): void {
-        if (!this.event()) return;
-
-        Swal.fire({
-            icon: 'warning',
-            title: '¿Eliminar evento?',
-            text: 'Esta acción no se puede deshacer',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#dc3545'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.eventService.deleteEvent(this.event()!.slug!).subscribe({
-                    next: () => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Evento eliminado',
-                            text: 'El evento ha sido eliminado correctamente',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            this.router.navigateByUrl('/');
-                        });
-                    },
-                    error: (err) => {
-                        console.error('Error al eliminar:', err);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'No se pudo eliminar el evento. Intenta de nuevo.',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
-            }
-        });
     }
 }

@@ -19,6 +19,9 @@ export class UserService {
 
   // Signal para detectar cuando se cierra sesión
   public logoutSignal = signal<number>(0);
+  
+  // Signal para detectar cuando se inicia sesión
+  public loginSignal = signal<number>(0);
 
   constructor(
     private apiService: ApiService,
@@ -53,6 +56,9 @@ export class UserService {
     // Actualizar observables globales
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
+    
+    // Emitir signal de login para actualizar contenido reactivamente
+    this.loginSignal.update(value => value + 1);
 
   }
 

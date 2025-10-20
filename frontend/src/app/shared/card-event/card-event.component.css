@@ -23,6 +23,7 @@
   color: var(--text);
   box-shadow: var(--shadow);
   transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  cursor: pointer;
 }
 .event-card:hover {
   transform: translateY(-2px);
@@ -104,7 +105,12 @@
 }
 
 /* CTA */
-.cta-row { display: flex; }
+.cta-row { 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 .cta {
   display: inline-flex;
   align-items: center;
@@ -121,12 +127,75 @@
     color-mix(in oklab, var(--brand), black 8%));
   border: 1px solid color-mix(in oklab, var(--brand), #000 35%);
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+  flex: 1;
 }
 .cta:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 28px rgba(0,0,0,.35);
 }
 
+/* Like Button */
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in oklab, var(--border), white 15%);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .18s ease;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.like-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: color-mix(in oklab, var(--border), white 25%);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.like-button.liked {
+  background: linear-gradient(180deg,
+    color-mix(in oklab, #e74c3c, white 10%),
+    color-mix(in oklab, #e74c3c, black 8%));
+  border-color: color-mix(in oklab, #e74c3c, #000 35%);
+  color: #fff;
+}
+
+.like-button.liked:hover {
+  background: linear-gradient(180deg,
+    color-mix(in oklab, #e74c3c, white 15%),
+    color-mix(in oklab, #e74c3c, black 5%));
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+}
+
+.like-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.like-button.liked svg {
+  fill: currentColor;
+  animation: heartBeat 0.3s ease;
+}
+
+.likes-count {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(0.95); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .event-card, .event-card * { transition: none !important; }
+  .like-button.liked svg { animation: none !important; }
 }

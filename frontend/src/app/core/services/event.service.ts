@@ -28,7 +28,8 @@ export class EventService {
             });
         }
 
-        return this.apiService.get("/api/eventos", httpParams, 4000);
+        // Enviar con auth opcional - si hay token lo envía, si no continúa sin él
+        return this.apiService.get("/api/eventos", httpParams, 4000, true);
     }
 
     get_products_filter(filters: Filters): Observable<Event[]> {
@@ -59,7 +60,8 @@ export class EventService {
         }
 
         console.log('Sending HTTP params:', httpParams.toString());
-        return this.apiService.get("/api/eventos", httpParams, 4000);
+        // Enviar con auth opcional - si hay token lo envía, si no continúa sin él
+        return this.apiService.get("/api/eventos", httpParams, 4000, true);
     }
 
     /**

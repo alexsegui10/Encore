@@ -24,5 +24,4 @@ export class EventMetaComponent {
   @Input() isLiked: boolean = false;
 
   @Output() liked: EventEmitter<boolean> = new EventEmitter();
-  @Output() deleted: EventEmitter<void> = new EventEmitter();
 }

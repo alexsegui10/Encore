@@ -45,8 +45,7 @@ export const listEvents = async (req, res, next) => {
     const events = await Event.find(query)
       .limit(Number(limit))
       .skip(Number(offset))
-      .sort('-date')
-      .lean();
+      .sort('-date');
 
     // Obtener conteo total con los mismos filtros
     const event_count = await Event.find(query).countDocuments();
@@ -57,8 +56,23 @@ export const listEvents = async (req, res, next) => {
       return res.status(404).json({ msg: "No se encontraron eventos" });
     }
 
+    // Intentar obtener el usuario actual si está autenticado
+    let currentUser = null;
+    if (req.userId) {
+      try {
+        currentUser = await User.findById(req.userId).exec();
+      } catch (err) {
+        console.log('Usuario no encontrado o token inválido:', err);
+      }
+    }
+
+    // Transformar cada evento usando toEventResponse para incluir isLiked y likesCount
+    const eventsWithLikes = await Promise.all(
+      events.map(event => event.toEventResponse(currentUser))
+    );
+
     return res.status(200).json({
-      events: events,
+      events: eventsWithLikes,
       event_count: event_count,
       filters_applied: {
         category,
