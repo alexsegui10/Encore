@@ -39,12 +39,14 @@ export class CommentsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log("esere",this.comments);
     this.slug = this._activatedRoute.snapshot.params['slug'];
     this._loadComments();
 
     this.sub = this._userService.currentUser$.subscribe(u => {
       const id = (u as any)?._id ?? (u as any)?.id ?? null;
       const email = (u as any)?.email ?? null;
+      const image = (u as any)?.image ?? null;
       this.currentUserId.set(id);
       this.currentUserEmail.set(email);
     });

@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-xs-12 col-md-8 offset-md-2">
 
+    <!-- Formulario de nuevo comentario -->
     <form class="card comment-form" *ngIf="hasToken(); else loginHint">
       <div class="card-block">
         <textarea
@@ -25,28 +26,43 @@
       <p><a routerLink="/login">Inicia sesión</a> para comentar este evento.</p>
     </ng-template>
 
-<ng-container *ngIf="comments()?.length; else noComments">
-  <div class="card comment-card"
-       *ngFor="let comment of comments(); trackBy: trackById"
-       [ngClass]="{ 'my-comment': isMine(comment) }">
-    <div class="card-block">
-      <p class="card-text">{{ comment.body }}</p>
-    </div>
-    <div class="card-footer">
-      <span class="date-posted">{{ comment.createdAt | date:'short' }}</span>
+    <!-- Lista de comentarios -->
+    <ng-container *ngIf="comments()?.length; else noComments">
+      <div class="card comment-card"
+           *ngFor="let comment of comments(); trackBy: trackById"
+           [ngClass]="{ 'my-comment': isMine(comment) }">
 
-      <span class="mod-options" *ngIf="isMine(comment)">
-        <button
-          class="btn btn-link danger p-0 ms-2"
-          (click)="deleteComment(comment.id)"
-          [disabled]="deletingId() === comment.id">
-          {{ deletingId() === comment.id ? 'Eliminando...' : 'Eliminar' }}
-        </button>
-      </span>
-    </div>
-  </div>
-</ng-container>
+        <!-- Cabecera con avatar y autor -->
+        <div class="comment-header">
+          <img
+            [src]="comment.author.image || 'https://api.dicebear.com/7.x/identicon/svg?seed=anon'"
+            alt="{{ comment.author.username || 'Usuario' }}"
+            class="comment-avatar"
+          />
+          <div class="comment-meta">
+            <span class="comment-username">{{ comment.author.username || 'Usuario' }}</span>
+            <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+          </div>
+        </div>
 
+        <!-- Cuerpo del comentario -->
+        <div class="card-block">
+          <p class="card-text">{{ comment.body }}</p>
+        </div>
+
+        <!-- Footer con botón eliminar -->
+        <div class="card-footer">
+          <span class="mod-options" *ngIf="isMine(comment)">
+            <button
+              class="btn btn-link danger p-0 ms-2"
+              (click)="deleteComment(comment.id)"
+              [disabled]="deletingId() === comment.id">
+              {{ deletingId() === comment.id ? 'Eliminando...' : 'Eliminar' }}
+            </button>
+          </span>
+        </div>
+      </div>
+    </ng-container>
 
     <ng-template #noComments>
       <p class="text-muted mt-3">Aún no hay comentarios. ¡Sé el primero!</p>

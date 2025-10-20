@@ -1,111 +1,118 @@
-:host {
-  display: block;
-}
-
-/* ===== FORMULARIO DE NUEVO COMENTARIO ===== */
+/* ===== FORMULARIO ===== */
 .comment-form {
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 16px;
-  padding: 0;
+  background: #fff;
   margin-bottom: 24px;
-  background: #ffffff;
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.03),
-    0 8px 24px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.15s ease, transform 0.1s ease;
 }
 
 .comment-form:hover {
   transform: translateY(-1px);
-  box-shadow:
-    0 3px 6px rgba(0, 0, 0, 0.05),
-    0 10px 32px rgba(0, 0, 0, 0.06);
-}
-
-.comment-form .card-block {
-  padding: 16px 18px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 .comment-form textarea.form-control {
   width: 100%;
   min-height: 90px;
-  resize: vertical;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  outline: none;
   background: #fafafa;
-  font-size: 0.95rem;
-  line-height: 1.4;
   padding: 10px 12px;
+  font-size: 0.95rem;
+  resize: vertical;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .comment-form textarea.form-control:focus {
-  border-color: #7c3aed; /* tu color primario (morado Zard) */
+  border-color: #7c3aed;
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
   background: #fff;
 }
 
-/* Footer con botón */
 .comment-form .card-footer {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
-  padding: 10px 18px 14px 18px;
-  background: transparent;
-  border-top: 1px dashed rgba(0, 0, 0, 0.08);
+  padding: 10px 16px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.05);
 }
 
-/* Botón de publicar */
 .comment-form .btn.btn-primary {
   background-color: #7c3aed;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   padding: 6px 14px;
-  font-size: 0.9rem;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .comment-form .btn.btn-primary:hover {
-  background-color: #6d28d9; /* un poco más oscuro */
-  transform: translateY(-1px);
+  background-color: #6d28d9;
 }
 
-.comment-form .btn.btn-primary:disabled {
-  background-color: #a78bfa;
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-/* ===== LISTA DE COMENTARIOS ===== */
+/* ===== COMENTARIOS ===== */
 .card.comment-card {
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 16px;
-  overflow: hidden;
   background: #fff;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   transition: box-shadow 0.15s ease;
 }
 
 .card.comment-card:hover {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Comentarios propios */
 .card.comment-card.my-comment {
   border-color: #7c3aed;
-  background: linear-gradient(
-      0deg,
-      rgba(124, 58, 237, 0.03),
-      rgba(124, 58, 237, 0.03)
-    ),
-    #fff;
+  background: linear-gradient(0deg, rgba(124, 58, 237, 0.03), rgba(124, 58, 237, 0.03)), #fff;
 }
 
-.card.comment-card .card-block {
+/* ===== CABECERA DEL COMENTARIO ===== */
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 14px 16px 0 16px;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #f3f4f6;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.comment-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+}
+
+.comment-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.comment-username {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.comment-date {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* ===== CUERPO Y FOOTER ===== */
+.card.comment-card .card-block {
+  padding: 10px 16px;
 }
 
 .card.comment-card .card-text {
@@ -116,38 +123,18 @@
 
 .card.comment-card .card-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 16px;
+  justify-content: flex-end;
+  padding: 8px 16px 12px 16px;
   border-top: 1px dashed rgba(0, 0, 0, 0.08);
 }
 
-.date-posted {
-  font-size: 0.85rem;
-  color: #6b7280;
-}
-
-/* Botón eliminar */
 .btn.btn-link.danger {
   color: #dc2626;
   font-weight: 600;
   text-decoration: none;
-  padding: 0;
 }
 
 .btn.btn-link.danger:hover {
   color: #b91c1c;
   text-decoration: underline;
-}
-
-.btn[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Mensaje sin comentarios */
-.text-muted.mt-3 {
-  color: #6b7280 !important;
-  text-align: center;
-  margin-top: 1rem !important;
 }
