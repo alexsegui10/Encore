@@ -36,10 +36,16 @@ export const followUser = asyncHandler(async (req, res) => {
             message: "User Not Found"
         })
     }
+    
     await loginUser.follow(user._id);
+    
+    // Refrescar loginUser después del follow para obtener el estado actualizado
+    const updatedLoginUser = await User.findOne({ email: req.userEmail }).exec();
+
+    const profile = user.toProfileJSON(updatedLoginUser);
 
     return res.status(200).json({
-        profile: user.toProfileJSON(loginUser)
+        profile: profile
     })
 
 });
@@ -56,9 +62,12 @@ export const unFollowUser = asyncHandler(async (req, res) => {
         })
     }
     await loginUser.unfollow(user._id);
+    
+    // Refrescar loginUser después del unfollow para obtener el estado actualizado
+    const updatedLoginUser = await User.findOne({ email: req.userEmail }).exec();
 
     return res.status(200).json({
-        profile: user.toProfileJSON(loginUser)
+        profile: user.toProfileJSON(updatedLoginUser)
     })
 
 });

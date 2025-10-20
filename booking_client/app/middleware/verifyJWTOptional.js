@@ -6,6 +6,7 @@ const verifyJWTOptional = async (req, res, next) => {
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         // No token provided, continue without user info
+        req.loggedin = false;
         return next();
     }
 
@@ -19,10 +20,14 @@ const verifyJWTOptional = async (req, res, next) => {
         if (user) {
             req.userId = user._id;
             req.userEmail = user.email;
+            req.loggedin = true;
+        } else {
+            req.loggedin = false;
         }
     } catch (error) {
         // Invalid token, but continue without user info
         console.log('Invalid token in optional verification:', error.message);
+        req.loggedin = false;
     }
 
     next();

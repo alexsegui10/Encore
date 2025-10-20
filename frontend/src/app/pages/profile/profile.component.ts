@@ -68,6 +68,37 @@ export class ProfileComponent {
         );
     }
 
+    toggleFollow(): void {
+        const currentUser = this.user();
+        if (!currentUser) return;
+
+        const isFollowing = currentUser.following;
+        const username = currentUser.username;
+
+
+        if (isFollowing) {
+            // Dejar de seguir
+            this.userService.unfollowUser(username).subscribe({
+                next: (data: { profile: User }) => {
+                    this.user.set(data.profile);
+                },
+                error: (err) => {
+                    console.error('Error al dejar de seguir:', err);
+                }
+            });
+        } else {
+            // Seguir
+            this.userService.followUser(username).subscribe({
+                next: (data: { profile: User }) => {
+                    this.user.set(data.profile);
+                },
+                error: (err) => {
+                    console.error('Error al seguir:', err);
+                }
+            });
+        }
+    }
+
     showProfile() {
         this.currentView.set('profile');
     }

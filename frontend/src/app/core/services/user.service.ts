@@ -109,6 +109,16 @@ export class UserService {
 
   // Obtener perfil de cualquier usuario por username
   getProfile(username: string): Observable<{ profile: User }> {
-    return this.apiService.get(`/api/profile/${username}`);
+    return this.apiService.get(`/api/profile/${username}`, undefined, 4000, true);
+  }
+
+  // Seguir a un usuario
+  followUser(username: string): Observable<{ profile: User }> {
+    return this.apiService.post(`/api/${username}/follow`, {}, 4000, true);
+  }
+
+  // Dejar de seguir a un usuario
+  unfollowUser(username: string): Observable<{ profile: User }> {
+    return this.apiService.delete(`/api/${username}/follow`, 4000, true);
   }
 }

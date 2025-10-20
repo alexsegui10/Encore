@@ -46,12 +46,13 @@ userSchema.methods.toUserResponse = function (jwt_access) {
   };
 };
 
-userSchema.methods.toProfileJSON = function () {
+userSchema.methods.toProfileJSON = function (user) {
   return {
     username: this.username,
     bio: this.bio,
     image: this.image,
-    email: this.email
+    email: this.email,
+    following: user ? user.isFollowing(this._id) : false
   };
 };
 
