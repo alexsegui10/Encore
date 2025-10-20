@@ -64,7 +64,11 @@ const EventSchema = new mongoose.Schema(
         },
         message: 'Cada URL de imagen debe ser un string de máximo 500 caracteres'
       }
-    }
+    },
+       comments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment'
+    }]
   },
   { timestamps: true }
 );
@@ -131,6 +135,7 @@ EventSchema.methods.toEventoCarouselResponse = async function () {
   }
 }
 
+// Método para actualizar el contador de favoritos
 EventSchema.methods.updateFavoriteCount = async function () {
   const User = mongoose.model('User');
   const favoriteCount = await User.countDocuments({
@@ -141,5 +146,18 @@ EventSchema.methods.updateFavoriteCount = async function () {
 
   return this.save();
 }
+
+// Métodos para comments
+EventSchema.methods.addComment = function (commentId) {
+    if(this.comments.indexOf(commentId) === -1){
+        this.comments.push(commentId);
+    }
+    return this.save();
+};
+
+EventSchema.methods.removeComment = function (commentId) {
+  this.comments.pull(commentId);
+  return this.save();
+};
 
 export default mongoose.model('Event', EventSchema);

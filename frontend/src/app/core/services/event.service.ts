@@ -175,6 +175,8 @@ export class EventService {
         return this.apiService.get('/api/eventos', params, 4000);
     }
 
+    // ===================== LIKES DE EVENTO =====================
+
     /**
      * Da like a un evento
      * @param slug - Slug del evento
@@ -195,5 +197,28 @@ export class EventService {
         return this.apiService.delete(`/api/${slug}/favorite`, 4000, true).pipe(
             map((response: any) => response.event)
         );
+    }
+
+    // ===================== COMENTARIOS DE EVENTO =====================
+
+    getEventComments(slug: string) {
+      return this.apiService.get(`/api/${slug}/comments`, undefined, 4000, false);
+    }
+
+    createEventComment(slug: string, body: string) {
+      return this.apiService.post(
+        `/api/${slug}/comments`,
+        { comment: { body } },
+        4000,
+        true
+      );
+    }
+
+    deleteEventComment(slug: string, commentId: string) {
+      return this.apiService.delete(
+        `/api/${slug}/comments/${commentId}`,
+        4000,
+        true
+      );
     }
 }

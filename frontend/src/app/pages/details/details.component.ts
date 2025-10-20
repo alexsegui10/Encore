@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
 import { CarouselComponent } from '../../shared/carrusel/carousel.component';
+import { CommentsComponent } from '../../shared/comments/comments.component';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
 import { MapaComponent } from '../../shared/map/map.component';
@@ -17,7 +18,7 @@ import { Observable } from 'rxjs';
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent, MapaComponent, DatePipe, EventMetaComponent],
+    imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent, MapaComponent, DatePipe, EventMetaComponent, CommentsComponent],
 })
 
 export class DetailsComponent implements OnInit {

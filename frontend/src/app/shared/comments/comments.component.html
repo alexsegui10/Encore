@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-xs-12 col-md-8 offset-md-2">
+
+    <form class="card comment-form" *ngIf="hasToken(); else loginHint">
+      <div class="card-block">
+        <textarea
+          [formControl]="newCommentControl"
+          class="form-control"
+          placeholder="Escribe un comentario..."
+          rows="3">
+        </textarea>
+      </div>
+      <div class="card-footer">
+        <button
+          type="button"
+          class="btn btn-sm btn-primary"
+          (click)="addComment()"
+          [disabled]="posting() || !newCommentControl.value.trim()">
+          {{ posting() ? 'Publicando...' : 'Publicar' }}
+        </button>
+      </div>
+    </form>
+
+    <ng-template #loginHint>
+      <p><a routerLink="/login">Inicia sesión</a> para comentar este evento.</p>
+    </ng-template>
+
+<ng-container *ngIf="comments()?.length; else noComments">
+  <div class="card comment-card"
+       *ngFor="let comment of comments(); trackBy: trackById"
+       [ngClass]="{ 'my-comment': isMine(comment) }">
+    <div class="card-block">
+      <p class="card-text">{{ comment.body }}</p>
+    </div>
+    <div class="card-footer">
+      <span class="date-posted">{{ comment.createdAt | date:'short' }}</span>
+
+      <span class="mod-options" *ngIf="isMine(comment)">
+        <button
+          class="btn btn-link danger p-0 ms-2"
+          (click)="deleteComment(comment.id)"
+          [disabled]="deletingId() === comment.id">
+          {{ deletingId() === comment.id ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+      </span>
+    </div>
+  </div>
+</ng-container>
+
+
+    <ng-template #noComments>
+      <p class="text-muted mt-3">Aún no hay comentarios. ¡Sé el primero!</p>
+    </ng-template>
+
+  </div>
+</div>

@@ -9,6 +9,7 @@ import eventosRoutes from "../routes/evento.routes.js";
 import categoryRoutes from "../routes/category.routes.js";
 import carouselRoutes from "../routes/carousel.routes.js";
 import authRoutes from "../routes/auth.routes.js";
+import CommentsRoutes from "../routes/comments.routes.js";
 import userRoutes from "../routes/user.routes.js";
 import profileRoutes from "../routes/profile.routes.js";
 
@@ -26,6 +27,7 @@ app.get("/", (_req, res) => res.send("API OK"));
 app.use("/api", eventosRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", carouselRoutes);
+app.use("/api", CommentsRoutes);
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", profileRoutes);

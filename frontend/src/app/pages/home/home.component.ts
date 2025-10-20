@@ -12,4 +12,5 @@ import { CarouselComponent } from '../../shared/carrusel/carousel.component';
     imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent, ListCategoryComponent]
 })
 export class HomeComponent {
+
 }
