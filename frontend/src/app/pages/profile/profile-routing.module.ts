@@ -7,7 +7,11 @@ const routes: Routes = [
     path: '',
     component: ProfileComponent,
     canActivate: [AuthGuard] // Solo clientes autenticados
-
+  },
+  {
+    path: ':username',
+    component: ProfileComponent
+    // Sin AuthGuard para permitir ver perfiles sin estar autenticado
   }
 ];
 

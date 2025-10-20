@@ -22,7 +22,7 @@ const refreshTokenSchema = new mongoose.Schema({
 // Add index for better performance
 refreshTokenSchema.index({ userId: 1 });
 
-// Remove expired tokens automatically
+// Remove expired tokens automatically (TTL index)
 refreshTokenSchema.index({ expiryDate: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model('RefreshToken', refreshTokenSchema);

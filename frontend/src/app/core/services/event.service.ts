@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Event, CreateEventRequest, UpdateEventRequest } from '../models/event.model';
 import { ApiService } from './api.service';
 import { Filters } from '../models/filters.model';
@@ -27,7 +28,8 @@ export class EventService {
             });
         }
 
-        return this.apiService.get("/api/eventos", httpParams, 4000);
+        // Enviar con auth opcional - si hay token lo envía, si no continúa sin él
+        return this.apiService.get("/api/eventos", httpParams, 4000, true);
     }
 
     get_products_filter(filters: Filters): Observable<Event[]> {
@@ -58,7 +60,8 @@ export class EventService {
         }
 
         console.log('Sending HTTP params:', httpParams.toString());
-        return this.apiService.get("/api/eventos", httpParams, 4000);
+        // Enviar con auth opcional - si hay token lo envía, si no continúa sin él
+        return this.apiService.get("/api/eventos", httpParams, 4000, true);
     }
 
     /**
@@ -67,7 +70,8 @@ export class EventService {
      * @returns Observable con el evento
      */
     getEventBySlug(slug: string): Observable<Event> {
-        return this.apiService.get(`/api/eventos/${slug}`, undefined, 4000);
+        // Enviar con auth opcional - si hay token lo envía, si no continúa sin él
+        return this.apiService.get(`/api/eventos/${slug}`, undefined, 4000, true);
     }
 
     /**
@@ -76,7 +80,8 @@ export class EventService {
      * @returns Observable con el evento
      */
     getEventById(id: string): Observable<Event> {
-        return this.apiService.get(`/api/eventos/${id}`, undefined, 4000);
+        // Enviar con auth opcional - si hay token lo envía, si no continúa sin él
+        return this.apiService.get(`/api/eventos/${id}`, undefined, 4000, true);
     }
 
     /**
@@ -169,26 +174,51 @@ export class EventService {
             .set('endDate', endDate.toISOString());
         return this.apiService.get('/api/eventos', params, 4000);
     }
+
+    // ===================== LIKES DE EVENTO =====================
+
+    /**
+     * Da like a un evento
+     * @param slug - Slug del evento
+     * @returns Observable con el evento actualizado
+     */
+    public likeEvent(slug: string): Observable<Event> {
+        return this.apiService.post(`/api/${slug}/favorite`, null, 4000, true).pipe(
+            map((response: any) => response.event)
+        );
+    }
+
+    /**
+     * Quita el like de un evento
+     * @param slug - Slug del evento
+     * @returns Observable con el evento actualizado
+     */
+    public unlikeEvent(slug: string): Observable<Event> {
+        return this.apiService.delete(`/api/${slug}/favorite`, 4000, true).pipe(
+            map((response: any) => response.event)
+        );
+    }
+
     // ===================== COMENTARIOS DE EVENTO =====================
 
-getEventComments(slug: string) {
-  return this.apiService.get(`/api/${slug}/comments`, undefined, 4000, false);
-}
+    getEventComments(slug: string) {
+      return this.apiService.get(`/api/${slug}/comments`, undefined, 4000, false);
+    }
 
-createEventComment(slug: string, body: string) {
-  return this.apiService.post(
-    `/api/${slug}/comments`,
-    { comment: { body } },
-    4000,
-    true
-  );
-}
+    createEventComment(slug: string, body: string) {
+      return this.apiService.post(
+        `/api/${slug}/comments`,
+        { comment: { body } },
+        4000,
+        true
+      );
+    }
 
-deleteEventComment(slug: string, commentId: string) {
-  return this.apiService.delete(
-    `/api/${slug}/comments/${commentId}`,
-    4000,
-    true
-  );
-}
+    deleteEventComment(slug: string, commentId: string) {
+      return this.apiService.delete(
+        `/api/${slug}/comments/${commentId}`,
+        4000,
+        true
+      );
+    }
 }

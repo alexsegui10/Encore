@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
@@ -17,20 +17,23 @@ export class UserService {
   private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
+  // Signal para detectar cuando se cierra sesión
+  public logoutSignal = signal<number>(0);
+  
+  // Signal para detectar cuando se inicia sesión
+  public loginSignal = signal<number>(0);
+
   constructor(
     private apiService: ApiService,
     private jwtService: JwtService
   ) {}
 
   populate(): void {
-    console.log('🔍 Verificando token guardado en localStorage...');
     const token = this.jwtService.getToken();
 
     if (token) {
-      console.log('✅ Token encontrado, verificando con servidor...');
       this.apiService.get('/api/user', undefined, 4000, true).subscribe({
         next: (data) => {
-          console.log('✅ Usuario verificado exitosamente', data);
           this.setAuth({ ...data.user, token });
         },
         error: (err) => {
@@ -45,29 +48,30 @@ export class UserService {
   }
 
   setAuth(user: User): void {
-    console.log('🔐 Guardando autenticación para usuario:', user.username);
 
     if (user?.token) {
       this.jwtService.saveToken(user.token);
-      console.log('💾 Token guardado en localStorage');
     }
 
     // Actualizar observables globales
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
+    
+    // Emitir signal de login para actualizar contenido reactivamente
+    this.loginSignal.update(value => value + 1);
 
-    console.log('✅ Usuario autenticado correctamente');
   }
 
   purgeAuth(): void {
-    console.log('🔓 Cerrando sesión y limpiando datos...');
     this.jwtService.destroyToken();
     
     // Actualizar observables globales
     this.currentUserSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
     
-    console.log('✅ Sesión cerrada correctamente');
+    // Emitir signal de logout para actualizar contenido reactivamente
+    this.logoutSignal.update(value => value + 1);
+    
   }
 
   attemptAuth(type: 'login' | 'register', credentials: Partial<User>): Observable<User> {
@@ -101,5 +105,20 @@ export class UserService {
           return data.user;
         })
       );
+  }
+
+  // Obtener perfil de cualquier usuario por username
+  getProfile(username: string): Observable<{ profile: User }> {
+    return this.apiService.get(`/api/profile/${username}`, undefined, 4000, true);
+  }
+
+  // Seguir a un usuario
+  followUser(username: string): Observable<{ profile: User }> {
+    return this.apiService.post(`/api/${username}/follow`, {}, 4000, true);
+  }
+
+  // Dejar de seguir a un usuario
+  unfollowUser(username: string): Observable<{ profile: User }> {
+    return this.apiService.delete(`/api/${username}/follow`, 4000, true);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, effect } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -12,6 +12,7 @@ import { Filters } from '../../core/models/filters.model';
 import { SearchComponent } from '../search/search.component';
 import { PaginationComponent } from  '../pagination/pagination.component';
 import { FiltersComponent } from '../filters/filters.component';
+import { UserService } from '../../core/services/user.service';
 @Component({
   selector: 'list-events',
   standalone: true,
@@ -38,8 +39,18 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private route: ActivatedRoute,
     private CategoryService: CategoryService,
-   private Location: Location
-  ) { }
+   private Location: Location,
+   private userService: UserService
+  ) {
+    // Effect para reaccionar al signal de logout
+    effect(() => {
+      const logoutCount = this.userService.logoutSignal();
+      if (logoutCount > 0) {
+        console.log('🔄 Detectado logout - recargando eventos');
+        this.loadEvents();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.routeFilters = this.route.snapshot.paramMap.get('filters');

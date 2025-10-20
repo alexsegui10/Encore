@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
@@ -16,18 +16,17 @@ interface Errors { errors: { [k: string]: string } }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent implements OnInit {
-  authType: 'login' | 'register' = 'login';
-  title: string = '';
-  errors: Errors = { errors: {} };
-  isSubmitting = false;
+  authType = signal<'login' | 'register'>('login');
+  title = signal<string>('');
+  errors = signal<Errors>({ errors: {} });
+  isSubmitting = signal<boolean>(false);
   authForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private fb: FormBuilder,
-    private cd: ChangeDetectorRef
+    private fb: FormBuilder
   ) {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -38,17 +37,15 @@ export class AuthComponent implements OnInit {
   ngOnInit(): void {
     (this.route.firstChild ?? this.route).url.subscribe(segments => {
       const last = segments[segments.length - 1]?.path as 'login' | 'register';
-      this.authType = (last === 'register') ? 'register' : 'login';
+      this.authType.set((last === 'register') ? 'register' : 'login');
 
-      this.title = (this.authType === 'login') ? 'Sign in' : 'Sign up';
+      this.title.set(this.authType() === 'login' ? 'Sign in' : 'Sign up');
 
-      if (this.authType === 'register' && !this.authForm.contains('username')) {
+      if (this.authType() === 'register' && !this.authForm.contains('username')) {
         this.authForm.addControl('username', new FormControl('', Validators.required));
-      } else if (this.authType === 'login' && this.authForm.contains('username')) {
+      } else if (this.authType() === 'login' && this.authForm.contains('username')) {
         this.authForm.removeControl('username');
       }
-
-      this.cd.markForCheck();
     });
   }
 
@@ -58,15 +55,15 @@ export class AuthComponent implements OnInit {
       return;
     }
 
-    this.isSubmitting = true;
-    this.errors = { errors: {} };
+    this.isSubmitting.set(true);
+    this.errors.set({ errors: {} });
 
     const credentials = this.authForm.value;
 
-    this.userService.attemptAuth(this.authType, credentials).subscribe({
+    this.userService.attemptAuth(this.authType(), credentials).subscribe({
       next: () => {
-        this.isSubmitting = false;
-        const message = this.authType === 'login' ? '¡Bienvenido de nuevo!' : '¡Cuenta creada exitosamente!';
+        this.isSubmitting.set(false);
+        const message = this.authType() === 'login' ? '¡Bienvenido de nuevo!' : '¡Cuenta creada exitosamente!';
 
         Swal.fire({
           icon: 'success',
@@ -79,13 +76,12 @@ export class AuthComponent implements OnInit {
       },
       error: (err) => {
         const body = err ?? {};
-        this.errors = body.errors ? body as Errors : { errors: { general: 'Error de autenticación' } };
-        this.isSubmitting = false;
-        this.cd.markForCheck();
+        this.errors.set(body.errors ? body as Errors : { errors: { general: 'Error de autenticación' } });
+        this.isSubmitting.set(false);
 
-        const errorMessage = this.errors.errors['general'] ||
-                            this.errors.errors['email'] ||
-                            'Error de autenticación. Por favor, verifica tus credenciales.';
+        const errorMessage = this.errors().errors['general'] ||
+          this.errors().errors['email'] ||
+          'Error de autenticación. Por favor, verifica tus credenciales.';
 
         Swal.fire({
           icon: 'error',

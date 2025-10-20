@@ -10,7 +10,6 @@ export const connectDB = async () => {
       serverSelectionTimeoutMS: 10000,
     });
 
-    console.log("✅ Conectado a MongoDB:", mongoose.connection.host);
   } catch (err) {
     console.error("❌ Error conectando a MongoDB:", err.message);
     process.exit(1);

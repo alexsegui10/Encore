@@ -1,6 +1,6 @@
 // app/models/evento.model.js
 import mongoose from 'mongoose';
-
+import User from './user.model.js';
 const EventSchema = new mongoose.Schema(
   {
     title: {
@@ -51,6 +51,10 @@ const EventSchema = new mongoose.Schema(
       trim: true,
       maxlength: 500
     },
+    favouritesCount: {
+      type: Number,
+      default: 0
+    },
     images: {
       type: [String],
       default: [],
@@ -91,6 +95,27 @@ EventSchema.pre('validate', function (next) {
   next();
 });
 
+EventSchema.methods.toEventResponse = async function (user) {
+    return {
+        _id: this._id,
+        slug: this.slug,
+        title: this.title,
+        date: this.date,
+        price: this.price,
+        currency: this.currency,
+        location: this.location,
+        description: this.description,
+        category: this.category,
+        status: this.status,
+        mainImage: this.mainImage,
+        images: this.images,
+        createdAt: this.createdAt,
+        updatedAt: this.updatedAt,
+        isLiked: user ? user.isFavourite(this._id) : false,
+        likesCount: this.favouritesCount,
+    }
+}
+
 //serializer para carousel
 EventSchema.methods.toEventoCarouselResponse = async function () {
   return {
@@ -110,7 +135,19 @@ EventSchema.methods.toEventoCarouselResponse = async function () {
   }
 }
 
-//serializer para comments
+// Método para actualizar el contador de favoritos
+EventSchema.methods.updateFavoriteCount = async function () {
+  const User = mongoose.model('User');
+  const favoriteCount = await User.countDocuments({
+    favouriteEvents: { $in: [this._id] }
+  });
+
+  this.favouritesCount = favoriteCount;
+
+  return this.save();
+}
+
+// Métodos para comments
 EventSchema.methods.addComment = function (commentId) {
     if(this.comments.indexOf(commentId) === -1){
         this.comments.push(commentId);
@@ -122,6 +159,5 @@ EventSchema.methods.removeComment = function (commentId) {
   this.comments.pull(commentId);
   return this.save();
 };
-
 
 export default mongoose.model('Event', EventSchema);

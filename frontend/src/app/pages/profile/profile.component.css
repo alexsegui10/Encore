@@ -63,6 +63,46 @@
   color: var(--zard-dim);
 }
 
+/* Botón de seguir/dejar de seguir */
+.user-info .btn {
+  width: 100%;
+  max-width: 200px;
+  padding: 8px 24px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all .2s ease;
+  margin-top: 16px;
+  cursor: pointer;
+  border: none;
+  letter-spacing: 0.3px;
+}
+
+.user-info .btn-primary {
+  background: #1d9bf0;
+  color: #ffffff;
+}
+
+.user-info .btn-primary:hover {
+  background: #1a8cd8;
+}
+
+.user-info .btn-primary:active {
+  transform: scale(0.97);
+}
+
+
+
+.user-info .btn-outline-secondary {
+  background: rgba(244, 33, 46, 0.1);
+  border-color: #f4212e;
+  color: #f4212e;
+}
+
+.user-info .btn-outline-secondary:active {
+  transform: scale(0.97);
+}
+
 /* ====== NAVEGACIÓN LATERAL ====== */
 .profile-nav .nav {
   list-style: none;

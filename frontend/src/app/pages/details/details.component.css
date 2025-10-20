@@ -144,3 +144,22 @@ h1 {
   :host > div[ng-reflect-ng-if="true"] { padding: 18px; }
   h1 { font-size: 22px; }
 }
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.loading p {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}

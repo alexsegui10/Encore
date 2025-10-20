@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-
 // Generate Access Token (expires in 30 mins)
 export const generateAccessToken = (user) => {
     return jwt.sign(

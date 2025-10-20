@@ -7,8 +7,8 @@ const verifyOptionalJWT = async (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    if (!req.logged) return next();
-    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    req.loggedin = false;
+    return next();
   }
 
   const token = authHeader.split(' ')[1];
@@ -18,21 +18,21 @@ const verifyOptionalJWT = async (req, res, next) => {
     const loginUser = await User.findOne({ email: decoded.user.email }).exec();
 
     if (!loginUser) {
-      if (!req.logged) return next();
-      return res.status(403).json({ message: 'User not found' });
+      req.loggedin = false;
+      return next();
     }
 
     const refreshToken = await RefreshToken.findOne({ userId: loginUser._id }).exec();
 
     if (!refreshToken) {
-      if (!req.logged) return next();
-      return res.status(403).json({ message: 'Refresh token not found' });
+      req.loggedin = false;
+      return next();
     }
 
     if (refreshToken.expiryDate < Date.now()) {
       await RefreshToken.deleteOne({ _id: refreshToken.id });
-      if (!req.logged) return next();
-      return res.status(403).json({ message: 'Refresh token has expired' });
+      req.loggedin = false;
+      return next();
     }
 
     let accessToken = token;
@@ -46,14 +46,13 @@ const verifyOptionalJWT = async (req, res, next) => {
     req.userEmail = loginUser.email;
     req.newAccessToken = accessToken;
     req.isAuthenticated = true;
+    req.loggedin = true;
 
     next();
   } catch (error) {
-    if (!req.logged) return next();
-    return res.status(403).json({
-      message: 'Forbidden: Invalid token',
-      error: error.message
-    });
+    console.log('Invalid token in optional verification:', error.message);
+    req.loggedin = false;
+    next();
   }
 };
 

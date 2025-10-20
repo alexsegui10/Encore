@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
@@ -22,7 +22,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private cd: ChangeDetectorRef
-  ) {}
+  ) {
+    // Effect para reaccionar al signal de logout
+    effect(() => {
+      const logoutCount = this.userService.logoutSignal();
+      if (logoutCount > 0) {
+        console.log('🔄 Detectado logout - actualizando contenido del header');
+        this.cd.markForCheck();
+      }
+    });
+  }
 
   ngOnInit(): void {
     // Inicializar el usuario autenticado
