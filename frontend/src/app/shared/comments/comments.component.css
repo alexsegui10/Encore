@@ -2,96 +2,152 @@
   display: block;
 }
 
-/* Form */
+/* ===== FORMULARIO DE NUEVO COMENTARIO ===== */
+.comment-form {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 0;
+  margin-bottom: 24px;
+  background: #ffffff;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.comment-form:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.05),
+    0 10px 32px rgba(0, 0, 0, 0.06);
+}
+
+.comment-form .card-block {
+  padding: 16px 18px;
+}
+
 .comment-form textarea.form-control {
-  min-height: 96px;
+  width: 100%;
+  min-height: 90px;
   resize: vertical;
-  border-radius: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   outline: none;
-  transition: box-shadow .2s ease, border-color .2s ease;
+  background: #fafafa;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .comment-form textarea.form-control:focus {
-  border-color: #7c3aed;           /* Primario suave (ajústalo a tu tema Zard) */
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+  border-color: #7c3aed; /* tu color primario (morado Zard) */
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  background: #fff;
 }
 
-/* Card base */
+/* Footer con botón */
+.comment-form .card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 18px 14px 18px;
+  background: transparent;
+  border-top: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+/* Botón de publicar */
+.comment-form .btn.btn-primary {
+  background-color: #7c3aed;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.comment-form .btn.btn-primary:hover {
+  background-color: #6d28d9; /* un poco más oscuro */
+  transform: translateY(-1px);
+}
+
+.comment-form .btn.btn-primary:disabled {
+  background-color: #a78bfa;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* ===== LISTA DE COMENTARIOS ===== */
 .card.comment-card {
-  border: 1px solid rgba(0,0,0,.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 16px;
   overflow: hidden;
   background: #fff;
-  box-shadow:
-    0 1px 1px rgba(0,0,0,.02),
-    0 8px 24px rgba(0,0,0,.04);
   margin-bottom: 14px;
-  transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+  transition: box-shadow 0.15s ease;
 }
 
 .card.comment-card:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 2px 8px rgba(0,0,0,.05),
-    0 12px 32px rgba(0,0,0,.06);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
 }
 
-/* Destacar tus comentarios */
+/* Comentarios propios */
 .card.comment-card.my-comment {
-  border-color: #7c3aed;                           /* Primario */
-  background:
-    linear-gradient(0deg, rgba(124,58,237,0.03), rgba(124,58,237,0.03)),
+  border-color: #7c3aed;
+  background: linear-gradient(
+      0deg,
+      rgba(124, 58, 237, 0.03),
+      rgba(124, 58, 237, 0.03)
+    ),
     #fff;
 }
 
-/* Cuerpo */
 .card.comment-card .card-block {
   padding: 14px 16px 0 16px;
 }
 
 .card.comment-card .card-text {
   margin: 0;
-  line-height: 1.5;
-  color: #1f2937; /* gris 800 */
-  word-break: break-word;
+  color: #1f2937;
+  font-size: 0.95rem;
 }
 
-/* Footer */
 .card.comment-card .card-footer {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 16px 12px 16px;
-  background: transparent;
-  border-top: 1px dashed rgba(0,0,0,.08);
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.08);
 }
 
 .date-posted {
-  font-size: .85rem;
-  color: #6b7280; /* gris 500 */
+  font-size: 0.85rem;
+  color: #6b7280;
 }
 
-/* Botón eliminar (estilo link pero accesible) */
+/* Botón eliminar */
 .btn.btn-link.danger {
-  color: #dc2626; /* rojo 600 */
+  color: #dc2626;
   font-weight: 600;
   text-decoration: none;
   padding: 0;
-  border: none;
 }
 
 .btn.btn-link.danger:hover {
-  color: #b91c1c; /* rojo 700 */
+  color: #b91c1c;
   text-decoration: underline;
 }
 
 .btn[disabled] {
-  opacity: .6;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Mensajes vacíos */
+/* Mensaje sin comentarios */
 .text-muted.mt-3 {
   color: #6b7280 !important;
+  text-align: center;
+  margin-top: 1rem !important;
 }
