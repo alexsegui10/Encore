@@ -69,14 +69,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.userService.purgeAuth();
-        
-        Swal.fire({
-          icon: 'success',
-          title: 'Sesión cerrada',
-          text: '¡Hasta pronto!',
-          timer: 1500,
-          showConfirmButton: false
+        // Llamar al endpoint de logout para limpiar la cookie HttpOnly
+        this.userService.logout().subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Sesión cerrada',
+              text: '¡Hasta pronto!',
+              timer: 1500,
+              showConfirmButton: false
+            });
+          },
+          error: (err) => {
+            console.error('Error al cerrar sesión:', err);
+            // Aunque falle, se limpia localmente en el servicio
+          }
         });
       }
     });

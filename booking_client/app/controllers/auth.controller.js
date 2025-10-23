@@ -1,38 +1,63 @@
-import { generateAccessToken } from '../middleware/authService.js';
+import { generateAccessToken, generateRefreshToken } from '../middleware/authService.js';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 import RefreshToken from '../models/refreshToken.model.js';
+import BlacklistedToken from '../models/blacklistedToken.model.js';
 import asyncHandler from 'express-async-handler';
+
+// Configuración de expiración del refresh token (debe coincidir con authService.js)
+const REFRESH_TOKEN_EXPIRY_MS = 2 * 60 * 1000; // 2 minutos en milisegundos
 
 // @desc Refresh access token
 // @route POST /api/users/refresh-token
 // @access Public
 export const refreshToken = asyncHandler(async (req, res) => {
-    // Get the token from the Authorization header
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+    // Obtener el refresh token de la cookie HttpOnly
+    const token = req.cookies.jid;
 
     if (!token) {
-        return res.status(403).json({ message: 'Refresh Token is required!' });
+        return res.status(401).json({ message: 'No refresh token' });
+    }
+
+    // Verificar que el token NO esté en la blacklist
+    const isBlacklisted = await BlacklistedToken.findOne({ token }).exec();
+    if (isBlacklisted) {
+        res.clearCookie('jid', { path: '/' });
+        return res.status(401).json({ message: 'Token has been revoked' });
     }
 
     // Find the refresh token in the database
     const refreshTokenRecord = await RefreshToken.findOne({ token }).exec();
 
     if (!refreshTokenRecord) {
-        return res.status(403).json({ message: 'Refresh Token not found!' });
+        return res.status(401).json({ message: 'Refresh token not found' });
     }
 
     // Check if the refresh token has expired
     if (refreshTokenRecord.expiryDate < new Date()) {
+        // Mover a blacklist antes de eliminar
+        await BlacklistedToken.create({
+            token: refreshTokenRecord.token,
+            userId: refreshTokenRecord.userId,
+            reason: 'expired',
+            originalExpiryDate: refreshTokenRecord.expiryDate
+        });
+        
+        // Eliminar de la tabla de refresh tokens
         await RefreshToken.findByIdAndDelete(refreshTokenRecord._id);
-        return res.status(403).json({ message: 'Refresh Token expired!' });
+        res.clearCookie('jid', { path: '/' });
+        return res.status(401).json({ message: 'Refresh token expired' });
     }
 
     // Verify the refresh token
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
-            return res.status(403).json({ message: 'Invalid Refresh Token' });
+            return res.status(401).json({ message: 'Invalid refresh token' });
+        }
+
+        // Verificar que el userId coincida
+        if (refreshTokenRecord.userId.toString() !== decoded.user.id) {
+            return res.status(401).json({ message: 'Token mismatch' });
         }
 
         // Get user from decoded token
@@ -42,9 +67,12 @@ export const refreshToken = asyncHandler(async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Generate a new access token
+        // NO ROTAR EL REFRESH TOKEN
+        // Solo generar un nuevo access token, manteniendo el mismo refresh token
+        // El refresh token expirará según su fecha original (2 minutos desde el login)
         const newAccessToken = generateAccessToken(user);
 
+        // Devolver el nuevo access token (sin cambiar el refresh token)
         res.status(200).json({ 
             accessToken: newAccessToken,
             user: user.toUserResponse(newAccessToken)
@@ -56,10 +84,29 @@ export const refreshToken = asyncHandler(async (req, res) => {
 // @route POST /api/users/logout
 // @access Private
 export const logout = asyncHandler(async (req, res) => {
-    const userId = req.userId;
+    const token = req.cookies.jid;
     
-    // Remove all refresh tokens for this user
-    await RefreshToken.deleteMany({ userId });
+    // Mover refresh token a blacklist antes de eliminarlo
+    if (token) {
+        const refreshTokenRecord = await RefreshToken.findOne({ token }).exec();
+        
+        if (refreshTokenRecord) {
+            // Agregar a blacklist
+            await BlacklistedToken.create({
+                token: refreshTokenRecord.token,
+                userId: refreshTokenRecord.userId,
+                reason: 'logout',
+                originalExpiryDate: refreshTokenRecord.expiryDate
+            });
+            
+            // Eliminar de la tabla de refresh tokens
+            await RefreshToken.deleteOne({ token });
+        }
+    }
+    
+    // Clear the cookie
+    res.clearCookie('jid', { path: '/' });
     
     res.status(200).json({ message: 'Logged out successfully' });
 });
+

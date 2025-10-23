@@ -21,35 +21,18 @@ const verifyJWT = async (req, res, next) => {
             return res.status(403).json({ message: 'User not found' });
         }
 
-        // Check if refresh token exists and is valid
-        const refreshToken = await RefreshToken.findOne({ userId: loginUser._id }).exec();
-
-        if (!refreshToken) {
-            return res.status(403).json({ message: 'Refresh token not found' });
-        }
-
-        if (refreshToken.expiryDate < Date.now()) {
-            await RefreshToken.deleteOne({ _id: refreshToken.id });
-            return res.status(403).json({ message: 'Refresh token has expired' });
-        }
-
-        let accessToken = token;
-
-        // Check if access token is expired
-        if (decoded.exp < Date.now() / 1000) {
-            // Token has expired, generate a new access token
-            accessToken = generateAccessToken(loginUser);
-            res.setHeader('Authorization', `Bearer ${accessToken}`);
-        }
+        // NO verificar el refresh token aquí - solo se verifica en /refresh-token
+        // Este middleware solo valida que el access token sea válido
 
         req.userId = loginUser._id;
         req.userEmail = loginUser.email;
-        req.newAccessToken = accessToken;
+        req.newAccessToken = token;
 
         next();
     } catch (error) {
+        // Si el token expiró o es inválido, devolver 403
         return res.status(403).json({
-            message: 'Forbidden: Invalid token',
+            message: 'Forbidden: Invalid or expired token',
             error: error.message
         });
     }

@@ -4,6 +4,9 @@ import asyncHandler from 'express-async-handler';
 import argon2 from 'argon2';
 import { generateAccessToken, generateRefreshToken } from '../middleware/authService.js';
 
+// Configuración de expiración del refresh token (debe coincidir con authService.js)
+const REFRESH_TOKEN_EXPIRY_MS = 2 * 60 * 1000; // 2 minutos en milisegundos
+
 // @desc Register a new user
 // @route POST /api/users
 // @access Public
@@ -46,7 +49,16 @@ export const registerUser = asyncHandler(async (req, res) => {
         await RefreshToken.create({
             token: refreshTokenValue,
             userId: createdUser._id,
-            expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+            expiryDate: new Date(Date.now() + REFRESH_TOKEN_EXPIRY_MS),
+        });
+
+        // Enviar refresh token en cookie HttpOnly
+        res.cookie('jid', refreshTokenValue, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // true en producción (HTTPS)
+            sameSite: 'lax', // o 'strict' según necesidades
+            path: '/',
+            maxAge: REFRESH_TOKEN_EXPIRY_MS,
         });
 
         res.status(201).json({
@@ -84,16 +96,27 @@ export const userLogin = asyncHandler(async (req, res) => {
     const accessToken = generateAccessToken(loginUser);
     const refreshTokenValue = generateRefreshToken(loginUser);
 
-    // Remove existing refresh token for this user
+    // Remove existing refresh token for this user (single device)
+    // Para múltiples dispositivos, comentar esta línea
     await RefreshToken.deleteMany({ userId: loginUser._id });
 
     // Create new refresh token
     await RefreshToken.create({
         token: refreshTokenValue,
         userId: loginUser._id,
-        expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        expiryDate: new Date(Date.now() + REFRESH_TOKEN_EXPIRY_MS),
     });
 
+    // Enviar refresh token en cookie HttpOnly
+    res.cookie('jid', refreshTokenValue, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // true en producción (HTTPS)
+        sameSite: 'lax',
+        path: '/',
+        maxAge: REFRESH_TOKEN_EXPIRY_MS,
+    });
+
+    // Enviar access token en el body
     res.status(200).json({
         user: loginUser.toUserResponse(accessToken)
     });

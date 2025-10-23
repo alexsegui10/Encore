@@ -8,7 +8,7 @@ const router = express.Router();
 // Authentication routes
 router.post('/users/login', userLogin);
 router.post('/users', registerUser);
-router.post('/users/refresh-token', refreshToken);
-router.post('/users/logout', verifyJWT, logout);
+router.post('/users/refresh-token', refreshToken); // No requiere auth
+router.post('/users/logout', logout); // No requiere auth estrictamente (usa cookie)
 
 export default router;

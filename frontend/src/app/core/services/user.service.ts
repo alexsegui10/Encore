@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, BehaviorSubject, ReplaySubject, throwError } from 'rxjs';
+import { map, distinctUntilChanged, tap, catchError } from 'rxjs/operators';
 
 import { ApiService } from './api.service';
 import { JwtService } from './jwt.service';
@@ -37,8 +37,16 @@ export class UserService {
           this.setAuth({ ...data.user, token });
         },
         error: (err) => {
-          console.warn('❌ Token inválido o expirado, limpiando sesión...', err);
-          this.purgeAuth();
+          // Si es 401/403, el interceptor intentará renovar el token automáticamente
+          // Solo hacer purgeAuth si el error NO es de autenticación (el interceptor ya lo manejó)
+          // O si el token simplemente no funciona después del refresh
+          if (err.status === 401 || err.status === 403) {
+            console.warn('⚠️ Token expirado, el interceptor intentará renovarlo...');
+            // No hacer purgeAuth aquí, el interceptor se encargará si el refresh falla
+          } else {
+            console.warn('❌ Error al cargar usuario, limpiando sesión...', err);
+            this.purgeAuth();
+          }
         }
       });
     } else {
@@ -48,7 +56,6 @@ export class UserService {
   }
 
   setAuth(user: User): void {
-
     if (user?.token) {
       this.jwtService.saveToken(user.token);
     }
@@ -59,7 +66,6 @@ export class UserService {
     
     // Emitir signal de login para actualizar contenido reactivamente
     this.loginSignal.update(value => value + 1);
-
   }
 
   purgeAuth(): void {
@@ -71,11 +77,10 @@ export class UserService {
     
     // Emitir signal de logout para actualizar contenido reactivamente
     this.logoutSignal.update(value => value + 1);
-    
   }
 
   attemptAuth(type: 'login' | 'register', credentials: Partial<User>): Observable<User> {
-  const route = ('' + type === 'login') ? '/login' : '';
+    const route = ('' + type === 'login') ? '/login' : '';
     return this.apiService
       .post(`/api/users${route}`, { user: credentials })
       .pipe(
@@ -88,6 +93,36 @@ export class UserService {
           return user;
         })
       );
+  }
+
+  // Llamada para refrescar el access token usando el refresh token en cookie
+  refreshToken(): Observable<any> {
+    return this.apiService.post('/api/users/refresh-token', {}).pipe(
+      tap((res: any) => {
+        if (res.accessToken) {
+          this.jwtService.saveToken(res.accessToken);
+        }
+      }),
+      catchError(err => {
+        // Si el refresh falla, NO hacer logout aquí
+        // El interceptor se encargará de llamar a handleAuthError -> purgeAuth
+        console.warn('❌ Refresh token expiró o es inválido');
+        return throwError(() => err);
+      })
+    );
+  }
+
+  logout(): Observable<any> {
+    return this.apiService.post('/api/users/logout', {}).pipe(
+      tap(() => {
+        this.purgeAuth();
+      }),
+      catchError(err => {
+        // Incluso si falla, limpiar localmente
+        this.purgeAuth();
+        return throwError(() => err);
+      })
+    );
   }
 
   getCurrentUser(): Observable<User> {
@@ -127,3 +162,4 @@ export class UserService {
     return this.apiService.get('/api/user/following', undefined, 4000, true);
   }
 }
+
