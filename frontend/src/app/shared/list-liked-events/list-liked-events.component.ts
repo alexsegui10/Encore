@@ -1,9 +1,8 @@
-import { Component, OnInit, signal, effect } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Event } from '../../core/models/event.model';
 import { EventService } from '../../core/services/event.service';
 import { CardEventComponent } from '../card-event/card-event.component';
-import { UserService } from '../../core/services/user.service';
 
 @Component({
     selector: 'app-list-liked-events',
@@ -17,29 +16,7 @@ export class ListLikedEventsComponent implements OnInit {
     isLoading = signal<boolean>(true);
     errorMessage = signal<string>('');
 
-    constructor(
-        private eventService: EventService,
-        private userService: UserService
-    ) {
-        // Effect para reaccionar al login - recargar eventos liked
-        effect(() => {
-            const loginCount = this.userService.loginSignal();
-            if (loginCount > 0) {
-                console.log('🔄 Detectado login - recargando eventos liked');
-                this.loadLikedEvents();
-            }
-        });
-
-        // Effect para reaccionar al logout - limpiar eventos liked
-        effect(() => {
-            const logoutCount = this.userService.logoutSignal();
-            if (logoutCount > 0) {
-                console.log('🔄 Detectado logout - limpiando eventos liked');
-                this.likedEvents.set([]);
-                this.isLoading.set(false);
-            }
-        });
-    }
+    constructor(private eventService: EventService) { }
 
     ngOnInit(): void {
         this.loadLikedEvents();

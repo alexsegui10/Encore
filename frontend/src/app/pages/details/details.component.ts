@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, effect } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
@@ -32,25 +32,7 @@ export class DetailsComponent implements OnInit {
         private router: Router,
         private eventService: EventService,
         private userService: UserService
-    ) {
-        // Effect para reaccionar al signal de logout
-        effect(() => {
-            const logoutCount = this.userService.logoutSignal();
-            if (logoutCount > 0 && this.slug) {
-                console.log('🔄 Detectado logout - recargando evento');
-                this.getEvent();
-            }
-        });
-        
-        // Effect para reaccionar al signal de login
-        effect(() => {
-            const loginCount = this.userService.loginSignal();
-            if (loginCount > 0 && this.slug) {
-                console.log('🔄 Detectado login - recargando evento con info de likes');
-                this.getEvent();
-            }
-        });
-    }
+    ) { }
 
     ngOnInit(): void {
         this.slug = this.route.snapshot.params['slug'];

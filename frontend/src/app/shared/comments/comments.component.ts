@@ -1,8 +1,7 @@
-import { Component, signal, ChangeDetectionStrategy, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, computed, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 import { EventService } from '../../core/services/event.service';
 import { EventComment } from '../../core/models/comments.model';
@@ -17,7 +16,7 @@ import { UserService } from '../../core/services/user.service';
   styleUrls: ['./comments.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentsComponent implements OnInit, OnDestroy {
+export class CommentsComponent implements OnInit {
   slug!: string;
 
   newCommentControl = new FormControl<string>('', { nonNullable: true });
@@ -29,7 +28,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   currentUserId = signal<string | null>(null);
   currentUserEmail = signal<string | null>(null);
-  private sub?: Subscription;
 
   constructor(
     private readonly _activatedRoute: ActivatedRoute,
@@ -43,17 +41,13 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.slug = this._activatedRoute.snapshot.params['slug'];
     this._loadComments();
 
-    this.sub = this._userService.currentUser$.subscribe(u => {
+    // Obtener el usuario actual una vez
+    this._userService.currentUser$.subscribe(u => {
       const id = (u as any)?._id ?? (u as any)?.id ?? null;
       const email = (u as any)?.email ?? null;
-      const image = (u as any)?.image ?? null;
       this.currentUserId.set(id);
       this.currentUserEmail.set(email);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
   }
 
   private _loadComments(): void {
