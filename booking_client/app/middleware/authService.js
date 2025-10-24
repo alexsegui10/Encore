@@ -5,7 +5,7 @@ export const generateAccessToken = (user) => {
     return jwt.sign(
         { user: { id: user._id, email: user.email } },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '1m' } // Token corto para mayor seguridad
+        { expiresIn: '15m' }
     );
 };
 
@@ -14,7 +14,7 @@ export const generateRefreshToken = (user) => {
     return jwt.sign(
         { user: { id: user._id } },
         process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: '2m' }
+        { expiresIn: '7d' }
     );
 };
 

@@ -21,7 +21,7 @@ export class CardEventComponent {
   constructor(
     private eventService: EventService,
     private router: Router
-  ) {}
+  ) { }
 
   public toggleEventLiked(event: MouseEvent, liked: boolean): void {
     // Prevenir navegación al detalle
@@ -36,7 +36,7 @@ export class CardEventComponent {
       next: (response) => {
         // Actualizar el evento con la respuesta del servidor
         this.event = response;
-        
+
         // Si se quitó el like (estaba liked y ahora no lo está), emitir evento
         if (wasLiked && !this.event.isLiked) {
           this.eventUnliked.emit(this.event.slug);
@@ -44,13 +44,18 @@ export class CardEventComponent {
       },
       error: (err) => {
         console.error('❌ Error al dar like:', err);
-        // Si el usuario no está autenticado, redirigir al login
-        if (err.status === 401) {
+        console.log('Error status:', err.status);
+        console.log('Error details:', err);
+        
+        // Verificar si es error de autenticación (401 o 403)
+        if (err.status === 401 || err.status === 403) {
           Swal.fire({
             icon: 'warning',
             title: 'Inicia sesión',
             text: 'Debes iniciar sesión para dar like a un evento',
-            confirmButtonText: 'Ir al login'
+            confirmButtonText: 'Ir al login',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.isConfirmed) {
               this.router.navigateByUrl('/auth/login');

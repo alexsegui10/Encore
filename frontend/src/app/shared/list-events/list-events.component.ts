@@ -42,11 +42,20 @@ export class ListEventsComponent implements OnInit, OnDestroy {
    private Location: Location,
    private userService: UserService
   ) {
-    // Effect para reaccionar al signal de logout
+    // Effect para reaccionar al logout - recargar eventos para actualizar likes
     effect(() => {
       const logoutCount = this.userService.logoutSignal();
       if (logoutCount > 0) {
         console.log('🔄 Detectado logout - recargando eventos');
+        this.loadEvents();
+      }
+    });
+
+    // Effect para reaccionar al login - recargar eventos para actualizar likes
+    effect(() => {
+      const loginCount = this.userService.loginSignal();
+      if (loginCount > 0) {
+        console.log('🔄 Detectado login - recargando eventos');
         this.loadEvents();
       }
     });
@@ -98,9 +107,10 @@ export class ListEventsComponent implements OnInit, OnDestroy {
   get_list_filtered(filters: Filters) {
     this.filters = filters;
     // console.log(JSON.stringify(this.filters));
-    this.eventService.get_products_filter(filters).subscribe(
-      (data: any) => {
-        this.events = data.events;
+    this.eventService.get_products_filter(filters).subscribe({
+      next: (data: any) => {
+        console.log('Filtered events data received:', data);
+        this.events = data.events || [];
 
         // Validate data before creating array
         const eventCount = data.event_count || 0;
@@ -108,8 +118,13 @@ export class ListEventsComponent implements OnInit, OnDestroy {
         const totalPagesCount = Math.max(1, Math.ceil(eventCount / limit));
 
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
-        console.log(this.events);
-      });
+        console.log('Processed filtered events:', this.events);
+      },
+      error: (err) => {
+        console.error('Error getting filtered events:', err);
+        this.events = [];
+      }
+    });
   }
 
   getListForCategory() {

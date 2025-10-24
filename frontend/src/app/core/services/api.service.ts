@@ -15,21 +15,26 @@ export class ApiService {
   ) { }
 
   private formatErrors(error: any) {
-    // devolvemos el body de error tal como hacías
-    return throwError(error?.error ?? error);
+    // Devolver el error completo para mantener status, statusText, etc.
+    // pero añadir la información del body si existe
+    return throwError(() => ({
+      ...error,
+      message: error?.error?.message || error?.message || 'Error desconocido',
+      errorBody: error?.error
+    }));
   }
 
   // headers opcionales de auth, solo si withAuth === true
   private buildOptions(params?: HttpParams, withAuth: boolean = false) {
     let headers = new HttpHeaders({ 'Accept': 'application/json' });
-    if (withAuth) {
-      const token = this.jwt.getToken();
-      if (token) {
-        // Si tu backend requiere 'Token ' en vez de 'Bearer ', cambia aquí.
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      }
-    }
-    return { params: params || new HttpParams(), headers };
+    
+    // NO añadir Authorization aquí - el interceptor se encarga de eso
+    // Solo construir los params
+    return { 
+      params: params || new HttpParams(), 
+      headers,
+      withCredentials: withAuth // Solo enviar cookies si se requiere auth
+    };
   }
 
   get(path: string, params?: HttpParams, port: number = 4000, withAuth: boolean = false): Observable<any> {
