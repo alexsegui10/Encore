@@ -20,7 +20,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 export class SettingsComponent implements OnInit, OnDestroy {
   // Signal local para el usuario - se actualiza automáticamente
   user = signal<User>({} as User);
-  
+
   settingsForm: FormGroup;
   errors: Object = {};
   isSubmitting = false;
@@ -211,6 +211,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.isUploading = false; this.cd.markForCheck();
       });
   }
+
 
   private async uploadToImgbb(file: File): Promise<string> {
     const endpoint = `https://api.imgbb.com/1/upload?key=${this.imgbbKey}`;
