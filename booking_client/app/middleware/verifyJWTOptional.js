@@ -8,6 +8,7 @@ const verifyOptionalJWT = async (req, res, next) => {
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     req.loggedin = false;
+    req.isAuthenticated = false;
     return next();
   }
 
@@ -19,39 +20,26 @@ const verifyOptionalJWT = async (req, res, next) => {
 
     if (!loginUser) {
       req.loggedin = false;
+      req.isAuthenticated = false;
       return next();
     }
 
-    const refreshToken = await RefreshToken.findOne({ userId: loginUser._id }).exec();
-
-    if (!refreshToken) {
-      req.loggedin = false;
-      return next();
-    }
-
-    if (refreshToken.expiryDate < Date.now()) {
-      await RefreshToken.deleteOne({ _id: refreshToken.id });
-      req.loggedin = false;
-      return next();
-    }
-
-    let accessToken = token;
-
-    if (decoded.exp < Date.now() / 1000) {
-      accessToken = generateAccessToken(loginUser);
-      res.setHeader('Authorization', `Bearer ${accessToken}`);
-    }
+    // Para auth opcional, NO verificar el refresh token
+    // Solo verificar que el access token sea válido
+    // Si el access token expira, el frontend debe pedir un refresh
 
     req.userId = loginUser._id;
     req.userEmail = loginUser.email;
-    req.newAccessToken = accessToken;
+    req.newAccessToken = token;
     req.isAuthenticated = true;
     req.loggedin = true;
 
     next();
   } catch (error) {
-    console.log('Invalid token in optional verification:', error.message);
+    // Si el token expiró o es inválido, simplemente continuar sin autenticación
+    console.log('Token inválido en verificación opcional:', error.message);
     req.loggedin = false;
+    req.isAuthenticated = false;
     next();
   }
 };

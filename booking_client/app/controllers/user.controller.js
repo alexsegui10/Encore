@@ -5,7 +5,7 @@ import argon2 from 'argon2';
 import { generateAccessToken, generateRefreshToken } from '../middleware/authService.js';
 
 // Configuración de expiración del refresh token (debe coincidir con authService.js)
-const REFRESH_TOKEN_EXPIRY_MS = 2 * 60 * 1000; // 2 minutos en milisegundos
+const REFRESH_TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
 
 // @desc Register a new user
 // @route POST /api/users

@@ -31,14 +31,12 @@ export class HttpTokenInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    // Añadir withCredentials: true para enviar cookies HttpOnly
-    let authReq = req.clone({
-      withCredentials: true
-    });
-
-    // Clonar la solicitud y añadir el encabezado Authorization si el token existe
+    // Solo añadir withCredentials si hay token (para enviar cookies HttpOnly)
+    let authReq = req;
+    
     if (token) {
-      authReq = authReq.clone({
+      authReq = req.clone({
+        withCredentials: true,
         setHeaders: {
           Authorization: `Bearer ${token}`,
         },
@@ -50,12 +48,17 @@ export class HttpTokenInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         // Si el error es un 401 o 403 (No autorizado/Token inválido) - intentar refresh
         // EXCEPTO si viene de /refresh-token o /logout (evitar bucles infinitos)
-        if ((error.status === 401 || error.status === 403) && 
+        // Y SOLO si hay token (si no hay token, simplemente devolver el error)
+        if (token && 
+            (error.status === 401 || error.status === 403) && 
             !req.url.includes('/refresh-token') && 
             !req.url.includes('/logout')) {
+          console.log('🔄 Token expirado, intentando renovar...');
           return this.handle401Error(req, next);
         }
 
+        // Si no hay token y es 401/403, devolver el error tal cual
+        // para que el componente pueda manejarlo adecuadamente
         return throwError(() => error);
       })
     );
@@ -70,6 +73,8 @@ export class HttpTokenInterceptor implements HttpInterceptor {
         switchMap((res: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(res.accessToken);
+          
+          console.log('✅ Token renovado exitosamente');
           
           // Re-intentar la petición original con el nuevo token
           return next.handle(this.addTokenHeader(request, res.accessToken));
