@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { SettingsComponent } from '../../shared/settings/settings.component';
 import { ListLikedEventsComponent } from '../../shared/list-liked-events/list-liked-events.component';
 import { ListFollowingUsersComponent } from '../../shared/list-following-users/list-following-users.component';
+import Swal from 'sweetalert2';
 @Component({
     selector: 'app-profile-page',
     templateUrl: './profile.component.html',
@@ -84,6 +85,29 @@ export class ProfileComponent {
                 },
                 error: (err) => {
                     console.error('Error al dejar de seguir:', err);
+                    
+                    // Verificar si es error de autenticación (401 o 403)
+                    if (err.status === 401 || err.status === 403) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Inicia sesión',
+                            text: 'Debes iniciar sesión para dejar de seguir a un usuario',
+                            confirmButtonText: 'Ir al login',
+                            showCancelButton: true,
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                this.router.navigateByUrl('/auth/login');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo dejar de seguir al usuario. Intenta de nuevo.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
                 }
             });
         } else {
@@ -94,6 +118,29 @@ export class ProfileComponent {
                 },
                 error: (err) => {
                     console.error('Error al seguir:', err);
+                    
+                    // Verificar si es error de autenticación (401 o 403)
+                    if (err.status === 401 || err.status === 403) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Inicia sesión',
+                            text: 'Debes iniciar sesión para seguir a un usuario',
+                            confirmButtonText: 'Ir al login',
+                            showCancelButton: true,
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                this.router.navigateByUrl('/auth/login');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo seguir al usuario. Intenta de nuevo.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
                 }
             });
         }

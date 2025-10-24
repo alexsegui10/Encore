@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, effect } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
-import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,48 +13,29 @@ import Swal from 'sweetalert2';
   styleUrls: ['./header.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
   isLogged = false;
-  private destroy$ = new Subject<void>();
 
   constructor(
     private userService: UserService,
     private cd: ChangeDetectorRef
-  ) {
-    // Effect para reaccionar al signal de logout
-    effect(() => {
-      const logoutCount = this.userService.logoutSignal();
-      if (logoutCount > 0) {
-        console.log('🔄 Detectado logout - actualizando contenido del header');
-        this.cd.markForCheck();
-      }
-    });
-  }
+  ) { }
 
   ngOnInit(): void {
-    // Inicializar el usuario autenticado
+    // Cargar el usuario una vez
     this.userService.populate();
+    
+    // Obtener el estado actual directamente
+    this.userService.currentUser$.subscribe((userData) => {
+      this.currentUser = userData;
+      this.cd.markForCheck();
+    });
 
-    // Suscribirse a los observables globales (con $)
-    this.userService.currentUser$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((userData) => {
-        this.currentUser = userData;
-        this.cd.markForCheck();
-      });
-
-    this.userService.isAuthenticated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((status) => {
-        this.isLogged = status;
-        this.cd.markForCheck();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.userService.isAuthenticated$.subscribe((status) => {
+      this.isLogged = status;
+      this.cd.markForCheck();
+    });
   }
   logout(): void {
     Swal.fire({

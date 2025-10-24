@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, ReplaySubject, throwError } from 'rxjs';
 import { map, distinctUntilChanged, tap, catchError } from 'rxjs/operators';
 
@@ -16,12 +16,6 @@ export class UserService {
 
   private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-
-  // Signal para detectar cuando se cierra sesión
-  public logoutSignal = signal<number>(0);
-  
-  // Signal para detectar cuando se inicia sesión
-  public loginSignal = signal<number>(0);
 
   constructor(
     private apiService: ApiService,
@@ -63,9 +57,6 @@ export class UserService {
     // Actualizar observables globales
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
-    
-    // Emitir signal de login para actualizar contenido reactivamente
-    this.loginSignal.update(value => value + 1);
   }
 
   purgeAuth(): void {
@@ -74,9 +65,6 @@ export class UserService {
     // Actualizar observables globales
     this.currentUserSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
-    
-    // Emitir signal de logout para actualizar contenido reactivamente
-    this.logoutSignal.update(value => value + 1);
   }
 
   attemptAuth(type: 'login' | 'register', credentials: Partial<User>): Observable<User> {

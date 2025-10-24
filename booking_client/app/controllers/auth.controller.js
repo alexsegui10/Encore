@@ -6,11 +6,8 @@ import BlacklistedToken from '../models/blacklistedToken.model.js';
 import asyncHandler from 'express-async-handler';
 
 // Configuración de expiración del refresh token (debe coincidir con authService.js)
-const REFRESH_TOKEN_EXPIRY_MS = 2 * 60 * 1000; // 2 minutos en milisegundos
+const REFRESH_TOKEN_EXPIRY_MS = 2 * 60 * 1000; 
 
-// @desc Refresh access token
-// @route POST /api/users/refresh-token
-// @access Public
 export const refreshToken = asyncHandler(async (req, res) => {
     // Obtener el refresh token de la cookie HttpOnly
     const token = req.cookies.jid;
@@ -26,7 +23,6 @@ export const refreshToken = asyncHandler(async (req, res) => {
         return res.status(401).json({ message: 'Token has been revoked' });
     }
 
-    // Find the refresh token in the database
     const refreshTokenRecord = await RefreshToken.findOne({ token }).exec();
 
     if (!refreshTokenRecord) {
@@ -55,24 +51,19 @@ export const refreshToken = asyncHandler(async (req, res) => {
             return res.status(401).json({ message: 'Invalid refresh token' });
         }
 
-        // Verificar que el userId coincida
         if (refreshTokenRecord.userId.toString() !== decoded.user.id) {
             return res.status(401).json({ message: 'Token mismatch' });
         }
 
-        // Get user from decoded token
         const user = await User.findById(decoded.user.id).exec();
         
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // NO ROTAR EL REFRESH TOKEN
-        // Solo generar un nuevo access token, manteniendo el mismo refresh token
-        // El refresh token expirará según su fecha original (2 minutos desde el login)
+
         const newAccessToken = generateAccessToken(user);
 
-        // Devolver el nuevo access token (sin cambiar el refresh token)
         res.status(200).json({ 
             accessToken: newAccessToken,
             user: user.toUserResponse(newAccessToken)

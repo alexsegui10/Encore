@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy, effect } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { Event } from '../../core/models/event.model';
 import { EventService } from '../../core/services/event.service';
 import { CardEventComponent } from '../card-event/card-event.component';
@@ -12,7 +11,6 @@ import { Filters } from '../../core/models/filters.model';
 import { SearchComponent } from '../search/search.component';
 import { PaginationComponent } from  '../pagination/pagination.component';
 import { FiltersComponent } from '../filters/filters.component';
-import { UserService } from '../../core/services/user.service';
 @Component({
   selector: 'list-events',
   standalone: true,
@@ -20,7 +18,7 @@ import { UserService } from '../../core/services/user.service';
   templateUrl: './list-events.component.html',
   styleUrls: ['./list-events.component.css']
 })
-export class ListEventsComponent implements OnInit, OnDestroy {
+export class ListEventsComponent implements OnInit {
   events: Event[] = [];
   cat_id: string | null = null;
   listCategories: Category[] = [];
@@ -33,33 +31,13 @@ export class ListEventsComponent implements OnInit, OnDestroy {
   // Params de routing
   private routeFilters: string | null = null;
   private slug_Category: string | null = null;
-  private subscription = new Subscription();
 
   constructor(
     private eventService: EventService,
     private route: ActivatedRoute,
     private CategoryService: CategoryService,
-   private Location: Location,
-   private userService: UserService
-  ) {
-    // Effect para reaccionar al logout - recargar eventos para actualizar likes
-    effect(() => {
-      const logoutCount = this.userService.logoutSignal();
-      if (logoutCount > 0) {
-        console.log('🔄 Detectado logout - recargando eventos');
-        this.loadEvents();
-      }
-    });
-
-    // Effect para reaccionar al login - recargar eventos para actualizar likes
-    effect(() => {
-      const loginCount = this.userService.loginSignal();
-      if (loginCount > 0) {
-        console.log('🔄 Detectado login - recargando eventos');
-        this.loadEvents();
-      }
-    });
-  }
+   private Location: Location
+  ) { }
 
   ngOnInit(): void {
     this.routeFilters = this.route.snapshot.paramMap.get('filters');
@@ -74,10 +52,6 @@ export class ListEventsComponent implements OnInit, OnDestroy {
       this.getListForCategory();
     }
 
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   private loadEvents(): void {

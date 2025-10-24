@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal, effect, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
-import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
@@ -17,14 +16,12 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
   styleUrls: ['./settings.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsComponent implements OnInit, OnDestroy {
-  // Signal local para el usuario - se actualiza automáticamente
+export class SettingsComponent implements OnInit {
   user = signal<User>({} as User);
 
   settingsForm: FormGroup;
   errors: Object = {};
   isSubmitting = false;
-  private destroy$ = new Subject<void>();
 
   isUploading = false;
   previewUrl: string | null = null;
@@ -45,36 +42,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
       email: '',
       password: ''
     });
-
-    // Effect para reaccionar a cambios en el usuario global
-    effect(() => {
-      this.userService.currentUser$
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((globalUser) => {
-          this.user.set(globalUser);
-          this.settingsForm.patchValue(globalUser);
-          this.previewUrl = globalUser?.image || null;
-          this.cd.markForCheck();
-        });
-    });
-
-    // Effect para reaccionar al signal de logout
-    effect(() => {
-      const logoutCount = this.userService.logoutSignal();
-      if (logoutCount > 0) {
-        console.log('🔄 Detectado logout - actualizando contenido de settings');
-        this.cd.markForCheck();
-      }
-    });
   }
 
   ngOnInit() {
-    // La inicialización se hace en el effect del constructor
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    // Cargar el usuario una vez
+    this.userService.currentUser$.subscribe((globalUser) => {
+      this.user.set(globalUser);
+      this.settingsForm.patchValue(globalUser);
+      this.previewUrl = globalUser?.image || null;
+      this.cd.markForCheck();
+    });
   }
 
   logout() {

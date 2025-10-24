@@ -1,8 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-list-following-users',
@@ -16,7 +17,10 @@ export class ListFollowingUsersComponent implements OnInit {
     isLoading = signal<boolean>(true);
     errorMessage = signal<string>('');
 
-    constructor(private userService: UserService) { }
+    constructor(
+        private userService: UserService,
+        private router: Router
+    ) { }
 
     ngOnInit(): void {
         this.loadFollowingUsers();
@@ -55,6 +59,29 @@ export class ListFollowingUsersComponent implements OnInit {
             },
             error: (err: any) => {
                 console.error('Error al dejar de seguir:', err);
+                
+                // Verificar si es error de autenticación (401 o 403)
+                if (err.status === 401 || err.status === 403) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Inicia sesión',
+                        text: 'Debes iniciar sesión para dejar de seguir a un usuario',
+                        confirmButtonText: 'Ir al login',
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.router.navigateByUrl('/auth/login');
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo dejar de seguir al usuario. Intenta de nuevo.',
+                        confirmButtonText: 'OK'
+                    });
+                }
             }
         });
     }
