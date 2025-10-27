@@ -10,12 +10,6 @@ export class CategoryService {
 
     constructor(private apiService: ApiService) { }
 
-
-    /**
-     * Obtiene todos los Categoryos
-     * @param params - Parámetros de consulta opcionales (filtros, paginación, etc.)
-     * @returns Observable con la lista de Categoryos
-     */
     getAllCategories(params?: any): Observable<Category[]> {
         let httpParams = new HttpParams();
 
@@ -30,11 +24,6 @@ export class CategoryService {
         return this.apiService.get("/api/category", httpParams, 4000);
     }
 
-    /**
-     * Obtiene un Categoryo específico por su slug
-     * @param slug - Identificador único del Categoryo
-     * @returns Observable con el Categoryo
-     */
     getCategoryBySlug(slug: string): Observable<Category> {
         return this.apiService.get(`/api/category/${slug}`, undefined, 4000);
     }

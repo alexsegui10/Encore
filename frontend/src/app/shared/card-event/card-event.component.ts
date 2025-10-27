@@ -43,7 +43,7 @@ export class CardEventComponent {
         }
       },
       error: (err) => {
-        console.error('❌ Error al dar like:', err);
+        console.error('Error al dar like:', err);
         console.log('Error status:', err.status);
         console.log('Error details:', err);
         

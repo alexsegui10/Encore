@@ -37,7 +37,6 @@ export class CommentsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log("esere",this.comments);
     this.slug = this._activatedRoute.snapshot.params['slug'];
     this._loadComments();
 

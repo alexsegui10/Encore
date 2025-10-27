@@ -31,20 +31,17 @@ export class UserService {
           this.setAuth({ ...data.user, token });
         },
         error: (err) => {
-          // Si es 401/403, el interceptor intentará renovar el token automáticamente
-          // Solo hacer purgeAuth si el error NO es de autenticación (el interceptor ya lo manejó)
-          // O si el token simplemente no funciona después del refresh
+
           if (err.status === 401 || err.status === 403) {
-            console.warn('⚠️ Token expirado, el interceptor intentará renovarlo...');
-            // No hacer purgeAuth aquí, el interceptor se encargará si el refresh falla
+            console.warn('Token expirado, el interceptor intentará renovarlo...');
           } else {
-            console.warn('❌ Error al cargar usuario, limpiando sesión...', err);
+            console.warn('Error al cargar usuario, limpiando sesión...', err);
             this.purgeAuth();
           }
         }
       });
     } else {
-      console.log('❌ No hay token guardado');
+      console.debug('No hay token guardado');
       this.purgeAuth();
     }
   }
@@ -92,9 +89,7 @@ export class UserService {
         }
       }),
       catchError(err => {
-        // Si el refresh falla, NO hacer logout aquí
-        // El interceptor se encargará de llamar a handleAuthError -> purgeAuth
-        console.warn('❌ Refresh token expiró o es inválido');
+        console.warn('Refresh token expiró o es inválido');
         return throwError(() => err);
       })
     );
@@ -106,7 +101,6 @@ export class UserService {
         this.purgeAuth();
       }),
       catchError(err => {
-        // Incluso si falla, limpiar localmente
         this.purgeAuth();
         return throwError(() => err);
       })
@@ -122,7 +116,6 @@ export class UserService {
       .put('/api/user', { user }, 4000, true) // withAuth: true
       .pipe(
         map((data: { user: User }) => {
-          // Actualizar observables globales - esto causará reactividad automática
           this.currentUserSubject.next(data.user);
           
           return data.user;

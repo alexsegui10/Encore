@@ -389,19 +389,19 @@ function attachEventIdsToCategories() {
 // ==========================
 async function main() {
   const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/encore';
-  console.log('🔌 Conectando a MongoDB:', uri);
+  console.log('Conectando a MongoDB:', uri);
   await mongoose.connect(uri, { autoIndex: true });
-  console.log('✅ Conectado');
+  console.log('Conectado');
 
   // Rellenar categories.events con IDs de los eventos
   attachEventIdsToCategories();
 
   // ------- EVENTS -------
-  console.log('🎫 Upsert events…');
+  console.log('Upsert events...');
   await Event.bulkWrite(upsertOps(events));
 
   // ------- CATEGORIES (sin intentar modificar _id si ya existe por slug) -------
-  console.log('🏷️ Upsert categories…');
+  console.log('Upsert categories...');
   await Category.bulkWrite(
     categories.map((c) => {
       const { _id, ...rest } = c; // no seteamos _id en update
@@ -423,14 +423,14 @@ async function main() {
     Event.countDocuments(),
     Category.countDocuments()
   ]);
-  console.log(`📈 Totales -> Events:${eC}  Categories:${catC}`);
+  console.log(`Totales -> Events:${eC}  Categories:${catC}`);
 
   await mongoose.disconnect();
-  console.log('🏁 SEED OK');
+  console.log('SEED OK');
 }
 
 main().catch(async (e) => {
-  console.error('❌ SEED ERROR:', e);
+  console.error('SEED ERROR:', e);
   try { await mongoose.disconnect(); } catch {}
   process.exit(1);
 });

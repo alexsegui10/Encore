@@ -10,13 +10,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class PaginationComponent {
 
-  /** Página actual (1-indexed) */
   @Input() currentPage: number = 1;
 
-  /** Array de páginas ya calculado en el padre: [1,2,3,...] */
   @Input() totalPages: number[] = [];
 
-  /** Emite la página seleccionada */
   @Output() pageChange = new EventEmitter<number>();
 
   changePage(pageNumber: number) {

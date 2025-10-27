@@ -114,7 +114,7 @@ export class DetailsComponent implements OnInit {
                 this.event.set(response);
             },
             error: (err) => {
-                console.error('❌ Error al dar like:', err);
+                console.error('Error al dar like:', err);
                 // Si el usuario no está autenticado, redirigir al login
                 if (err.status === 401 || err.status === 403) {
                     Swal.fire({

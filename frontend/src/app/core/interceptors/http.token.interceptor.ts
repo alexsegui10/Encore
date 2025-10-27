@@ -26,7 +26,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.jwtService.getToken();
 
-    // ⬇️ EVITAR añadir Authorization a ImgBB u otros dominios externos
+  // Evitar añadir Authorization a ImgBB u otros dominios externos
     if (req.url.includes('imgbb.com')) {
       return next.handle(req);
     }
@@ -53,7 +53,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
             (error.status === 401 || error.status === 403) && 
             !req.url.includes('/refresh-token') && 
             !req.url.includes('/logout')) {
-          console.log('🔄 Token expirado, intentando renovar...');
+          console.debug('Token expirado, intentando renovar...');
           return this.handle401Error(req, next);
         }
 
@@ -74,7 +74,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(res.accessToken);
           
-          console.log('✅ Token renovado exitosamente');
+          console.debug('Token renovado exitosamente');
           
           // Re-intentar la petición original con el nuevo token
           return next.handle(this.addTokenHeader(request, res.accessToken));
@@ -83,7 +83,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           
           // Si refresh falla, hacer logout y redirigir
-          console.warn('❌ Refresh token expirado o inválido, cerrando sesión...');
+          console.warn('Refresh token expirado o inválido, cerrando sesión...');
           this.handleAuthError();
           
           return throwError(() => err);
@@ -115,8 +115,8 @@ export class HttpTokenInterceptor implements HttpInterceptor {
     
     // Intentar hacer logout en el backend para limpiar la cookie (no bloqueante)
     this.userService.logout().subscribe({
-      next: () => console.log('✅ Logout en backend exitoso'),
-      error: (err) => console.warn('⚠️ No se pudo hacer logout en backend:', err)
+  next: () => console.debug('Logout en backend exitoso'),
+  error: (err) => console.warn('No se pudo hacer logout en backend:', err)
     });
     
     // Redirigir al home

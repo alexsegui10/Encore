@@ -5,7 +5,7 @@ import { map, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ImgbbService {
-  // ⚠️ Mejor mete esta clave en environment.ts -> environment.imgbbKey
+  // Considera mover esta clave a environment.ts -> environment.imgbbKey
   private readonly API_KEY = 'f25a39c5f0cfea2e96c07d88342f6f90';
   private readonly ENDPOINT = 'https://api.imgbb.com/1/upload';
 
