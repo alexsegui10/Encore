@@ -9,6 +9,7 @@ import prismaPlugin from './plugins/prisma.js'
 import bcryptPlugin from './plugins/bcrypt.js'
 import jwtPlugin from './plugins/jwt.js'
 import usersRoutes from './routes/users/index.js'
+import eventsRoutes from './routes/events/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -33,7 +34,16 @@ await app.register(swagger, {
     },
     servers: [
       { url: `http://localhost:${process.env.PORT || 3000}`, description: 'Development' }
-    ]
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
   }
 })
 
@@ -50,6 +60,7 @@ await app.register(prismaPlugin)
 await app.register(bcryptPlugin)
 await app.register(jwtPlugin)
 await app.register(usersRoutes, { prefix: '/api' })
+await app.register(eventsRoutes, { prefix: '/api' })
 
 app.setErrorHandler((error, req, reply) => {
   req.log.error(error)

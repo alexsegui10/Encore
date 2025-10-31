@@ -13,6 +13,12 @@ enum UserStatus {
   pending
 }
 
+enum EventStatus {
+  draft
+  published
+  cancelled
+}
+
 model Usuario {
   id               String      @id @default(auto()) @map("_id") @db.ObjectId
   uid              String      @unique
@@ -28,4 +34,24 @@ model Usuario {
   followingUsers   String[]    @db.ObjectId
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
+}
+
+model Evento {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  slug            String       @unique
+  title           String
+  date            DateTime
+  price           Float
+  currency        String       @default("EUR")
+  location        String?
+  description     String?
+  category        String
+  status          EventStatus  @default(draft)
+  isActive        Boolean      @default(true)
+  mainImage       String?
+  favouritesCount Int          @default(0)
+  images          String[]
+  comments        String[]     @db.ObjectId
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }
