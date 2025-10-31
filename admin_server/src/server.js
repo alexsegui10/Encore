@@ -11,6 +11,7 @@ import jwtPlugin from './plugins/jwt.js'
 import authRoutes from './routes/auth/index.js'
 import usersRoutes from './routes/users/index.js'
 import categoriesRoutes from './routes/category/index.js'
+import eventsRoutes from './routes/events/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -35,7 +36,16 @@ await app.register(swagger, {
     },
     servers: [
       { url: `http://localhost:${process.env.PORT || 3000}`, description: 'Development' }
-    ]
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
   }
 })
 
@@ -54,6 +64,7 @@ await app.register(jwtPlugin)
 await app.register(authRoutes, { prefix: '/api' })
 await app.register(usersRoutes, { prefix: '/api' })
 await app.register(categoriesRoutes, { prefix: '/api' })
+await app.register(eventsRoutes, { prefix: '/api' })
 
 app.setErrorHandler((error, req, reply) => {
   req.log.error(error)

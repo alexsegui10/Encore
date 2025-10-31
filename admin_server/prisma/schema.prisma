@@ -13,6 +13,7 @@ enum UserStatus {
   pending
 }
 
+<<<<<<< HEAD
 enum CategoryStatus {
   active
   hidden
@@ -28,6 +29,12 @@ model Admin {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+=======
+enum EventStatus {
+  draft
+  published
+  cancelled
+>>>>>>> f21c4aebf3c98fa706ea5ceaf1723e8ff2c040dc
 }
 
 model Usuario {
@@ -49,6 +56,7 @@ model Usuario {
   updatedAt        DateTime    @updatedAt
 }
 
+<<<<<<< HEAD
 model categories {
   id          String         @id @default(auto()) @map("_id") @db.ObjectId
   name        String
@@ -60,4 +68,24 @@ model categories {
   eventos     String[]       @db.ObjectId
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+=======
+model Evento {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  slug            String       @unique
+  title           String
+  date            DateTime
+  price           Float
+  currency        String       @default("EUR")
+  location        String?
+  description     String?
+  category        String
+  status          EventStatus  @default(draft)
+  isActive        Boolean      @default(true)
+  mainImage       String?
+  favouritesCount Int          @default(0)
+  images          String[]
+  comments        String[]     @db.ObjectId
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+>>>>>>> f21c4aebf3c98fa706ea5ceaf1723e8ff2c040dc
 }
