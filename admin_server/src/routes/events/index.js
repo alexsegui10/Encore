@@ -28,24 +28,6 @@ async function generateUniqueSlug(prisma, title, date, excludeId = null) {
     return `${base}-${Math.random().toString(36).slice(2, 6)}`
 }
 
-// JWT verification middleware
-async function verifyJWT(req, reply, server) {
-    try {
-        const authHeader = req.headers.authorization
-
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return reply.code(401).send({ message: 'No token provided' })
-        }
-
-        const token = authHeader.substring(7)
-        const decoded = await server.jwt.verify(token)
-        req.user = decoded
-
-        return decoded
-    } catch (error) {
-        return reply.code(401).send({ message: 'Invalid or expired token' })
-    }
-}
 
 // Format event response
 function formatEventResponse(event) {
@@ -80,11 +62,9 @@ export default async function eventsRoutes(server) {
         method: 'POST',
         url: '/events',
         schema: schema.createEvent,
+        preHandler: server.authenticate,
         handler: async (req, reply) => {
             try {
-                // Verify JWT
-                const user = await verifyJWT(req, reply, server)
-                if (!user) return // Response already sent by verifyJWT
 
                 const { event: eventData } = req.body
 
@@ -140,11 +120,9 @@ export default async function eventsRoutes(server) {
         method: 'PUT',
         url: '/events/:slug',
         schema: schema.updateEvent,
+        preHandler: server.authenticate,
         handler: async (req, reply) => {
             try {
-                // Verify JWT
-                const user = await verifyJWT(req, reply, server)
-                if (!user) return
 
                 const { slug } = req.params
                 const { event: eventData } = req.body
@@ -217,11 +195,9 @@ export default async function eventsRoutes(server) {
         method: 'GET',
         url: '/events/:slug',
         schema: schema.getEvent,
+        preHandler: server.authenticate,
         handler: async (req, reply) => {
             try {
-                // Verify JWT
-                const user = await verifyJWT(req, reply, server)
-                if (!user) return
 
                 const { slug } = req.params
 
@@ -252,11 +228,9 @@ export default async function eventsRoutes(server) {
         method: 'GET',
         url: '/events',
         schema: schema.listEvents,
+        preHandler: server.authenticate,
         handler: async (req, reply) => {
             try {
-                // Verify JWT
-                const user = await verifyJWT(req, reply, server)
-                if (!user) return
 
                 const {
                     limit = 20,
@@ -326,11 +300,9 @@ export default async function eventsRoutes(server) {
         method: 'DELETE',
         url: '/events/:slug',
         schema: schema.deleteEvent,
+        preHandler: server.authenticate,
         handler: async (req, reply) => {
             try {
-                // Verify JWT
-                const user = await verifyJWT(req, reply, server)
-                if (!user) return
 
                 const { slug } = req.params
 
@@ -368,11 +340,9 @@ export default async function eventsRoutes(server) {
         method: 'PATCH',
         url: '/events/:slug/status',
         schema: schema.updateEventStatus,
+        preHandler: server.authenticate,
         handler: async (req, reply) => {
             try {
-                // Verify JWT
-                const user = await verifyJWT(req, reply, server)
-                if (!user) return
 
                 const { slug } = req.params
                 const { status } = req.body
@@ -418,11 +388,9 @@ export default async function eventsRoutes(server) {
         method: 'PATCH',
         url: '/events/:slug/active',
         schema: schema.toggleEventActive,
+        preHandler: server.authenticate,
         handler: async (req, reply) => {
             try {
-                // Verify JWT
-                const user = await verifyJWT(req, reply, server)
-                if (!user) return
 
                 const { slug } = req.params
                 const { isActive } = req.body
