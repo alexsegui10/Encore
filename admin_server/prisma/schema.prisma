@@ -13,9 +13,10 @@ enum UserStatus {
   pending
 }
 
-model Usuarios {
+model Usuario {
   id               String      @id @default(auto()) @map("_id") @db.ObjectId
   uid              String      @unique
+  slug             String      @unique
   username         String      @unique
   email            String      @unique
   password         String

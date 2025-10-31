@@ -1,163 +1,104 @@
 import 'dotenv/config'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
-import { PrismaClient } from '@prisma/client'
+import swagger from '@fastify/swagger'
+import swaggerUI from '@fastify/swagger-ui'
+import prismaPlugin from './plugins/prisma.js'
+import bcryptPlugin from './plugins/bcrypt.js'
+import jwtPlugin from './plugins/jwt.js'
+import usersRoutes from './routes/users/index.js'
 
-const app = Fastify({ logger: true })
-await app.register(cors, { origin: true })
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-const prisma = new PrismaClient({
-  datasources: { db: { url: process.env.DATABASE_URL } }
+const app = Fastify({ 
+  logger: {
+    level: process.env.LOG_LEVEL || 'info'
+  }
 })
 
-function genUid(prefix = 'client') {
-  const rnd = Math.floor(100000 + Math.random() * 900000)
-  return `${prefix}_${rnd}`
-}
+await app.register(cors, {
+  origin: process.env.CORS_ORIGIN || '*',
+  credentials: true
+})
 
-function normalizeUsername(s = '') {
-  return String(s)
-    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)+/g, '')
-}
-
-const userCreateSchema = {
-  type: 'object',
-  required: ['username', 'email', 'password'],
-  properties: {
-    username: { type: 'string', minLength: 3, maxLength: 40 },
-    email: { type: 'string', format: 'email' },
-    password: { type: 'string', minLength: 4, maxLength: 200 },
-    uidPrefix: { type: 'string' }
-  }
-}
-
-const userUpdateSchema = {
-  type: 'object',
-  properties: {
-    username: { type: 'string', minLength: 3, maxLength: 40 },
-    email: { type: 'string', format: 'email' },
-    password: { type: 'string', minLength: 4, maxLength: 200 },
-    bio: { type: 'string', maxLength: 5000 },
-    image: { type: 'string' },
-    isActive: { type: 'boolean' },
-    status: { type: 'string', enum: ['active', 'blocked', 'pending'] }
-  },
-  additionalProperties: true
-}
-
-app.get('/usuarios', async (req, reply) => {
-  const q = req.query?.q
-  const where = q ? {
-    OR: [
-      { username: { contains: normalizeUsername(q), mode: 'insensitive' } },
-      { email: { contains: String(q).toLowerCase(), mode: 'insensitive' } },
-      { uid: { contains: String(q), mode: 'insensitive' } }
+await app.register(swagger, {
+  openapi: { 
+    info: { 
+      title: 'Encore Admin API', 
+      version: '1.0.0',
+      description: 'Admin API for Encore platform'
+    },
+    servers: [
+      { url: `http://localhost:${process.env.PORT || 3000}`, description: 'Development' }
     ]
-  } : undefined
-
-  const users = await prisma.usuario.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true, uid: true, username: true, email: true,
-      bio: true, image: true, isActive: true, status: true,
-      createdAt: true, updatedAt: true
-    }
-  })
-  reply.send(users)
+  }
 })
 
-app.get('/usuarios/:username', async (req, reply) => {
-  const username = normalizeUsername(req.params.username)
-  const user = await prisma.usuario.findUnique({
-    where: { username },
-    select: {
-      id: true, uid: true, username: true, email: true,
-      bio: true, image: true, isActive: true, status: true,
-      createdAt: true, updatedAt: true
-    }
-  })
-  if (!user) return reply.code(404).send({ error: 'Usuario no encontrado' })
-  reply.send(user)
+await app.register(swaggerUI, { 
+  routePrefix: '/docs', 
+  staticCSP: true,
+  uiConfig: {
+    docExpansion: 'list',
+    deepLinking: true
+  }
 })
 
-app.post('/usuarios', { schema: { body: userCreateSchema } }, async (req, reply) => {
-  const username = normalizeUsername(req.body.username)
-  const email = String(req.body.email).toLowerCase()
-  const password = req.body.password
-  const uid = genUid(req.body.uidPrefix || 'client')
+await app.register(prismaPlugin)
+await app.register(bcryptPlugin)
+await app.register(jwtPlugin)
+await app.register(usersRoutes, { prefix: '/api' })
 
-  try {
-    const created = await prisma.usuario.create({
-      data: {
-        uid,
-        username,
-        email,
-        password,
-        favouriteEvents: [],
-        followingUsers: []
-      },
-      select: { id: true, uid: true, username: true, email: true, createdAt: true }
+app.setErrorHandler((error, req, reply) => {
+  req.log.error(error)
+
+  if (error.validation) {
+    return reply.code(400).send({
+      message: 'Validation error',
+      errors: error.validation
     })
-    reply.code(201).send(created)
-  } catch (err) {
-    const msg = String(err?.message || err)
-    if (msg.includes('Unique') || msg.includes('unique')) {
-      return reply.code(409).send({ error: 'uid, username o email ya existe' })
-    }
-    req.log.error(err)
-    reply.code(500).send({ error: 'Error interno' })
   }
-})
 
-app.put('/usuarios/:username', { schema: { body: userUpdateSchema } }, async (req, reply) => {
-  const currentUsername = normalizeUsername(req.params.username)
-  const data = { ...(req.body ?? {}) }
-  if (data.username) data.username = normalizeUsername(data.username)
-  if (data.email) data.email = String(data.email).toLowerCase()
-
-  try {
-    const updated = await prisma.usuario.update({
-      where: { username: currentUsername },
-      data,
-      select: {
-        id: true, uid: true, username: true, email: true,
-        bio: true, image: true, isActive: true, status: true, updatedAt: true
-      }
+  if (error.statusCode) {
+    return reply.code(error.statusCode).send({
+      message: error.message
     })
-    reply.send(updated)
-  } catch (err) {
-    const msg = String(err?.message || err)
-    if (msg.includes('Record to update not found')) {
-      return reply.code(404).send({ error: 'Usuario no encontrado' })
-    }
-    if (msg.includes('Unique') || msg.includes('unique')) {
-      return reply.code(409).send({ error: 'username o email ya existe' })
-    }
-    req.log.error(err)
-    reply.code(500).send({ error: 'Error interno' })
+  }
+
+  return reply.code(500).send({
+    message: 'Internal server error'
+  })
+})
+
+app.setNotFoundHandler((req, reply) => {
+  reply.code(404).send({
+    message: 'Route not found',
+    path: req.url
+  })
+})
+
+app.addHook('onRequest', async (req, reply) => {
+  if (req.headers['content-type'] === 'application/json' && 
+      req.headers['content-length'] === '0') {
+    req.headers['content-type'] = 'empty'
   }
 })
 
-app.delete('/usuarios/:username', async (req, reply) => {
-  const username = normalizeUsername(req.params.username)
-  try {
-    await prisma.usuario.delete({ where: { username } })
-    reply.code(204).send()
-  } catch (err) {
-    const msg = String(err?.message || err)
-    if (msg.includes('Record to delete does not exist')) {
-      return reply.code(404).send({ error: 'Usuario no encontrado' })
-    }
-    req.log.error(err)
-    reply.code(500).send({ error: 'Error interno' })
-  }
+app.addContentTypeParser('empty', (request, body, done) => {
+  done(null, {})
 })
 
 const PORT = Number(process.env.PORT || 3000)
-app.listen({ port: PORT, host: '0.0.0.0' })
-  .then(() => console.log(`API Users http://localhost:${PORT}`))
-  .catch(err => { console.error(err); process.exit(1) })
+const HOST = process.env.HOST || '0.0.0.0'
+
+app.listen({ port: PORT, host: HOST })
+  .then(() => {
+    app.log.info(`Server running at http://localhost:${PORT}`)
+    app.log.info(`Documentation at http://localhost:${PORT}/docs`)
+  })
+  .catch(error => {
+    app.log.error(error)
+    process.exit(1)
+  })
