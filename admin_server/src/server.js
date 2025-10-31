@@ -8,7 +8,9 @@ import swaggerUI from '@fastify/swagger-ui'
 import prismaPlugin from './plugins/prisma.js'
 import bcryptPlugin from './plugins/bcrypt.js'
 import jwtPlugin from './plugins/jwt.js'
+import authRoutes from './routes/auth/index.js'
 import usersRoutes from './routes/users/index.js'
+import categoriesRoutes from './routes/category/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -49,7 +51,9 @@ await app.register(swaggerUI, {
 await app.register(prismaPlugin)
 await app.register(bcryptPlugin)
 await app.register(jwtPlugin)
+await app.register(authRoutes, { prefix: '/api' })
 await app.register(usersRoutes, { prefix: '/api' })
+await app.register(categoriesRoutes, { prefix: '/api' })
 
 app.setErrorHandler((error, req, reply) => {
   req.log.error(error)
