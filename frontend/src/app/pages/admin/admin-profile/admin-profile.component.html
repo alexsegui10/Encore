@@ -1,0 +1,95 @@
+<div class="admin-profile-page">
+  <div class="page-header">
+    <h1>Mi Perfil de Administrador</h1>
+  </div>
+
+  @if (admin()) {
+    <div class="profile-container">
+      <div class="profile-card">
+        <div class="profile-info">
+          <div class="admin-avatar">
+            <span class="avatar-icon">👤</span>
+          </div>
+          <div class="admin-details">
+            <h2>{{ admin()?.username }}</h2>
+            <p class="admin-email">{{ admin()?.email }}</p>
+            <span class="admin-badge">Administrador</span>
+          </div>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="submitForm()" class="profile-form">
+          <div class="form-group">
+            <label for="username">Nombre de usuario</label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-control"
+              [class.is-invalid]="profileForm.get('username')?.invalid && profileForm.get('username')?.touched"
+            />
+            @if (profileForm.get('username')?.invalid && profileForm.get('username')?.touched) {
+              <div class="invalid-feedback">
+                @if (profileForm.get('username')?.errors?.['required']) {
+                  <span>El nombre de usuario es requerido</span>
+                }
+                @if (profileForm.get('username')?.errors?.['minlength']) {
+                  <span>Mínimo 3 caracteres</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-control"
+              [class.is-invalid]="profileForm.get('email')?.invalid && profileForm.get('email')?.touched"
+            />
+            @if (profileForm.get('email')?.invalid && profileForm.get('email')?.touched) {
+              <div class="invalid-feedback">
+                @if (profileForm.get('email')?.errors?.['required']) {
+                  <span>El email es requerido</span>
+                }
+                @if (profileForm.get('email')?.errors?.['email']) {
+                  <span>Debe ser un email válido</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="password">Nueva contraseña (opcional)</label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              class="form-control"
+              placeholder="Dejar en blanco para mantener la actual"
+              [class.is-invalid]="profileForm.get('password')?.invalid && profileForm.get('password')?.touched"
+            />
+            @if (profileForm.get('password')?.invalid && profileForm.get('password')?.touched) {
+              <div class="invalid-feedback">
+                @if (profileForm.get('password')?.errors?.['minlength']) {
+                  <span>Mínimo 6 caracteres</span>
+                }
+              </div>
+            }
+            <small class="form-text">Si deseas cambiar tu contraseña, ingresa una nueva (mínimo 6 caracteres)</small>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="isSubmitting || profileForm.invalid">
+              {{ isSubmitting ? 'Guardando...' : 'Guardar cambios' }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="logout()">
+              Cerrar sesión
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

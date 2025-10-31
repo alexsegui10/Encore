@@ -23,6 +23,8 @@ async function jwtPlugin(app) {
   app.decorate('authenticate', async function(req, reply) {
     try {
       const authHeader = req.headers.authorization
+      
+      console.log('🔐 Authenticate - Authorization header:', authHeader ? 'EXISTS' : 'MISSING');
 
       if (!authHeader) {
         return reply.code(401).send({ 
@@ -42,8 +44,13 @@ async function jwtPlugin(app) {
         })
       }
 
+      console.log('🔐 Token extraído (primeros 20 chars):', token.substring(0, 20) + '...');
+
       await req.jwtVerify({ token })
+      
+      console.log('✅ Token verificado. req.user:', req.user);
     } catch (error) {
+      console.error('❌ Error en authenticate:', error.message);
       return reply.code(401).send({ 
         message: 'Invalid or expired token' 
       })

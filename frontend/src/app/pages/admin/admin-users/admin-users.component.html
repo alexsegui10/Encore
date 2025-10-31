@@ -1,0 +1,215 @@
+<div class="admin-users-page">
+  <div class="page-header">
+    <h1>Gestión de Usuarios</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      <span class="icon">+</span> Nuevo Usuario
+    </button>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por nombre, email o biografía..."
+      (input)="onSearch($event)"
+      class="search-input"
+    />
+  </div>
+
+  <!-- Loading state -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando usuarios...</p>
+    </div>
+  }
+
+  <!-- Tabla de usuarios -->
+  @else if (filteredUsers().length > 0) {
+    <div class="table-container">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Biografía</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of filteredUsers(); track user.uid) {
+            <tr>
+              <td>
+                <div class="user-cell">
+                  @if (user.image) {
+                    <img [src]="user.image" [alt]="user.username" class="user-avatar" />
+                  } @else {
+                    <div class="user-avatar-placeholder">{{ user.username.charAt(0).toUpperCase() }}</div>
+                  }
+                  <div class="user-info">
+                    <span class="user-name">{{ user.username }}</span>
+                    <span class="user-slug">@{{ user.slug }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="badge" [class]="getStatusBadgeClass(user.status)">
+                  {{ getStatusText(user.status) }}
+                </span>
+              </td>
+              <td>
+                <span class="bio-text">{{ user.bio || 'Sin biografía' }}</span>
+              </td>
+              <td>
+                <div class="actions-cell">
+                  <button class="btn-icon btn-edit" (click)="openEditForm(user)" title="Editar">
+                    ✏️
+                  </button>
+                  <button class="btn-icon btn-delete" (click)="deleteUser(user)" title="Eliminar">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>No se encontraron usuarios</p>
+    </div>
+  }
+
+  <!-- Modal de formulario -->
+  @if (showForm()) {
+    <div class="modal-overlay" (click)="closeForm()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ isEditing() ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+          <button class="btn-close" (click)="closeForm()">×</button>
+        </div>
+
+        <form [formGroup]="userForm" (ngSubmit)="submitForm()" class="user-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username">Nombre de usuario *</label>
+              <input
+                type="text"
+                id="username"
+                formControlName="username"
+                class="form-control"
+                [class.is-invalid]="userForm.get('username')?.invalid && userForm.get('username')?.touched"
+                placeholder="johndoe"
+              />
+              @if (userForm.get('username')?.invalid && userForm.get('username')?.touched) {
+                <div class="invalid-feedback">
+                  @if (userForm.get('username')?.errors?.['required']) {
+                    <span>El nombre de usuario es requerido</span>
+                  }
+                  @if (userForm.get('username')?.errors?.['minlength']) {
+                    <span>Mínimo 3 caracteres</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+                placeholder="john@example.com"
+              />
+              @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+                <div class="invalid-feedback">
+                  @if (userForm.get('email')?.errors?.['required']) {
+                    <span>El email es requerido</span>
+                  }
+                  @if (userForm.get('email')?.errors?.['email']) {
+                    <span>Debe ser un email válido</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">
+                Contraseña {{ isEditing() ? '(dejar en blanco para mantener)' : '*' }}
+              </label>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                [class.is-invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched"
+                [placeholder]="isEditing() ? 'Dejar vacío si no deseas cambiarla' : 'Mínimo 6 caracteres'"
+              />
+              @if (userForm.get('password')?.invalid && userForm.get('password')?.touched) {
+                <div class="invalid-feedback">
+                  @if (userForm.get('password')?.errors?.['required']) {
+                    <span>La contraseña es requerida</span>
+                  }
+                  @if (userForm.get('password')?.errors?.['minlength']) {
+                    <span>Mínimo 6 caracteres</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="status">Estado *</label>
+              <select
+                id="status"
+                formControlName="status"
+                class="form-control"
+              >
+                <option value="active">Activo</option>
+                <option value="blocked">Bloqueado</option>
+                <option value="pending">Pendiente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bio">Biografía</label>
+            <textarea
+              id="bio"
+              formControlName="bio"
+              class="form-control"
+              rows="3"
+              placeholder="Una breve descripción del usuario..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="image">URL de imagen</label>
+            <input
+              type="url"
+              id="image"
+              formControlName="image"
+              class="form-control"
+              placeholder="https://example.com/image.jpg"
+            />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="closeForm()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="isSubmitting || userForm.invalid">
+              {{ isSubmitting ? 'Guardando...' : (isEditing() ? 'Actualizar' : 'Crear') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

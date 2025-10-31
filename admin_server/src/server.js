@@ -23,8 +23,16 @@ const app = Fastify({
 })
 
 await app.register(cors, {
-  origin: process.env.CORS_ORIGIN || '*',
-  credentials: true
+  origin: (origin, cb) => {
+    // Permitir todas las origins en desarrollo
+    cb(null, true)
+  },
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  preflight: true,
+  strictPreflight: false
 })
 
 await app.register(swagger, {

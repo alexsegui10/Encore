@@ -1,0 +1,159 @@
+<div class="admin-categories-page">
+  <div class="page-header">
+    <h1>Gestión de Categorías</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      <span class="icon">+</span> Nueva Categoría
+    </button>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por nombre o descripción..."
+      (input)="onSearch($event)"
+      class="search-input"
+    />
+  </div>
+
+  <!-- Loading state -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando categorías...</p>
+    </div>
+  }
+
+  <!-- Grid de categorías -->
+  @else if (filteredCategories().length > 0) {
+    <div class="categories-grid">
+      @for (category of filteredCategories(); track category.slug) {
+        <div class="category-card">
+          <div class="category-image">
+            @if (category.image) {
+              <img [src]="category.image" [alt]="category.name" />
+            } @else {
+              <div class="image-placeholder">
+                <span>📁</span>
+              </div>
+            }
+          </div>
+
+          <div class="category-content">
+            <div class="category-header">
+              <h3>{{ category.name }}</h3>
+              <span class="badge" [class]="getStatusBadgeClass(category.status)">
+                {{ getStatusText(category.status) }}
+              </span>
+            </div>
+
+            <p class="category-description">
+              {{ category.description || 'Sin descripción' }}
+            </p>
+
+            <div class="category-meta">
+              <span class="slug">@{{ category.slug }}</span>
+              @if (category.eventos) {
+                <span class="events-count">{{ category.eventos.length }} eventos</span>
+              }
+            </div>
+          </div>
+
+          <div class="category-actions">
+            <button class="btn-edit" (click)="openEditForm(category)">
+              ✏️ Editar
+            </button>
+            <button class="btn-delete" (click)="deleteCategory(category)">
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>No se encontraron categorías</p>
+    </div>
+  }
+
+  <!-- Modal de formulario -->
+  @if (showForm()) {
+    <div class="modal-overlay" (click)="closeForm()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ isEditing() ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+          <button class="btn-close" (click)="closeForm()">×</button>
+        </div>
+
+        <form [formGroup]="categoryForm" (ngSubmit)="submitForm()" class="category-form">
+          <div class="form-group">
+            <label for="name">Nombre de la categoría *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+              [class.is-invalid]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
+              placeholder="Rock, Jazz, Electrónica..."
+            />
+            @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+              <div class="invalid-feedback">
+                @if (categoryForm.get('name')?.errors?.['required']) {
+                  <span>El nombre es requerido</span>
+                }
+                @if (categoryForm.get('name')?.errors?.['minlength']) {
+                  <span>Mínimo 3 caracteres</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              class="form-control"
+              rows="4"
+              placeholder="Una breve descripción de la categoría..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="image">URL de imagen</label>
+            <input
+              type="url"
+              id="image"
+              formControlName="image"
+              class="form-control"
+              placeholder="https://example.com/image.jpg"
+            />
+            <small class="form-text">URL de la imagen que representa la categoría</small>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Estado *</label>
+            <select
+              id="status"
+              formControlName="status"
+              class="form-control"
+            >
+              <option value="active">Activa</option>
+              <option value="hidden">Oculta</option>
+              <option value="archived">Archivada</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="closeForm()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="isSubmitting || categoryForm.invalid">
+              {{ isSubmitting ? 'Guardando...' : (isEditing() ? 'Actualizar' : 'Crear') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>
