@@ -1,0 +1,279 @@
+<div class="admin-events-page">
+    <div class="page-header">
+        <h1>Gestión de Eventos</h1>
+        <button class="btn-primary" (click)="openCreateForm()">
+            <span class="icon">+</span> Nuevo Evento
+        </button>
+    </div>
+
+    <!-- Barra de búsqueda y filtros -->
+    <div class="filters-bar">
+        <input type="text" placeholder="Buscar por título, descripción o ubicación..." (input)="onSearch($event)"
+            class="search-input" />
+
+        <div class="filters-row">
+            <select class="filter-select" (change)="onStatusFilter($event)">
+                <option value="all">Todos los estados</option>
+                <option value="draft">Borradores</option>
+                <option value="published">Publicados</option>
+                <option value="cancelled">Cancelados</option>
+            </select>
+
+            <select class="filter-select" (change)="onCategoryFilter($event)">
+                <option value="all">Todas las categorías</option>
+                @for (category of categories(); track category.slug) {
+                <option [value]="category.slug">{{ category.name }}</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <!-- Loading state -->
+    @if (isLoading()) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando eventos...</p>
+    </div>
+    }
+
+    <!-- Grid de eventos -->
+    @else if (filteredEvents().length > 0) {
+    <div class="events-grid">
+        @for (event of filteredEvents(); track event.slug) {
+        <div class="event-card">
+            <div class="event-image">
+                @if (event.mainImage) {
+                <img [src]="event.mainImage" [alt]="event.title" />
+                } @else {
+                <div class="image-placeholder">
+                    <span>🎫</span>
+                </div>
+                }
+                @if (!event.isActive) {
+                <div class="inactive-overlay">
+                    <span>Inactivo</span>
+                </div>
+                }
+            </div>
+
+            <div class="event-content">
+                <div class="event-header">
+                    <h3>{{ event.title }}</h3>
+                    <span class="badge" [class]="getStatusBadgeClass(event.status)">
+                        {{ getStatusText(event.status) }}
+                    </span>
+                </div>
+
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <span class="meta-icon">📅</span>
+                        <span class="meta-text">{{ formatDate(event.date) }}</span>
+                    </div>
+
+                    @if (event.location) {
+                    <div class="meta-item">
+                        <span class="meta-icon">📍</span>
+                        <span class="meta-text">{{ event.location }}</span>
+                    </div>
+                    }
+
+                    <div class="meta-item">
+                        <span class="meta-icon">💰</span>
+                        <span class="meta-text">{{ formatPrice(event.price, event.currency) }}</span>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-icon">📂</span>
+                        <span class="meta-text">{{ getCategoryName(event.category) }}</span>
+                    </div>
+                </div>
+
+                <p class="event-description">
+                    {{ event.description || 'Sin descripción' }}
+                </p>
+
+                <div class="event-stats">
+                    <span class="stat">
+                        <span class="stat-icon">❤️</span>
+                        {{ event.favouritesCount }} me gusta
+                    </span>
+                    <span class="stat">
+                        <span class="stat-icon">💬</span>
+                        {{ event.comments.length }} comentarios
+                    </span>
+                    @if (event.images.length > 0) {
+                    <span class="stat">
+                        <span class="stat-icon">🖼️</span>
+                        {{ event.images.length }} imágenes
+                    </span>
+                    }
+                </div>
+
+                <div class="event-footer">
+                    <span class="slug">@{{ event.slug }}</span>
+                </div>
+            </div>
+
+            <div class="event-actions">
+                <button class="btn-edit" (click)="openEditForm(event)">
+                    ✏️ Editar
+                </button>
+                <button class="btn-delete" (click)="deleteEvent(event)">
+                    🗑️ Eliminar
+                </button>
+            </div>
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="empty-state">
+        <p>No se encontraron eventos</p>
+    </div>
+    }
+
+    <!-- Modal de formulario -->
+    @if (showForm()) {
+    <div class="modal-overlay" (click)="closeForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>{{ isEditing() ? 'Editar Evento' : 'Nuevo Evento' }}</h2>
+                <button class="btn-close" (click)="closeForm()">×</button>
+            </div>
+
+            <form [formGroup]="eventForm" (ngSubmit)="submitForm()" class="event-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">Título del evento *</label>
+                        <input type="text" id="title" formControlName="title" class="form-control"
+                            [class.is-invalid]="eventForm.get('title')?.invalid && eventForm.get('title')?.touched"
+                            placeholder="Nombre del evento" />
+                        @if (eventForm.get('title')?.invalid && eventForm.get('title')?.touched) {
+                        <div class="invalid-feedback">
+                            @if (eventForm.get('title')?.errors?.['required']) {
+                            <span>El título es requerido</span>
+                            }
+                            @if (eventForm.get('title')?.errors?.['maxlength']) {
+                            <span>Máximo 160 caracteres</span>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Categoría *</label>
+                        <select id="category" formControlName="category" class="form-control"
+                            [class.is-invalid]="eventForm.get('category')?.invalid && eventForm.get('category')?.touched">
+                            <option value="">Seleccionar categoría</option>
+                            @for (category of categories(); track category.slug) {
+                            <option [value]="category.slug">{{ category.name }}</option>
+                            }
+                        </select>
+                        @if (eventForm.get('category')?.invalid && eventForm.get('category')?.touched) {
+                        <div class="invalid-feedback">
+                            <span>La categoría es requerida</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Fecha y hora *</label>
+                        <input type="datetime-local" id="date" formControlName="date" class="form-control"
+                            [class.is-invalid]="eventForm.get('date')?.invalid && eventForm.get('date')?.touched" />
+                        @if (eventForm.get('date')?.invalid && eventForm.get('date')?.touched) {
+                        <div class="invalid-feedback">
+                            <span>La fecha es requerida</span>
+                        </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Ubicación</label>
+                        <input type="text" id="location" formControlName="location" class="form-control"
+                            placeholder="Dirección del evento" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Precio *</label>
+                        <input type="number" id="price" formControlName="price" class="form-control" min="0" step="0.01"
+                            [class.is-invalid]="eventForm.get('price')?.invalid && eventForm.get('price')?.touched" />
+                        @if (eventForm.get('price')?.invalid && eventForm.get('price')?.touched) {
+                        <div class="invalid-feedback">
+                            <span>El precio debe ser mayor o igual a 0</span>
+                        </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="currency">Moneda *</label>
+                        <select id="currency" formControlName="currency" class="form-control">
+                            <option value="EUR">EUR (€)</option>
+                            <option value="USD">USD ($)</option>
+                            <option value="GBP">GBP (£)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Estado *</label>
+                        <select id="status" formControlName="status" class="form-control">
+                            <option value="draft">Borrador</option>
+                            <option value="published">Publicado</option>
+                            <option value="cancelled">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" formControlName="description" class="form-control" rows="4"
+                        placeholder="Describe el evento..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="mainImage">URL de imagen principal</label>
+                    <input type="url" id="mainImage" formControlName="mainImage" class="form-control"
+                        placeholder="https://example.com/image.jpg" />
+                    <small class="form-text">URL de la imagen principal del evento</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Imágenes adicionales</label>
+                    @for (imageUrl of eventForm.get('images')?.value; track $index) {
+                    <div class="image-input-row">
+                        <input type="url" class="form-control" [value]="imageUrl"
+                            (input)="updateImageUrl($index, $any($event.target).value)"
+                            placeholder="https://example.com/image.jpg" />
+                        <button type="button" class="btn-remove-image" (click)="removeImageUrl($index)">
+                            ×
+                        </button>
+                    </div>
+                    }
+                    <button type="button" class="btn-add-image" (click)="addImageUrl()">
+                        + Añadir imagen
+                    </button>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="isActive" />
+                        <span>Evento activo</span>
+                    </label>
+                    <small class="form-text">Los eventos inactivos no se mostrarán públicamente</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" (click)="closeForm()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary" [disabled]="isSubmitting || eventForm.invalid">
+                        {{ isSubmitting ? 'Guardando...' : (isEditing() ? 'Actualizar' : 'Crear') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+</div>

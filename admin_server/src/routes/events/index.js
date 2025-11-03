@@ -16,7 +16,7 @@ async function generateUniqueSlug(prisma, title, date, excludeId = null) {
     const datePart = date ? new Date(date).toISOString().slice(0, 10) : ''
     const base = slugify(`${title || 'evento'} ${datePart}`) || 'evento'
 
-    const existingEvent = await prisma.evento.findUnique({
+    const existingEvent = await prisma.events.findUnique({
         where: { slug: base }
     })
 
@@ -86,7 +86,7 @@ export default async function eventsRoutes(server) {
                 const slug = await generateUniqueSlug(server.prisma, eventData.title, eventData.date)
 
                 // Create event
-                const newEvent = await server.prisma.evento.create({
+                const newEvent = await server.prisma.events.create({
                     data: {
                         slug,
                         title: eventData.title,
@@ -128,7 +128,7 @@ export default async function eventsRoutes(server) {
                 const { event: eventData } = req.body
 
                 // Find existing event
-                const existingEvent = await server.prisma.evento.findUnique({
+                const existingEvent = await server.prisma.events.findUnique({
                     where: { slug }
                 })
 
@@ -173,7 +173,7 @@ export default async function eventsRoutes(server) {
                 }
 
                 // Update event
-                const updatedEvent = await server.prisma.evento.update({
+                const updatedEvent = await server.prisma.events.update({
                     where: { slug },
                     data: updateData
                 })
@@ -201,7 +201,7 @@ export default async function eventsRoutes(server) {
 
                 const { slug } = req.params
 
-                const event = await server.prisma.evento.findUnique({
+                const event = await server.prisma.events.findUnique({
                     where: { slug }
                 })
 
@@ -272,13 +272,13 @@ export default async function eventsRoutes(server) {
 
                 // Get events
                 const [events, totalCount] = await Promise.all([
-                    server.prisma.evento.findMany({
+                    server.prisma.events.findMany({
                         where,
                         orderBy,
                         skip: offset,
                         take: limit
                     }),
-                    server.prisma.evento.count({ where })
+                    server.prisma.events.count({ where })
                 ])
 
                 return reply.code(200).send({
@@ -307,7 +307,7 @@ export default async function eventsRoutes(server) {
                 const { slug } = req.params
 
                 // Find event
-                const event = await server.prisma.evento.findUnique({
+                const event = await server.prisma.events.findUnique({
                     where: { slug }
                 })
 
@@ -318,7 +318,7 @@ export default async function eventsRoutes(server) {
                 }
 
                 // Delete event
-                const deletedEvent = await server.prisma.evento.delete({
+                const deletedEvent = await server.prisma.events.delete({
                     where: { slug }
                 })
 
@@ -355,7 +355,7 @@ export default async function eventsRoutes(server) {
                 }
 
                 // Find event
-                const event = await server.prisma.evento.findUnique({
+                const event = await server.prisma.events.findUnique({
                     where: { slug }
                 })
 
@@ -366,7 +366,7 @@ export default async function eventsRoutes(server) {
                 }
 
                 // Update status
-                const updatedEvent = await server.prisma.evento.update({
+                const updatedEvent = await server.prisma.events.update({
                     where: { slug },
                     data: { status }
                 })
@@ -396,7 +396,7 @@ export default async function eventsRoutes(server) {
                 const { isActive } = req.body
 
                 // Find event
-                const event = await server.prisma.evento.findUnique({
+                const event = await server.prisma.events.findUnique({
                     where: { slug }
                 })
 
@@ -407,7 +407,7 @@ export default async function eventsRoutes(server) {
                 }
 
                 // Update isActive
-                const updatedEvent = await server.prisma.evento.update({
+                const updatedEvent = await server.prisma.events.update({
                     where: { slug },
                     data: { isActive }
                 })

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AdminGuard } from './core/guards';
 
 export const routes: Routes = [
     {
@@ -18,8 +19,8 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsComponent)
     },
     {
-         path: 'auth',
-         loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule)
+        path: 'auth',
+        loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule)
     },
     {
         path: 'profile',
@@ -35,6 +36,7 @@ export const routes: Routes = [
             {
                 path: 'dashboard',
                 loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+                canActivate: [AdminGuard],
                 children: [
                     {
                         path: '',
@@ -43,19 +45,23 @@ export const routes: Routes = [
                     },
                     {
                         path: 'users',
-                        loadComponent: () => import('./pages/admin/admin-users/admin-users.component').then(m => m.AdminUsersComponent)
+                        loadComponent: () => import('./pages/admin/admin-users/admin-users.component').then(m => m.AdminUsersComponent),
+                        canActivate: [AdminGuard]
                     },
                     {
                         path: 'categories',
-                        loadComponent: () => import('./pages/admin/admin-categories/admin-categories.component').then(m => m.AdminCategoriesComponent)
+                        loadComponent: () => import('./pages/admin/admin-categories/admin-categories.component').then(m => m.AdminCategoriesComponent),
+                        canActivate: [AdminGuard]
                     },
                     {
                         path: 'events',
-                        loadComponent: () => import('./pages/admin/admin-events/admin-events.component').then(m => m.AdminEventsComponent)
+                        loadComponent: () => import('./pages/admin/admin-events/admin-events.component').then(m => m.AdminEventsComponent),
+                        canActivate: [AdminGuard]
                     },
                     {
                         path: 'profile',
-                        loadComponent: () => import('./pages/admin/admin-profile/admin-profile.component').then(m => m.AdminProfileComponent)
+                        loadComponent: () => import('./pages/admin/admin-profile/admin-profile.component').then(m => m.AdminProfileComponent),
+                        canActivate: [AdminGuard]
                     }
                 ]
             },

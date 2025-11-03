@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 // Generate Access Token (expires in 15 mins)
 export const generateAccessToken = (user) => {
     return jwt.sign(
-        { user: { id: user._id, email: user.email } },
+        { user: { id: user._id, email: user.email, role: user.role } },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '15m' }
     );
@@ -17,4 +17,3 @@ export const generateRefreshToken = (user) => {
         { expiresIn: '7d' }
     );
 };
-
