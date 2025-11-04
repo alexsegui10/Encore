@@ -1,6 +1,6 @@
 import * as schema from './schema.js'
+import { requireAdmin } from '../../middleware/rbac.js'
 
-// Utility function to slugify text
 function slugify(text) {
     if (!text) return ''
     return String(text)
@@ -62,7 +62,7 @@ export default async function eventsRoutes(server) {
         method: 'POST',
         url: '/events',
         schema: schema.createEvent,
-        preHandler: server.authenticate,
+        preHandler: server.requireAdmin,
         handler: async (req, reply) => {
             try {
 
@@ -120,7 +120,7 @@ export default async function eventsRoutes(server) {
         method: 'PUT',
         url: '/events/:slug',
         schema: schema.updateEvent,
-        preHandler: server.authenticate,
+        preHandler: server.requireAdmin,
         handler: async (req, reply) => {
             try {
 
@@ -195,7 +195,7 @@ export default async function eventsRoutes(server) {
         method: 'GET',
         url: '/events/:slug',
         schema: schema.getEvent,
-        preHandler: server.authenticate,
+        preHandler: server.requireAdmin,
         handler: async (req, reply) => {
             try {
 
@@ -228,7 +228,7 @@ export default async function eventsRoutes(server) {
         method: 'GET',
         url: '/events',
         schema: schema.listEvents,
-        preHandler: server.authenticate,
+        preHandler: server.requireAdmin,
         handler: async (req, reply) => {
             try {
 
@@ -300,7 +300,7 @@ export default async function eventsRoutes(server) {
         method: 'DELETE',
         url: '/events/:slug',
         schema: schema.deleteEvent,
-        preHandler: server.authenticate,
+        preHandler: server.requireAdmin,
         handler: async (req, reply) => {
             try {
 
@@ -340,7 +340,7 @@ export default async function eventsRoutes(server) {
         method: 'PATCH',
         url: '/events/:slug/status',
         schema: schema.updateEventStatus,
-        preHandler: server.authenticate,
+        preHandler: server.requireAdmin,
         handler: async (req, reply) => {
             try {
 
@@ -388,7 +388,7 @@ export default async function eventsRoutes(server) {
         method: 'PATCH',
         url: '/events/:slug/active',
         schema: schema.toggleEventActive,
-        preHandler: server.authenticate,
+        preHandler: server.requireAdmin,
         handler: async (req, reply) => {
             try {
 

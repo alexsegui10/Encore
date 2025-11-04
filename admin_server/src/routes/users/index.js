@@ -1,4 +1,5 @@
 import * as schema from "./schema.js";
+import { requireAdmin } from "../middleware/auth.js";
 
 function normalizeUsername(text) {
   if (!text) return "";
@@ -27,7 +28,7 @@ export default async function usersRoutes(server) {
   server.route({
     method: "GET",
     url: "/users",
-    onRequest: [server.authenticate],
+    onRequest: [requireAdmin],
     schema: schema.list,
     handler: async (req, reply) => {
       try {
@@ -62,7 +63,7 @@ export default async function usersRoutes(server) {
   server.route({
     method: "GET",
     url: "/users/:uid",
-    onRequest: [server.authenticate],
+    onRequest: [requireAdmin],
     schema: schema.getById,
     handler: async (req, reply) => {
       try {
@@ -98,7 +99,7 @@ export default async function usersRoutes(server) {
   server.route({
     method: "POST",
     url: "/users",
-    onRequest: [server.authenticate],
+    onRequest: [requireAdmin],
     schema: schema.create,
     handler: async (req, reply) => {
       try {
@@ -177,7 +178,7 @@ export default async function usersRoutes(server) {
   server.route({
     method: "PUT",
     url: "/users/:uid",
-    onRequest: [server.authenticate],
+    onRequest: [requireAdmin],
     schema: schema.update,
     handler: async (req, reply) => {
       try {
@@ -274,7 +275,7 @@ export default async function usersRoutes(server) {
   server.route({
     method: "DELETE",
     url: "/users/:uid",
-    onRequest: [server.authenticate],
+    onRequest: [requireAdmin],
     schema: schema.remove,
     handler: async (req, reply) => {
       try {

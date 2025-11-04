@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
+import { UserTypeService } from '../../core/services/user-type.service';
 import Swal from 'sweetalert2';
 
 interface Errors { errors: { [k: string]: string } }
@@ -26,6 +27,7 @@ export class AuthComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
+    private userTypeService: UserTypeService,
     private fb: FormBuilder
   ) {
     this.authForm = this.fb.group({
@@ -63,6 +65,10 @@ export class AuthComponent implements OnInit {
     this.userService.attemptAuth(this.authType(), credentials).subscribe({
       next: () => {
         this.isSubmitting.set(false);
+        
+        // Actualizar el rol en UserTypeService
+        this.userTypeService.updateRole();
+        
         const message = this.authType() === 'login' ? '¡Bienvenido de nuevo!' : '¡Cuenta creada exitosamente!';
 
         Swal.fire({

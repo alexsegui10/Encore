@@ -8,7 +8,13 @@
     </div>
 
     <nav class="main-nav">
-      <ul>
+      <!-- Navegación para Admin -->
+      <ul *ngIf="isAdmin">
+        <li><a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a></li>
+      </ul>
+
+      <!-- Navegación para Cliente o No autenticado -->
+      <ul *ngIf="!isAdmin">
         <li><a routerLink="/" routerLinkActive="active">Inicio</a></li>
         <li><a routerLink="/shop" routerLinkActive="active">Artista</a></li>
         <li><a routerLink="/eventos" routerLinkActive="active">Eventos</a></li>
@@ -16,32 +22,31 @@
       </ul>
 
       <div class="actions">
-        <ng-container *ngIf="!isLogged; else loggedIn">
+        <ng-container *ngIf="!isAuthenticated; else loggedIn">
           <a routerLink="/auth/login" class="btn login">Ingresar</a>
           <a routerLink="/auth/register" class="btn primary">Registrarse</a>
         </ng-container>
 
-          <ng-template #loggedIn>
-            <div class="user-info-pill">
-              <a class="avatar-wrap" routerLink="/profile" aria-label="Ir al perfil">
-                <img
-                  [src]="currentUser?.image || 'assets/default-avatar.png'"
-                  alt="Avatar"
-                  class="avatar"                />
-              </a>
+        <ng-template #loggedIn>
+          <div class="user-info-pill">
+            <a class="avatar-wrap" [routerLink]="isAdmin ? '/admin/dashboard' : '/profile'" aria-label="Ir al perfil">
+              <img [src]="currentUser()?.image || 'assets/default-avatar.png'" alt="Avatar" class="avatar" />
+            </a>
 
-<!--               <span class="username" title="{{ currentUser?.username }}">
-                {{ currentUser?.username }}
-              </span> -->
+            <!-- Mostrar username para cliente, email para admin -->
+            <span class="username" *ngIf="currentUser()"
+              [title]="isAdmin ? currentUser()?.email : currentUser()?.username">
+              {{ isAdmin ? (currentUser()?.username || currentUser()?.email) : currentUser()?.username }}
+            </span>
 
-              <button class="btn logout" (click)="logout()" aria-label="Cerrar sesión">
-                Cerrar sesión
-              </button>
-            </div>
-          </ng-template>
+            <button class="btn logout" (click)="logout()" aria-label="Cerrar sesión">
+              Cerrar sesión
+            </button>
+          </div>
+        </ng-template>
 
-        <!-- Enlace discreto al admin -->
-        <a routerLink="/admin/login" class="admin-link" title="Acceso Admin">🔒</a>
+        <!-- Enlace discreto al admin solo si NO es admin -->
+        <a *ngIf="!isAdmin" routerLink="/admin/login" class="admin-link" title="Acceso Admin">🔒</a>
       </div>
     </nav>
   </div>

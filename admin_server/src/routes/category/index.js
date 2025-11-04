@@ -1,4 +1,5 @@
 import * as schema from './schema.js'
+import { requireAdmin } from '../../middleware/rbac.js'
 
 function generateSlug(text) {
   if (!text) return ''
@@ -18,7 +19,7 @@ export default async function categoryRoutes(server) {
   server.route({
     method: 'GET',
     url: '/categories',
-    onRequest: [server.authenticate],
+    onRequest: [server.requireAdmin],
     schema: schema.list,
     handler: async (req, reply) => {
       try {
@@ -61,7 +62,7 @@ export default async function categoryRoutes(server) {
   server.route({
     method: 'POST',
     url: '/categories',
-    onRequest: [server.authenticate],
+    onRequest: [server.requireAdmin],
     schema: schema.create,
     handler: async (req, reply) => {
       try {
@@ -105,7 +106,7 @@ export default async function categoryRoutes(server) {
   server.route({
     method: 'PUT',
     url: '/categories/:slug',
-    onRequest: [server.authenticate],
+    onRequest: [server.requireAdmin],
     schema: schema.update,
     handler: async (req, reply) => {
       try {
@@ -169,7 +170,7 @@ export default async function categoryRoutes(server) {
   server.route({
     method: 'DELETE',
     url: '/categories/:slug',
-    onRequest: [server.authenticate],
+    onRequest: [server.requireAdmin],
     schema: schema.remove,
     handler: async (req, reply) => {
       try {

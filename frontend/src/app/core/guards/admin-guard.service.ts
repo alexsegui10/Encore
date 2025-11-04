@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { UserService } from '../services/user.service';
-import { Observable, map, take } from 'rxjs';
+import { UserTypeService } from '../services/user-type.service';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AdminGuard implements CanActivate {
-    constructor(private userService: UserService, private router: Router) { }
+    constructor(
+        private userTypeService: UserTypeService,
+        private router: Router
+    ) { }
 
     canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean> {
-        return this.userService.currentUser$.pipe(
-            take(1),
-            map((user) => {
-                // Check if user is authenticated
-                if (!user) {
-                    this.router.navigate(['/auth/login']);
-                    return false;
-                }
-
-                // Check if user has admin role
-                if (user.role === 'admin') {
-                    return true;
-                } else {
-                    // User is authenticated but not admin, redirect to home
-                    this.router.navigate(['/']);
-                    return false;
-                }
-            })
-        );
+        const hasValidToken = this.userTypeService.updateRole();
+        
+        if (!hasValidToken) {
+            this.router.navigate(['/admin/login']);
+            return of(false);
+        }
+        
+        if (this.userTypeService.isAdmin()) {
+            return of(true);
+        } else if (this.userTypeService.isAuthenticated()) {
+            this.router.navigate(['/']);
+            return of(false);
+        } else {
+            this.router.navigate(['/admin/login']);
+            return of(false);
+        }
     }
 }

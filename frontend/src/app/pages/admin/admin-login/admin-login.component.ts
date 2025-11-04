@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminAuthService } from '../../../core/services/admin-auth.service';
+import { UserTypeService } from '../../../core/services/user-type.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -19,6 +20,7 @@ export class AdminLoginComponent {
   constructor(
     private fb: FormBuilder,
     private adminAuthService: AdminAuthService,
+    private userTypeService: UserTypeService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -29,7 +31,6 @@ export class AdminLoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      console.warn('⚠️ Formulario inválido');
       return;
     }
 
@@ -37,16 +38,13 @@ export class AdminLoginComponent {
     this.errorMessage = '';
 
     const credentials = this.loginForm.value;
-    console.log('📝 Credenciales a enviar:', credentials);
 
     this.adminAuthService.login(credentials).subscribe({
-      next: (admin) => {
-        console.log('✅ Login exitoso, admin:', admin);
-        console.log('🔑 Verificando token en localStorage:', localStorage.getItem('admin_jwtToken'));
+      next: () => {
+        this.userTypeService.updateRole();
         this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
-        console.error('❌ Error en login:', err);
         this.isSubmitting = false;
         this.errorMessage = err.error?.message || err.message || 'Error en el login';
       }

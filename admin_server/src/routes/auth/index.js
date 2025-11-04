@@ -52,7 +52,8 @@ export default async function authRoutes(server) {
 
         const token = server.jwt.sign({ 
           id: admin.id,
-          uid: admin.uid
+          uid: admin.uid,
+          role: 'admin'
         })
 
         const { password: _, ...adminData } = admin

@@ -20,43 +20,6 @@ async function jwtPlugin(app) {
     }
   })
 
-  app.decorate('authenticate', async function(req, reply) {
-    try {
-      const authHeader = req.headers.authorization
-      
-      console.log('🔐 Authenticate - Authorization header:', authHeader ? 'EXISTS' : 'MISSING');
-
-      if (!authHeader) {
-        return reply.code(401).send({ 
-          message: 'Missing authorization header' 
-        })
-      }
-
-      const token = authHeader.startsWith('Token ')
-        ? authHeader.slice(6)
-        : authHeader.startsWith('Bearer ')
-        ? authHeader.slice(7)
-        : authHeader
-
-      if (!token) {
-        return reply.code(401).send({ 
-          message: 'Invalid authorization format' 
-        })
-      }
-
-      console.log('🔐 Token extraído (primeros 20 chars):', token.substring(0, 20) + '...');
-
-      await req.jwtVerify({ token })
-      
-      console.log('✅ Token verificado. req.user:', req.user);
-    } catch (error) {
-      console.error('❌ Error en authenticate:', error.message);
-      return reply.code(401).send({ 
-        message: 'Invalid or expired token' 
-      })
-    }
-  })
-
   app.log.info('JWT plugin loaded successfully')
 }
 

@@ -1,8 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { UserService } from '../../../core/services/user.service';
-import { User } from '../../../core/models/user.model';
+import { UserTypeService } from '../../../core/services/user-type.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,33 +9,48 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  currentUser: User | null = null;
-  isLogged = false;
+  // Signal local para el usuario
+  currentUser = signal<any>(null);
+
+  // Getters para signals del servicio
+  get isAdmin() {
+    return this.userTypeService.isAdmin();
+  }
+
+  get isAuthenticated() {
+    return this.userTypeService.isAuthenticated();
+  }
 
   constructor(
-    private userService: UserService,
-    private cd: ChangeDetectorRef
-  ) { }
+    private userTypeService: UserTypeService
+  ) {
+    // Effect para actualizar datos del usuario cuando cambie el role
+    effect(() => {
+      // Disparar cuando cambie el role
+      const role = this.userTypeService.currentRole();
 
-  ngOnInit(): void {
-    // Cargar el usuario una vez
-    this.userService.populate();
-    
-    // Obtener el estado actual directamente
-    this.userService.currentUser$.subscribe((userData) => {
-      this.currentUser = userData;
-      this.cd.markForCheck();
-    });
-
-    this.userService.isAuthenticated$.subscribe((status) => {
-      this.isLogged = status;
-      this.cd.markForCheck();
+      if (role) {
+        this.userTypeService.getCurrentUserData().subscribe(userData => {
+          this.currentUser.set(userData);
+        });
+      } else {
+        this.currentUser.set(null);
+      }
     });
   }
+
+  ngOnInit(): void {
+    // Cargar datos iniciales
+    if (this.userTypeService.isAuthenticated()) {
+      this.userTypeService.getCurrentUserData().subscribe(userData => {
+        this.currentUser.set(userData);
+      });
+    }
+  }
+
   logout(): void {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -49,22 +63,18 @@ export class HeaderComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Llamar al endpoint de logout para limpiar la cookie HttpOnly
-        this.userService.logout().subscribe({
-          next: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Sesión cerrada',
-              text: '¡Hasta pronto!',
-              timer: 1500,
-              showConfirmButton: false
-            });
-          },
-          error: (err) => {
-            console.error('Error al cerrar sesión:', err);
-            // Aunque falle, se limpia localmente en el servicio
-          }
+        this.userTypeService.logout();
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Sesión cerrada',
+          text: '¡Hasta pronto!',
+          timer: 1500,
+          showConfirmButton: false
         });
+        setTimeout(() => {
+          location.assign('/');
+        }, 1500);
       }
     });
   }
