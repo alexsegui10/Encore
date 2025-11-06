@@ -32,7 +32,7 @@ export default async function usersRoutes(server) {
     schema: schema.list,
     handler: async (req, reply) => {
       try {
-        const users = await server.prisma.usuario.findMany({
+  const users = await server.prisma.users.findMany({
           orderBy: { createdAt: "desc" },
           select: {
             id: true,
@@ -67,7 +67,7 @@ export default async function usersRoutes(server) {
     schema: schema.getById,
     handler: async (req, reply) => {
       try {
-        const user = await server.prisma.usuario.findUnique({
+  const user = await server.prisma.users.findUnique({
           where: { uid: req.params.uid },
           select: {
             id: true,
@@ -122,13 +122,13 @@ export default async function usersRoutes(server) {
         const uid = generateUid();
         const [existingEmail, existingUsername, existingSlug] =
           await Promise.all([
-            server.prisma.usuario.findUnique({
+            server.prisma.users.findUnique({
               where: { email: email.toLowerCase() },
             }),
-            server.prisma.usuario.findUnique({
+            server.prisma.users.findUnique({
               where: { username: username.toLowerCase() },
             }),
-            server.prisma.usuario.findUnique({ where: { slug } }),
+            server.prisma.users.findUnique({ where: { slug } }),
           ]);
         if (existingEmail)
           return reply.code(409).send({ message: "Email already registered" });
@@ -139,7 +139,12 @@ export default async function usersRoutes(server) {
             .code(409)
             .send({ message: "Username slug already exists" });
         const hashedPassword = await server.hash(password);
-        const user = await server.prisma.usuario.create({
+        
+        const userImage = image && image.trim() !== '' 
+          ? image 
+          : `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(email)}`;
+        
+        const user = await server.prisma.users.create({
           data: {
             uid,
             slug,
@@ -147,7 +152,11 @@ export default async function usersRoutes(server) {
             email: email.toLowerCase(),
             password: hashedPassword,
             bio: bio || "",
-            image: image || null,
+            image: userImage,
+            favouriteEvents: [],
+            followingUsers: [],
+            comentarios: [],
+            reservas: [],
           },
           select: {
             id: true,
@@ -192,10 +201,10 @@ export default async function usersRoutes(server) {
               .send({ message: "Username must be at least 3 characters" });
           const slug = normalizeUsername(input.username);
           const [existingUsername, existingSlug] = await Promise.all([
-            server.prisma.usuario.findUnique({
+            server.prisma.users.findUnique({
               where: { username: input.username.toLowerCase() },
             }),
-            server.prisma.usuario.findUnique({ where: { slug } }),
+            server.prisma.users.findUnique({ where: { slug } }),
           ]);
           if (existingUsername && existingUsername.uid !== uid)
             return reply.code(409).send({ message: "Username already taken" });
@@ -209,7 +218,7 @@ export default async function usersRoutes(server) {
         if (input.email) {
           if (!validateEmail(input.email))
             return reply.code(400).send({ message: "Invalid email format" });
-          const existing = await server.prisma.usuario.findUnique({
+          const existing = await server.prisma.users.findUnique({
             where: { email: input.email.toLowerCase() },
           });
           if (existing && existing.uid !== uid)
@@ -241,7 +250,7 @@ export default async function usersRoutes(server) {
         }
         if (Object.keys(updateData).length === 0)
           return reply.code(400).send({ message: "No fields to update" });
-        const user = await server.prisma.usuario.update({
+  const user = await server.prisma.users.update({
           where: { uid },
           data: updateData,
           select: {
@@ -279,7 +288,7 @@ export default async function usersRoutes(server) {
     schema: schema.remove,
     handler: async (req, reply) => {
       try {
-        await server.prisma.usuario.delete({ where: { uid: req.params.uid } });
+  await server.prisma.users.delete({ where: { uid: req.params.uid } });
         return reply.code(204).send();
       } catch (error) {
         if (error.code === "P2025")
