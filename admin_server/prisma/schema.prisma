@@ -36,7 +36,7 @@ enum EventStatus {
   cancelled
 }
 
-model Usuario {
+model users {
   id              String     @id @default(auto()) @map("_id") @db.ObjectId
   uid             String     @unique
   slug            String     @unique
@@ -47,6 +47,7 @@ model Usuario {
   image           String?
   isActive        Boolean    @default(true)
   status          UserStatus @default(active)
+  role            String     @default("client")
   favouriteEvents String[]   @db.ObjectId
   followingUsers  String[]   @db.ObjectId
   comentarios     String[]   @db.ObjectId

@@ -6,7 +6,7 @@ import cors from '@fastify/cors'
 import swagger from '@fastify/swagger'
 import swaggerUI from '@fastify/swagger-ui'
 import prismaPlugin from './plugins/prisma.js'
-import bcryptPlugin from './plugins/bcrypt.js'
+import argon2Plugin from './plugins/argon2.js'
 import jwtPlugin from './plugins/jwt.js'
 import authRoutes from './routes/auth/index.js'
 import usersRoutes from './routes/users/index.js'
@@ -67,7 +67,7 @@ await app.register(swaggerUI, {
 })
 
 await app.register(prismaPlugin)
-await app.register(bcryptPlugin)
+await app.register(argon2Plugin)
 await app.register(jwtPlugin)
 await app.register(authRoutes, { prefix: '/api' })
 await app.register(usersRoutes, { prefix: '/api' })
