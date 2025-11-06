@@ -1,30 +1,36 @@
 import { Routes } from '@angular/router';
-import { AdminGuard } from './core/guards';
+import { AdminGuard, NonAdminGuard, AuthGuard } from './core/guards';
 
 export const routes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
+        canActivate: [NonAdminGuard]
     },
     {
         path: 'home',
-        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
+        canActivate: [NonAdminGuard]
     },
     {
         path: 'shop',
-        loadChildren: () => import('./pages/shop/shop.module').then(m => m.ShopModule)
+        loadChildren: () => import('./pages/shop/shop.module').then(m => m.ShopModule),
+        canActivate: [NonAdminGuard]
     },
     {
         path: 'details/:slug',
-        loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsComponent)
+        loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsComponent),
+        canActivate: [NonAdminGuard]
     },
     {
         path: 'auth',
-        loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule)
+        loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule),
+        canActivate: [NonAdminGuard]
     },
     {
         path: 'profile',
-        loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfileModule)
+        loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfileModule),
+        canActivate: [AuthGuard]
     },
     {
         path: 'admin',

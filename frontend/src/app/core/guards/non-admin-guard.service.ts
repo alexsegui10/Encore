@@ -6,19 +6,14 @@ import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class NonAdminGuard implements CanActivate {
   constructor(
     private userTypeService: UserTypeService,
     private router: Router
   ) { }
 
   canActivate(): Observable<boolean> {
-    const hasValidToken = this.userTypeService.updateRole();
-    
-    if (!hasValidToken) {
-      this.router.navigate(['/auth/login']);
-      return of(false);
-    }
+    this.userTypeService.updateRole();
     
     // Si es admin, redirigir al dashboard
     if (this.userTypeService.isAdmin()) {
@@ -26,11 +21,7 @@ export class AuthGuard implements CanActivate {
       return of(false);
     }
     
-    if (this.userTypeService.isAuthenticated()) {
-      return of(true);
-    } else {
-      this.router.navigate(['/auth/login']);
-      return of(false);
-    }
+    // Permitir acceso a usuarios no autenticados y clientes
+    return of(true);
   }
 }
