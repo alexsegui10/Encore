@@ -1,5 +1,5 @@
 import * as schema from "./schema.js";
-import { requireAdmin } from "../middleware/auth.js";
+import { requireAdmin } from "../../middleware/auth.js";
 
 function normalizeUsername(text) {
   if (!text) return "";

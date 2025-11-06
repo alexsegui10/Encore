@@ -1,4 +1,5 @@
 import * as schema from './schema.js'
+import { authenticate } from '../../middleware/auth.js'
 
 function generateUid(prefix = 'adm') {
   const timestamp = Date.now().toString(36)
@@ -69,7 +70,7 @@ export default async function authRoutes(server) {
   server.route({
     method: 'GET',
     url: '/auth/me',
-    onRequest: [server.authenticate],
+    onRequest: [authenticate],
     schema: schema.getMe,
     handler: async (req, reply) => {
       try {
@@ -99,7 +100,7 @@ export default async function authRoutes(server) {
   server.route({
     method: 'PUT',
     url: '/auth/me',
-    onRequest: [server.authenticate],
+    onRequest: [authenticate],
     schema: schema.updateMe,
     handler: async (req, reply) => {
       try {
