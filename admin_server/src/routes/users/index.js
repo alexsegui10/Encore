@@ -250,36 +250,36 @@ export default async function usersRoutes(server) {
         }
         if (Object.keys(updateData).length === 0)
           return reply.code(400).send({ message: "No fields to update" });
-  const user = await server.prisma.users.update({
-          where: { uid },
-          data: updateData,
-          select: {
-            id: true,
-            uid: true,
-            slug: true,
-            username: true,
-            email: true,
-            bio: true,
-            image: true,
-            isActive: true,
-            status: true,
-            favouriteEvents: true,
-            followingUsers: true,
-            comentarios: true,
-            reservas: true,
-            createdAt: true,
-            updatedAt: true,
+        const user = await server.prisma.users.update({
+                where: { uid },
+                data: updateData,
+                select: {
+                  id: true,
+                  uid: true,
+                  slug: true,
+                  username: true,
+                  email: true,
+                  bio: true,
+                  image: true,
+                  isActive: true,
+                  status: true,
+                  favouriteEvents: true,
+                  followingUsers: true,
+                  comentarios: true,
+                  reservas: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+              });
+              return { user };
+            } catch (error) {
+              if (error.code === "P2025")
+                return reply.code(404).send({ message: "User not found" });
+              req.log.error(error);
+              return reply.code(500).send({ message: "Internal server error" });
+            }
           },
         });
-        return { user };
-      } catch (error) {
-        if (error.code === "P2025")
-          return reply.code(404).send({ message: "User not found" });
-        req.log.error(error);
-        return reply.code(500).send({ message: "Internal server error" });
-      }
-    },
-  });
 
   server.route({
     method: "DELETE",
