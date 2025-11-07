@@ -21,7 +21,6 @@ async function prismaPlugin(app) {
 
   app.decorate('prisma', prisma)
 
-  // Log quick sanity checks about generated models to help debugging
   try {
     app.log.info(`prisma.users present: ${Boolean(prisma.users)}`)
     app.log.info(`prisma.usuario present: ${Boolean(prisma.usuario)}`)
