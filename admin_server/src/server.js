@@ -24,7 +24,6 @@ const app = Fastify({
 
 await app.register(cors, {
   origin: (origin, cb) => {
-    // Permitir todas las origins en desarrollo
     cb(null, true)
   },
   credentials: true,

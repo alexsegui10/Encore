@@ -115,6 +115,31 @@
   padding: 12px 14px;
 }
 
+/* Mensajes de error de campo */
+.text-danger.small {
+  color: #fca5a5;
+  font-size: 13px;
+  margin-top: 6px;
+  display: block;
+  animation: errorSlideIn 0.2s ease;
+}
+
+.form-control.is-invalid {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, .18) !important;
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Helper para compactar el card dentro de Bootstrap grid */
 .auth-page .col-md-6.offset-md-3.col-xs-12 > .auth-card {
   margin-top: 8px;

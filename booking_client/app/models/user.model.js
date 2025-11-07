@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
     match: [/\S+@\S+\.\S+/, 'is invalid'],
     index: true
   },
+  uid: { type: String, required: true, unique: true },
+  slug: { type: String, required: true, unique: true },
   favouriteEvents: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Event'
@@ -23,9 +25,16 @@ const userSchema = new mongoose.Schema({
   bio: { type: String, default: '' },
   image: { type: String },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
-  // Campos añadidos para compatibilidad con el admin_server
   isActive: { type: Boolean, default: true },
-  status: { type: String, enum: ['active', 'blocked', 'pending'], default: 'active' }
+  status: { type: String, enum: ['active', 'blocked', 'pending'], default: 'active' },
+  comentarios: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment'
+  }],
+  reservas: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Reservation'
+  }]
 }, { timestamps: true });
 
 userSchema.plugin(uniqueValidator);
@@ -45,6 +54,8 @@ userSchema.methods.toUserResponse = function (jwt_access) {
     bio: this.bio,
     image: this.image,
     role: this.role,
+    uid: this.uid,
+    slug: this.slug,
     isActive: this.isActive,
     status: this.status,
     accessToken: jwt_access
