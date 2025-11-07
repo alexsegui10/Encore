@@ -13,10 +13,10 @@ import {
   ɵɵdefineNgModule,
   ɵɵdirectiveInject
 } from "./chunk-SSSPD6GQ.js";
-import "./chunk-JRFR6BLO.js";
 import {
   fromEvent
 } from "./chunk-HWYXSU2G.js";
+import "./chunk-JRFR6BLO.js";
 import {
   filter,
   map,

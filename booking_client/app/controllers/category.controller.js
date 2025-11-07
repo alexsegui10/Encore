@@ -5,7 +5,14 @@ export const list = async (req, res, next) => {
   try {
     const offset = parseInt(req.query.offset, 10) || 0;
     const limit = parseInt(req.query.limit, 10) || 4;
-    const items = await Category.find()
+    // Mostrar categorías activas o sin status definido (para retrocompatibilidad)
+    const items = await Category.find({ 
+      $or: [
+        { status: 'active' },
+        { status: { $exists: false } },
+        { status: null }
+      ]
+    })
       .sort('name')
       .skip(offset)
       .limit(limit)
@@ -20,7 +27,15 @@ export const list = async (req, res, next) => {
 export const getOne = async (req, res, next) => {
   try {
     const { slug } = req.params;
-    const doc = await Category.findOne({ slug }).lean();
+    // Permitir acceso a categorías activas o sin status definido (para retrocompatibilidad)
+    const doc = await Category.findOne({ 
+      slug,
+      $or: [
+        { status: 'active' },
+        { status: { $exists: false } },
+        { status: null }
+      ]
+    }).lean();
     if (!doc) return res.status(404).json({ error: 'Categoría no encontrada' });
     res.json(doc);
   } catch (err) {
@@ -59,7 +74,7 @@ export const update = async (req, res, next) => {
     const doc = await Category.findOne({ slug });
     if (!doc) return res.status(404).json({ error: 'Categoría no encontrada' });
 
-    const allowed = ['name', 'description', 'image'];
+    const allowed = ['name', 'description', 'image', 'status'];
     for (const k of allowed) {
       if (k in req.body) doc[k] = req.body[k];
     }
@@ -92,7 +107,14 @@ export const remove = async (req, res, next) => {
 // GET /categories_select_filter
 export const findCategoriesSelect = async (req, res, next) => {
   try {
-    const items = await Category.find()
+    // Mostrar categorías activas o sin status definido (para retrocompatibilidad)
+    const items = await Category.find({ 
+      $or: [
+        { status: 'active' },
+        { status: { $exists: false } },
+        { status: null }
+      ]
+    })
       .select('_id name slug')
       .sort('name')
       .lean();

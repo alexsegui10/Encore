@@ -199,3 +199,76 @@
   .event-card, .event-card * { transition: none !important; }
   .like-button.liked svg { animation: none !important; }
 }
+
+/* Status Badge */
+.status-badge {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  pointer-events: none; /* No interferir con clicks en la tarjeta */
+}
+
+.status-badge span {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+  border: 1px solid;
+}
+
+.badge-draft {
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.4) !important;
+  color: #ffc107;
+}
+
+.badge-cancelled {
+  background: rgba(244, 67, 54, 0.15);
+  border-color: rgba(244, 67, 54, 0.4) !important;
+  color: #f44336;
+}
+
+/* Estado del evento - Borrador */
+.event-card.event-draft {
+  opacity: 0.85;
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+.event-card.event-draft .media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 193, 7, 0.08);
+  pointer-events: none;
+}
+
+/* Estado del evento - Cancelado */
+.event-card.event-cancelled {
+  opacity: 0.7;
+  border-color: rgba(244, 67, 54, 0.3);
+}
+
+.event-card.event-cancelled .media img {
+  filter: grayscale(60%) contrast(0.9) saturate(0.8);
+}
+
+.event-card.event-cancelled .media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(244, 67, 54, 0.12);
+  pointer-events: none;
+}
+
+.event-card.event-cancelled .cta {
+  opacity: 0.6;
+  pointer-events: none;
+  background: linear-gradient(180deg, #555, #444);
+  border-color: #333;
+}

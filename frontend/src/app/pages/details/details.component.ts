@@ -1,24 +1,23 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { CarouselModule } from 'primeng/carousel';
-import { CarouselComponent } from '../../shared/carrusel/carousel.component';
-import { CommentsComponent } from '../../shared/comments/comments.component';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
-import { MapaComponent } from '../../shared/map/map.component';
 import { UserService } from '../../core/services/user.service';
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
-import { EventMetaComponent } from "../../shared/event-meta/event-meta.component";
 import { Observable } from 'rxjs';
+import { EventMetaComponent } from "../../shared/event-meta/event-meta.component";
+import { CommentsComponent } from '../../shared/comments/comments.component';
+import { MapaComponent } from '../../shared/map/map.component';
+import { CarouselComponent } from '../../shared/carrusel/carousel.component';
 
 @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, CarouselModule, CarouselComponent, MapaComponent, DatePipe, EventMetaComponent, CommentsComponent],
+    imports: [CommonModule, RouterModule, DatePipe, EventMetaComponent, CommentsComponent, MapaComponent, CarouselComponent],
 })
 
 export class DetailsComponent implements OnInit {

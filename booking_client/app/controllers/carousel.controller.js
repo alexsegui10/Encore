@@ -5,7 +5,14 @@ import asyncHandler from 'express-async-handler';
 //CATEGORIAS
 const get_carousel_category = asyncHandler( async (req, res) => {
 
-    const categories = await Category.find();
+    // Mostrar categorías activas o sin status definido (para retrocompatibilidad)
+    const categories = await Category.find({ 
+        $or: [
+            { status: 'active' },
+            { status: { $exists: false } },
+            { status: null }
+        ]
+    });
 
     if (!categories) {
         return res.status(401).json({
