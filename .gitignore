@@ -1,1 +1,18 @@
 node_modules/
+
+# Angular cache
+.angular/
+frontend/.angular/
+
+# Environment files with secrets
+*.env
+!*.env.example
+
+# Build outputs
+dist/
+build/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
