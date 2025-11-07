@@ -200,12 +200,36 @@ export const userLogin = asyncHandler(async (req, res) => {
     const loginUser = await User.findOne({ email: user.email }).exec();
 
     if (!loginUser) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
     const match = await argon2.verify(loginUser.password, user.password);
     if (!match) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+        return res.status(401).json({ message: 'Credenciales inválidas' });
+    }
+
+    // Verificar el estado del usuario
+    if (loginUser.status === 'blocked') {
+        return res.status(403).json({ 
+            message: 'Tu cuenta ha sido bloqueada. Por favor, contacta con soporte.',
+            error: 'ACCOUNT_BLOCKED',
+            status: 'blocked'
+        });
+    }
+
+    if (loginUser.status === 'pending') {
+        return res.status(403).json({ 
+            message: 'Tu cuenta está pendiente de aprobación. Por favor, espera a que un administrador apruebe tu cuenta.',
+            error: 'ACCOUNT_PENDING',
+            status: 'pending'
+        });
+    }
+
+    if (!loginUser.isActive) {
+        return res.status(403).json({ 
+            message: 'Tu cuenta está inactiva. Por favor, contacta con soporte.',
+            error: 'ACCOUNT_INACTIVE'
+        });
     }
 
     // Generate tokens

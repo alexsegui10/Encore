@@ -1,5 +1,14 @@
-<div class="card" style="cursor: pointer;" [routerLink]="['/shop/categories/', category.slug]">
-  <div class="card__background" [style.background-image]="'url(' + backgroundUrl + ')'"></div>
+<div class="card" style="cursor: pointer;" [routerLink]="['/shop/categories/', category.slug]"
+     [class.category-hidden]="category.status === 'hidden'" 
+     [class.category-archived]="category.status === 'archived'">
+  
+  <div class="card__background" [style.background-image]="'url(' + backgroundUrl + ')'">
+    <!-- Badge de estado -->
+    <span class="status-badge" *ngIf="category.status && category.status !== 'active'">
+      <span *ngIf="category.status === 'hidden'" class="badge-hidden">Oculta</span>
+      <span *ngIf="category.status === 'archived'" class="badge-archived">Archivada</span>
+    </span>
+  </div>
 
   <div class="card__content">
     <p class="card__category">{{ category.slug || 'CATEGORY' }}</p>

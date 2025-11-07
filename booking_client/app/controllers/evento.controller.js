@@ -32,6 +32,12 @@ export const listEvents = async (req, res, next) => {
         { price: { $gte: parseFloat(price_min) } },
         { price: { $lte: parseFloat(price_max) } }
       ],
+      // Mostrar eventos publicados o sin status definido (para retrocompatibilidad)
+      $or: [
+        { status: 'published' },
+        { status: { $exists: false } },
+        { status: null }
+      ]
     };
 
     // Agregar filtro de categoría si está presente
@@ -93,7 +99,15 @@ export const listEvents = async (req, res, next) => {
 export const getOneEvent = async (req, res, next) => {
   try {
     const { slug } = req.params;
-    const doc = await Event.findOne({ slug });
+    // Permitir acceso a eventos publicados o sin status definido (para retrocompatibilidad)
+    const doc = await Event.findOne({ 
+      slug,
+      $or: [
+        { status: 'published' },
+        { status: { $exists: false } },
+        { status: null }
+      ]
+    });
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
 
     // Intentar obtener el usuario actual si está autenticado
@@ -211,14 +225,29 @@ export const GetProductsByCategory = asyncHandler(async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const category = await Category.findOne({ slug }).exec();
+    // Buscar categorías activas o sin status definido
+    const category = await Category.findOne({ 
+      slug,
+      $or: [
+        { status: 'active' },
+        { status: { $exists: false } },
+        { status: null }
+      ]
+    }).exec();
 
     if (!category) {
       return res.status(404).json({ message: "Categoria no encontrada" });
     }
 
-    // Obtener todos los eventos de esta categoría
-    const events = await Event.find({ category: category._id }).sort('-date').lean();
+    // Obtener eventos publicados o sin status definido de esta categoría
+    const events = await Event.find({ 
+      category: category._id,
+      $or: [
+        { status: 'published' },
+        { status: { $exists: false } },
+        { status: null }
+      ]
+    }).sort('-date').lean();
 
     return res.status(200).json(events);
   } catch (err) {

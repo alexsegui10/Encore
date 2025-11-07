@@ -7,6 +7,7 @@ const CategorySchema = new mongoose.Schema(
     description: { type: String, trim: true, maxlength: 500 },
     image: { type: String, trim: true }, // URL de la imagen de la categoría
     slug: { type: String, unique: true, index: true },
+    status: { type: String, enum: ['active', 'hidden', 'archived'], default: 'active' },
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: "Events" }],
 
   },
@@ -37,6 +38,7 @@ CategorySchema.methods.toCategoryCarouselResponse = function () {
     description: this.description,
     image: this.image || '/images/default-category.jpg',
     slug: this.slug,
+    status: this.status,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   };
