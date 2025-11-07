@@ -24,6 +24,13 @@ const verifyOptionalJWT = async (req, res, next) => {
       return next();
     }
 
+    // Verificar el estado del usuario
+    if (loginUser.status === 'blocked' || loginUser.status === 'pending' || !loginUser.isActive) {
+      req.loggedin = false;
+      req.isAuthenticated = false;
+      return next();
+    }
+
     // Para auth opcional, NO verificar el refresh token
     // Solo verificar que el access token sea válido
     // Si el access token expira, el frontend debe pedir un refresh

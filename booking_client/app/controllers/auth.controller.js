@@ -58,7 +58,58 @@ export const refreshToken = asyncHandler(async (req, res) => {
         const user = await User.findById(decoded.user.id).exec();
         
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Verificar el estado del usuario
+        if (user.status === 'blocked') {
+            // Mover a blacklist y eliminar refresh token
+            await BlacklistedToken.create({
+                token: refreshTokenRecord.token,
+                userId: refreshTokenRecord.userId,
+                reason: 'user_blocked',
+                originalExpiryDate: refreshTokenRecord.expiryDate
+            });
+            await RefreshToken.findByIdAndDelete(refreshTokenRecord._id);
+            res.clearCookie('jid', { path: '/' });
+            return res.status(403).json({ 
+                message: 'Tu cuenta ha sido bloqueada. Por favor, contacta con soporte.',
+                error: 'ACCOUNT_BLOCKED',
+                status: 'blocked'
+            });
+        }
+
+        if (user.status === 'pending') {
+            // Mover a blacklist y eliminar refresh token
+            await BlacklistedToken.create({
+                token: refreshTokenRecord.token,
+                userId: refreshTokenRecord.userId,
+                reason: 'user_pending',
+                originalExpiryDate: refreshTokenRecord.expiryDate
+            });
+            await RefreshToken.findByIdAndDelete(refreshTokenRecord._id);
+            res.clearCookie('jid', { path: '/' });
+            return res.status(403).json({ 
+                message: 'Tu cuenta está pendiente de aprobación. Por favor, espera a que un administrador apruebe tu cuenta.',
+                error: 'ACCOUNT_PENDING',
+                status: 'pending'
+            });
+        }
+
+        if (!user.isActive) {
+            // Mover a blacklist y eliminar refresh token
+            await BlacklistedToken.create({
+                token: refreshTokenRecord.token,
+                userId: refreshTokenRecord.userId,
+                reason: 'user_inactive',
+                originalExpiryDate: refreshTokenRecord.expiryDate
+            });
+            await RefreshToken.findByIdAndDelete(refreshTokenRecord._id);
+            res.clearCookie('jid', { path: '/' });
+            return res.status(403).json({ 
+                message: 'Tu cuenta está inactiva. Por favor, contacta con soporte.',
+                error: 'ACCOUNT_INACTIVE'
+            });
         }
 
 

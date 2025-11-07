@@ -19,11 +19,8 @@ const refreshTokenSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Add index for better performance
 refreshTokenSchema.index({ userId: 1 });
 
-// Índice para búsquedas por fecha de expiración (sin TTL automático)
-// Ya no usamos expireAfterSeconds porque queremos mover los tokens a blacklist manualmente
 refreshTokenSchema.index({ expiryDate: 1 });
 
 export default mongoose.model('RefreshToken', refreshTokenSchema);

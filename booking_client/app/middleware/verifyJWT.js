@@ -18,7 +18,31 @@ const verifyJWT = async (req, res, next) => {
         const loginUser = await User.findOne({ email: decoded.user.email }).exec();
 
         if (!loginUser) {
-            return res.status(403).json({ message: 'User not found' });
+            return res.status(403).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Verificar el estado del usuario
+        if (loginUser.status === 'blocked') {
+            return res.status(403).json({ 
+                message: 'Tu cuenta ha sido bloqueada. Por favor, contacta con soporte.',
+                error: 'ACCOUNT_BLOCKED',
+                status: 'blocked'
+            });
+        }
+
+        if (loginUser.status === 'pending') {
+            return res.status(403).json({ 
+                message: 'Tu cuenta está pendiente de aprobación. Por favor, espera a que un administrador apruebe tu cuenta.',
+                error: 'ACCOUNT_PENDING',
+                status: 'pending'
+            });
+        }
+
+        if (!loginUser.isActive) {
+            return res.status(403).json({ 
+                message: 'Tu cuenta está inactiva. Por favor, contacta con soporte.',
+                error: 'ACCOUNT_INACTIVE'
+            });
         }
 
         // NO verificar el refresh token aquí - solo se verifica en /refresh-token

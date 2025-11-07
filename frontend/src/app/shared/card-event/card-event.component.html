@@ -1,5 +1,11 @@
-<article class="event-card" (click)="navigateToDetail($event)">
+<article class="event-card" (click)="navigateToDetail($event)" [class.event-draft]="event.status === 'draft'" [class.event-cancelled]="event.status === 'cancelled'">
   <div class="media">
+    <!-- Badge de estado -->
+    <span class="status-badge" *ngIf="event.status !== 'published'">
+      <span *ngIf="event.status === 'draft'" class="badge-draft">Borrador</span>
+      <span *ngIf="event.status === 'cancelled'" class="badge-cancelled">Cancelado</span>
+    </span>
+
     <img [src]="event.mainImage || '/assets/default-event.jpg'" [alt]="event.title || 'Evento'" loading="lazy"
       decoding="async" />
     <span class="date-badge" *ngIf="event.date">
@@ -22,7 +28,7 @@
     <p class="desc" *ngIf="event.description">{{ event.description }}</p>
 
     <div class="cta-row">
-      <a class="cta" href="#" (click)="$event.preventDefault(); $event.stopPropagation()">Comprar entradas</a>
+      <a class="cta" href="#" (click)="$event.preventDefault(); $event.stopPropagation()" tabindex="0">Comprar entradas</a>
       
       <!-- Botón de Like -->
       <button 

@@ -81,8 +81,9 @@ export class CardEventComponent {
   }
 
   public navigateToDetail(event: MouseEvent): void {
-    // Solo navegar si no se hizo click en el botón de like
-    if (!(event.target as HTMLElement).closest('.like-button')) {
+    // Solo navegar si no se hizo click en el botón de like o en el botón de comprar
+    const target = event.target as HTMLElement;
+    if (!target.closest('.like-button') && !target.closest('.cta')) {
       this.router.navigate(['/details', this.event.slug]);
     }
   }

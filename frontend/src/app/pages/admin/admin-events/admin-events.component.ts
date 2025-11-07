@@ -107,12 +107,10 @@ export class AdminEventsComponent implements OnInit {
       );
     }
 
-    // Filtro por estado
     if (this.filterStatus !== 'all') {
       filtered = filtered.filter(event => event.status === this.filterStatus);
     }
 
-    // Filtro por categoría
     if (this.filterCategory !== 'all') {
       filtered = filtered.filter(event => event.category === this.filterCategory);
     }
@@ -314,7 +312,6 @@ export class AdminEventsComponent implements OnInit {
     return category ? category.name : categorySlug;
   }
 
-  // Manejo de imágenes adicionales
   addImageUrl() {
     const currentImages = this.eventForm.get('images')?.value || [];
     this.eventForm.patchValue({ images: [...currentImages, ''] });
