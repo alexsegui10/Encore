@@ -8,6 +8,17 @@ import Swal from 'sweetalert2';
 
 interface Errors { errors: { [k: string]: string } }
 
+const ERROR_MESSAGES: { [key: string]: string } = {
+  'EMAIL_EXISTS': 'Este correo electrónico ya está registrado',
+  'USERNAME_EXISTS': 'Este nombre de usuario ya está en uso',
+  'INVALID_EMAIL': 'El formato del correo electrónico no es válido',
+  'USERNAME_TOO_SHORT': 'El nombre de usuario debe tener al menos 3 caracteres',
+  'PASSWORD_TOO_SHORT': 'La contraseña debe tener al menos 6 caracteres',
+  'UID_CONFLICT': 'Error al generar identificador único, intenta de nuevo',
+  'SLUG_CONFLICT': 'Error al generar slug de usuario, intenta de nuevo',
+  'DUPLICATE_KEY': 'Ya existe un usuario con esta información'
+};
+
 @Component({
   selector: 'app-auth-page',
   standalone: true,
@@ -65,10 +76,10 @@ export class AuthComponent implements OnInit {
     this.userService.attemptAuth(this.authType(), credentials).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        
+
         // Actualizar el rol en UserTypeService
         this.userTypeService.updateRole();
-        
+
         const message = this.authType() === 'login' ? '¡Bienvenido de nuevo!' : '¡Cuenta creada exitosamente!';
 
         Swal.fire({
@@ -81,13 +92,46 @@ export class AuthComponent implements OnInit {
         });
       },
       error: (err) => {
-        const body = err ?? {};
-        this.errors.set(body.errors ? body as Errors : { errors: { general: 'Error de autenticación' } });
         this.isSubmitting.set(false);
 
-        const errorMessage = this.errors().errors['general'] ||
-          this.errors().errors['email'] ||
-          'Error de autenticación. Por favor, verifica tus credenciales.';
+        let errorMessage = 'Error de autenticación. Por favor, intenta nuevamente.';
+        let errorField = '';
+
+        if (err.error) {
+          const errorData = err.error;
+
+          // Usar el mapa de mensajes si existe el código de error
+          if (errorData.error && ERROR_MESSAGES[errorData.error]) {
+            errorMessage = ERROR_MESSAGES[errorData.error];
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+
+          // Si hay un campo específico, marcar el error en el formulario
+          if (errorData.field) {
+            errorField = errorData.field;
+
+            const fieldErrors: { [key: string]: string } = {};
+            fieldErrors[errorField] = errorMessage;
+            this.errors.set({ errors: fieldErrors });
+
+            const control = this.authForm.get(errorField);
+            if (control) {
+              control.setErrors({ serverError: errorMessage });
+              control.markAsTouched();
+            }
+          } else {
+            this.errors.set({ errors: { general: errorMessage } });
+          }
+        } else if (err.status === 404) {
+          errorMessage = 'Usuario no encontrado';
+          this.errors.set({ errors: { email: errorMessage } });
+        } else if (err.status === 401) {
+          errorMessage = 'Credenciales inválidas';
+          this.errors.set({ errors: { password: errorMessage } });
+        } else {
+          this.errors.set({ errors: { general: errorMessage } });
+        }
 
         Swal.fire({
           icon: 'error',

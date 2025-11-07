@@ -23,7 +23,13 @@
                   formControlName="username"
                   placeholder="Username"
                   class="form-control form-control-lg"
+                  [class.is-invalid]="authForm.get('username')?.invalid && authForm.get('username')?.touched"
                   type="text" />
+                @if (authForm.get('username')?.hasError('serverError')) {
+                  <div class="text-danger small mt-1">{{ authForm.get('username')?.errors?.['serverError'] }}</div>
+                } @else if (authForm.get('username')?.hasError('required') && authForm.get('username')?.touched) {
+                  <div class="text-danger small mt-1">El nombre de usuario es requerido</div>
+                }
               </fieldset>
             }
 
@@ -32,7 +38,15 @@
                 formControlName="email"
                 placeholder="Email"
                 class="form-control form-control-lg"
+                [class.is-invalid]="authForm.get('email')?.invalid && authForm.get('email')?.touched"
                 type="text" />
+              @if (authForm.get('email')?.hasError('serverError')) {
+                <div class="text-danger small mt-1">{{ authForm.get('email')?.errors?.['serverError'] }}</div>
+              } @else if (authForm.get('email')?.hasError('required') && authForm.get('email')?.touched) {
+                <div class="text-danger small mt-1">El email es requerido</div>
+              } @else if (authForm.get('email')?.hasError('email') && authForm.get('email')?.touched) {
+                <div class="text-danger small mt-1">El formato del email es inválido</div>
+              }
             </fieldset>
 
             <fieldset class="form-group">
@@ -40,7 +54,13 @@
                 formControlName="password"
                 placeholder="Password"
                 class="form-control form-control-lg"
+                [class.is-invalid]="authForm.get('password')?.invalid && authForm.get('password')?.touched"
                 type="password" />
+              @if (authForm.get('password')?.hasError('serverError')) {
+                <div class="text-danger small mt-1">{{ authForm.get('password')?.errors?.['serverError'] }}</div>
+              } @else if (authForm.get('password')?.hasError('required') && authForm.get('password')?.touched) {
+                <div class="text-danger small mt-1">La contraseña es requerida</div>
+              }
             </fieldset>
 
             <button class="btn btn-lg btn-primary pull-xs-right"
@@ -51,13 +71,9 @@
           </fieldset>
         </form>
 
-        @if (errors().errors) {
-          <div class="alert alert-danger mt-2">
-            @for (kv of (errors().errors | keyvalue); track kv.key) {
-              <div>
-                {{ kv.key }}: {{ kv.value }}
-              </div>
-            }
+        @if (errors().errors['general']) {
+          <div class="alert alert-danger mt-3">
+            {{ errors().errors['general'] }}
           </div>
         }
       </div>

@@ -30,20 +30,64 @@ export const registerUser = asyncHandler(async (req, res) => {
     const { user } = req.body;
 
     if (!user || !user.email || !user.username || !user.password) {
-        return res.status(400).json({ message: "All fields are required" });
+        return res.status(400).json({ 
+            message: "All fields are required",
+            errors: {
+                email: !user?.email ? "Email is required" : undefined,
+                username: !user?.username ? "Username is required" : undefined,
+                password: !user?.password ? "Password is required" : undefined
+            }
+        });
     }
 
     const email = user.email.trim().toLowerCase();
     const username = user.username.trim().toLowerCase();
 
-    // Check if user already exists
-    const existingUser = await User.findOne({
-        $or: [{ email }, { username }]
-    });
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({
+            message: "Invalid email format",
+            error: "INVALID_EMAIL",
+            field: "email"
+        });
+    }
 
-    if (existingUser) {
+    // Validar longitud de username
+    if (username.length < 3) {
+        return res.status(400).json({
+            message: "Username must be at least 3 characters long",
+            error: "USERNAME_TOO_SHORT",
+            field: "username"
+        });
+    }
+
+    // Validar longitud de password
+    if (user.password.length < 6) {
+        return res.status(400).json({
+            message: "Password must be at least 6 characters long",
+            error: "PASSWORD_TOO_SHORT",
+            field: "password"
+        });
+    }
+
+    // Verificar si el email ya existe
+    const existingUserByEmail = await User.findOne({ email });
+    if (existingUserByEmail) {
         return res.status(409).json({
-            message: "User already exists with this email or username"
+            message: "Email already registered",
+            error: "EMAIL_EXISTS",
+            field: "email"
+        });
+    }
+
+    // Verificar si el username ya existe
+    const existingUserByUsername = await User.findOne({ username });
+    if (existingUserByUsername) {
+        return res.status(409).json({
+            message: "Username already taken",
+            error: "USERNAME_EXISTS",
+            field: "username"
         });
     }
 
@@ -85,8 +129,28 @@ export const registerUser = asyncHandler(async (req, res) => {
         createdUser = await User.create(newUser);
     } catch (error) {
         if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern || {})[0];
+            let message = "A user with this information already exists";
+            let errorCode = "DUPLICATE_KEY";
+            
+            if (field === 'email') {
+                message = "Email already registered";
+                errorCode = "EMAIL_EXISTS";
+            } else if (field === 'username') {
+                message = "Username already taken";
+                errorCode = "USERNAME_EXISTS";
+            } else if (field === 'uid') {
+                message = "User ID conflict, please try again";
+                errorCode = "UID_CONFLICT";
+            } else if (field === 'slug') {
+                message = "Username slug conflict, please try again";
+                errorCode = "SLUG_CONFLICT";
+            }
+            
             return res.status(409).json({
-                message: "User already exists with this email or username"
+                message,
+                error: errorCode,
+                field
             });
         }
         throw error;
@@ -214,7 +278,11 @@ export const updateUser = asyncHandler(async (req, res) => {
         const newEmail = user.email.trim().toLowerCase();
         const existingEmailUser = await User.findOne({ email: newEmail });
         if (existingEmailUser) {
-            return res.status(409).json({ message: "Email already in use" });
+            return res.status(409).json({ 
+                message: "Email already in use",
+                error: "EMAIL_EXISTS",
+                field: "email"
+            });
         }
         target.email = newEmail;
     }
@@ -223,7 +291,11 @@ export const updateUser = asyncHandler(async (req, res) => {
         const newUsername = user.username.trim().toLowerCase();
         const existingUsernameUser = await User.findOne({ username: newUsername });
         if (existingUsernameUser) {
-            return res.status(409).json({ message: "Username already in use" });
+            return res.status(409).json({ 
+                message: "Username already in use",
+                error: "USERNAME_EXISTS",
+                field: "username"
+            });
         }
         target.username = newUsername;
 
@@ -252,7 +324,23 @@ export const updateUser = asyncHandler(async (req, res) => {
         await target.save();
     } catch (error) {
         if (error.code === 11000) {
-            return res.status(409).json({ message: "Email or username already in use" });
+            const field = Object.keys(error.keyPattern || {})[0];
+            let message = "This information is already in use";
+            let errorCode = "DUPLICATE_KEY";
+            
+            if (field === 'email') {
+                message = "Email already in use";
+                errorCode = "EMAIL_EXISTS";
+            } else if (field === 'username') {
+                message = "Username already in use";
+                errorCode = "USERNAME_EXISTS";
+            }
+            
+            return res.status(409).json({ 
+                message,
+                error: errorCode,
+                field
+            });
         }
         throw error;
     }
