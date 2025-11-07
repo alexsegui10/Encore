@@ -5,7 +5,23 @@ import argon2 from 'argon2';
 import { generateAccessToken, generateRefreshToken } from '../middleware/authService.js';
 
 // Configuración de expiración del refresh token (debe coincidir con authService.js)
-const REFRESH_TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos
+const REFRESH_TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
+
+function normalizeUsername(text) {
+    if (!text) return '';
+    return String(text)
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+}
+
+function generateUid(prefix = 'usr') {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2, 7);
+    return `${prefix}_${timestamp}${random}`;
+}
 
 // @desc Register a new user
 // @route POST /api/users
@@ -17,9 +33,12 @@ export const registerUser = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "All fields are required" });
     }
 
+    const email = user.email.trim().toLowerCase();
+    const username = user.username.trim().toLowerCase();
+
     // Check if user already exists
     const existingUser = await User.findOne({
-        $or: [{ email: user.email }, { username: user.username }]
+        $or: [{ email }, { username }]
     });
 
     if (existingUser) {
@@ -31,14 +50,47 @@ export const registerUser = asyncHandler(async (req, res) => {
     const hashedPwd = await argon2.hash(user.password);
 
     const newUser = {
-        username: user.username,
+        username,
         password: hashedPwd,
-        email: user.email,
+        email,
         bio: user.bio || "",
-        image: user.image || ""
+        image: user.image && user.image.trim() !== ''
+            ? user.image
+            : `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(email)}`,
+        favouriteEvents: [],
+        followingUsers: [],
+        comentarios: [],
+        reservas: []
     };
 
-    const createdUser = await User.create(newUser);
+    // Generar slug único basado en username normalizado
+    const baseSlug = normalizeUsername(username);
+    let slugCandidate = baseSlug || username;
+    let slugCounter = 1;
+    while (await User.findOne({ slug: slugCandidate })) {
+        slugCandidate = `${baseSlug || username}-${slugCounter}`;
+        slugCounter += 1;
+    }
+    newUser.slug = slugCandidate;
+
+    // Generar uid único
+    let uidCandidate = generateUid();
+    while (await User.findOne({ uid: uidCandidate })) {
+        uidCandidate = generateUid();
+    }
+    newUser.uid = uidCandidate;
+
+    let createdUser;
+    try {
+        createdUser = await User.create(newUser);
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(409).json({
+                message: "User already exists with this email or username"
+            });
+        }
+        throw error;
+    }
 
     if (createdUser) {
         // Generate tokens
@@ -158,20 +210,31 @@ export const updateUser = asyncHandler(async (req, res) => {
     }
 
     // Check if email or username already exists (if being updated)
-    if (user.email && user.email !== target.email) {
-        const existingEmailUser = await User.findOne({ email: user.email });
+    if (user.email && user.email.trim().toLowerCase() !== target.email) {
+        const newEmail = user.email.trim().toLowerCase();
+        const existingEmailUser = await User.findOne({ email: newEmail });
         if (existingEmailUser) {
             return res.status(409).json({ message: "Email already in use" });
         }
-        target.email = user.email;
+        target.email = newEmail;
     }
 
-    if (user.username && user.username !== target.username) {
-        const existingUsernameUser = await User.findOne({ username: user.username });
+    if (user.username && user.username.trim().toLowerCase() !== target.username) {
+        const newUsername = user.username.trim().toLowerCase();
+        const existingUsernameUser = await User.findOne({ username: newUsername });
         if (existingUsernameUser) {
             return res.status(409).json({ message: "Username already in use" });
         }
-        target.username = user.username;
+        target.username = newUsername;
+
+        const baseSlug = normalizeUsername(newUsername);
+        let slugCandidate = baseSlug || newUsername;
+        let slugCounter = 1;
+        while (await User.findOne({ slug: slugCandidate, _id: { $ne: target._id } })) {
+            slugCandidate = `${baseSlug || newUsername}-${slugCounter}`;
+            slugCounter += 1;
+        }
+        target.slug = slugCandidate;
     }
 
     if (user.password) {
@@ -185,7 +248,14 @@ export const updateUser = asyncHandler(async (req, res) => {
         target.bio = user.bio;
     }
 
-    await target.save();
+    try {
+        await target.save();
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(409).json({ message: "Email or username already in use" });
+        }
+        throw error;
+    }
 
     const accessToken = generateAccessToken(target);
 
