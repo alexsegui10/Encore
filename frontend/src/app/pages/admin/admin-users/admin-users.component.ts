@@ -107,7 +107,7 @@ export class AdminUsersComponent implements OnInit {
       status: user.status,
       password: ''
     });
-    // Hacer password opcional en edición
+
     this.userForm.get('password')?.clearValidators();
     this.userForm.get('password')?.updateValueAndValidity();
     this.showForm.set(true);
@@ -138,7 +138,6 @@ export class AdminUsersComponent implements OnInit {
 
     const formData = { ...this.userForm.value };
 
-    // Si es edición y no hay contraseña, eliminarla del objeto
     if (this.isEditing() && (!formData.password || formData.password.trim() === '')) {
       delete formData.password;
     }

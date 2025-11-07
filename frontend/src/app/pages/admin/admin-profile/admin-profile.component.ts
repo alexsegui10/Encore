@@ -66,7 +66,6 @@ export class AdminProfileComponent implements OnInit {
       email: this.profileForm.value.email
     };
 
-    // Solo incluir password si se proporcionó uno nuevo
     if (this.profileForm.value.password && this.profileForm.value.password.trim() !== '') {
       updateData.password = this.profileForm.value.password;
     }
@@ -74,7 +73,7 @@ export class AdminProfileComponent implements OnInit {
     this.adminAuthService.updateAdmin(updateData).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.profileForm.patchValue({ password: '' }); // Limpiar campo de contraseña
+        this.profileForm.patchValue({ password: '' });
         this.cd.markForCheck();
 
         Swal.fire({
