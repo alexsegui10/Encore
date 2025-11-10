@@ -3,6 +3,11 @@ node_modules/
 # Angular cache
 .angular/
 frontend/.angular/
+*.tsbuildinfo
+
+# Vite cache and build
+.vite/
+vite.config.js.timestamp-*
 
 # Environment files with secrets
 *.env
