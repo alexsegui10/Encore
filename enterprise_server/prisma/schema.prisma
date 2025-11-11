@@ -62,8 +62,6 @@ model Enterprise {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
-  productCategories ProductCategory[]
-  products          Product[]
 }
 
 model ProductCategory {
@@ -74,9 +72,6 @@ model ProductCategory {
   isActive    Boolean       @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-
-  enterprise  Enterprise?   @relation(fields: [enterpriseId], references: [id])
-  enterpriseId String?      @db.ObjectId
 
   products    Product[]
 }
@@ -98,8 +93,30 @@ model Product {
   category       ProductCategory? @relation(fields: [categoryId], references: [id])
   categoryId     String?          @db.ObjectId
 
-  enterprise     Enterprise?      @relation(fields: [enterpriseId], references: [id])
-  enterpriseId   String?          @db.ObjectId
+  orderItems     OrderItem[]
+}
+
+// ========================================================
+// EVENTOS
+// ========================================================
+
+model Event {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  date           DateTime
+  price          Float
+  currency       String        @default("EUR")
+  location       String?
+  description    String?
+  category       String
+  slug           String        @unique
+  status         String        @default("draft")
+  mainImage      String?
+  favouritesCount Int          @default(0)
+  images         String[]      @default([])
+  comments       String[]      @default([])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   orderItems     OrderItem[]
 }
@@ -138,8 +155,14 @@ model OrderItem {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
   quantity    Int
   unitPrice   Float
-  product     Product     @relation(fields: [productId], references: [id])
-  productId   String      @db.ObjectId
+  
+  // Puede ser producto O evento (uno de los dos debe estar presente)
+  product     Product?    @relation(fields: [productId], references: [id])
+  productId   String?     @db.ObjectId
+  
+  event       Event?      @relation(fields: [eventId], references: [id])
+  eventId     String?     @db.ObjectId
+  
   order       Order       @relation(fields: [orderId], references: [id])
   orderId     String      @db.ObjectId
 
@@ -167,6 +190,7 @@ model Ticket {
   issuedAt      DateTime      @default(now())
   usedAt        DateTime?
 
+  // Relación con el item de la orden (que puede ser producto o evento)
   orderItem     OrderItem     @relation(fields: [orderItemId], references: [id])
   orderItemId   String        @db.ObjectId
 
