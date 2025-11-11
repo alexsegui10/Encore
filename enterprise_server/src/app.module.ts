@@ -8,9 +8,12 @@ import { ProductCategoryService } from './product-category/product-category.serv
 import { ProductCategoryController } from './product-category/product-category.controller';
 import { ProductService } from './product/product.service';
 import { ProductController } from './product/product.controller';
+import { ProductModule } from './product/product.module';
+import { ProductCategoryModule } from './product-category/product-category.module';
+import { EnterpriseModule } from './enterprise/enterprise.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, ProductModule, ProductCategoryModule, EnterpriseModule],
   controllers: [AppController, EnterpriseController, ProductCategoryController, ProductController],
   providers: [AppService, EnterpriseService, ProductCategoryService, ProductService],
 })
