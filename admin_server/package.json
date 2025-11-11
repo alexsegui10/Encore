@@ -23,7 +23,11 @@
     "fluent-json-schema": "^6.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0",
-    "prisma": "^6.18.0"
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^24.10.0",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.18.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }

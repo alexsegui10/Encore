@@ -22,7 +22,7 @@ export class ProfileComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly userService = inject(UserService);
     private readonly _profileUsername: string;
-    
+
     // Signals
     public user = signal<User | null>(null);
     public currentView = signal<string>('profile');
@@ -85,7 +85,7 @@ export class ProfileComponent {
                 },
                 error: (err) => {
                     console.error('Error al dejar de seguir:', err);
-                    
+
                     // Verificar si es error de autenticación (401 o 403)
                     if (err.status === 401 || err.status === 403) {
                         Swal.fire({
@@ -118,7 +118,7 @@ export class ProfileComponent {
                 },
                 error: (err) => {
                     console.error('Error al seguir:', err);
-                    
+
                     // Verificar si es error de autenticación (401 o 403)
                     if (err.status === 401 || err.status === 403) {
                         Swal.fire({
