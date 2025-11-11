@@ -1,20 +1,24 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EnterpriseService } from './enterprise/enterprise.service';
-import { EnterpriseController } from './enterprise/enterprise.controller';
 import { PrismaModule } from './prisma/prisma.module';
-import { ProductCategoryService } from './product-category/product-category.service';
-import { ProductCategoryController } from './product-category/product-category.controller';
-import { ProductService } from './product/product.service';
-import { ProductController } from './product/product.controller';
 import { ProductModule } from './product/product.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
 import { EnterpriseModule } from './enterprise/enterprise.module';
+import { ProxyMiddleware } from './gateway/proxy.middleware';
 
 @Module({
-  imports: [PrismaModule, ProductModule, ProductCategoryModule, EnterpriseModule],
-  controllers: [AppController, EnterpriseController, ProductCategoryController, ProductController],
-  providers: [AppService, EnterpriseService, ProductCategoryService, ProductService],
+  imports: [
+    PrismaModule,
+    ProductModule,
+    ProductCategoryModule,
+    EnterpriseModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ProxyMiddleware).forRoutes('*');
+  }
+}
