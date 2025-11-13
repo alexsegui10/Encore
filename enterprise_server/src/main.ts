@@ -1,32 +1,23 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { config } from 'dotenv';
-
-// Cargar variables de entorno
-config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
-  // Configurar CORS
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: configService.get<string>('CORS_ORIGIN') || '*',
     credentials: true,
   });
+  const port = configService.get<number>('PORT') || 5000;
+  const host = configService.get<string>('HOST') || '0.0.0.0';
 
-  // Puerto y host
-  const port = process.env.PORT || 5000;
-  const host = process.env.HOST || '0.0.0.0';
-
-  await app.listen(5000);
-
-  console.log(`Enterprise Server running on http://${host}:${port}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Database: 
-    ${process.env.DATABASE_URL ? 'Connected' : 'Not configured'}`);
+  await app.listen(port, host);
+  console.log(`Server running on http://${host}:${port}`);
 }
 
 bootstrap().catch((error) => {
-  console.error(' Error starting server:', error);
+  console.error('Error starting server:', error);
   process.exit(1);
 });
