@@ -28,14 +28,14 @@ const categories = [
 
 // Eventos (distribuidos por categorías) — fotos reales (Unsplash)
 const events = [
-  // Conciertos
+  // Conciertos – cada uno con varias fotos genéricas de conciertos
   {
     _id: OID('66fca0020000000000000001'),
-    title: 'Taylor Swift — Madrid',
-    date: new Date('2026-06-20T20:30:00.000Z'),
-    price: 120, currency: 'EUR',
-    location: 'Santiago Bernabéu, Madrid',
-    description: 'The Eras Tour llega a Madrid con un show de 3 horas.',
+    title: 'Hans Zimmer — Valencia',
+    date: new Date('2026-03-26T20:30:00.000Z'),
+    price: 85, currency: 'EUR',
+    location: 'Roig Arena, Valencia',
+    description: 'El compositor Hans Zimmer presenta su tour “The Next Level” con banda completa en Valencia:contentReference[oaicite:0]{index=0}.',
     category: OID('66fca0010000000000000001'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1506157786151-b8491531f063',
@@ -43,16 +43,16 @@ const events = [
       'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba',
       'https://images.unsplash.com/photo-1492684223066-81342ee5ff30'
     ],
-    slug: 'taylor-swift-madrid-2026-06-20',
+    slug: 'hans-zimmer-valencia-2026-03-26',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000002'),
-    title: 'Coldplay — Barcelona',
-    date: new Date('2026-07-05T21:00:00.000Z'),
-    price: 95, currency: 'EUR',
-    location: 'Estadi Olímpic, Barcelona',
-    description: 'Coldplay regresa con su gira Music of the Spheres.',
+    title: 'Eric Clapton — Madrid',
+    date: new Date('2026-05-07T21:00:00.000Z'),
+    price: 110, currency: 'EUR',
+    location: 'Movistar Arena, Madrid',
+    description: 'El legendario guitarrista Eric Clapton regresa a Madrid dentro de su gira europea de 2026:contentReference[oaicite:1]{index=1}.',
     category: OID('66fca0010000000000000001'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1483412033650-1015ddeb83d1',
@@ -60,306 +60,367 @@ const events = [
       'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc',
       'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4'
     ],
-    slug: 'coldplay-barcelona-2026-07-05',
+    slug: 'eric-clapton-madrid-2026-05-07',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000003'),
-    title: 'Ed Sheeran — Valencia',
-    date: new Date('2026-09-12T21:00:00.000Z'),
-    price: 75, currency: 'EUR',
-    location: 'Mestalla, Valencia',
-    description: 'Gira internacional con sus nuevos éxitos.',
+    title: 'Tame Impala — Barcelona',
+    date: new Date('2026-04-08T21:00:00.000Z'),
+    price: 65, currency: 'EUR',
+    location: 'Palau Sant Jordi, Barcelona',
+    description: 'La banda australiana Tame Impala recala en Barcelona con su inconfundible sonido psicodélico:contentReference[oaicite:2]{index=2}.',
     category: OID('66fca0010000000000000001'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044',
-    images: ['https://images.unsplash.com/photo-1511379938547-c1f69419868d'],
-    slug: 'ed-sheeran-valencia-2026-09-12',
+    images: [
+      'https://images.unsplash.com/photo-1511379938547-c1f69419868d',
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba'
+    ],
+    slug: 'tame-impala-barcelona-2026-04-08',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000004'),
-    title: 'Aitana — Sevilla',
-    date: new Date('2026-05-18T20:00:00.000Z'),
-    price: 42, currency: 'EUR',
-    location: 'Estadio La Cartuja, Sevilla',
-    description: 'Nueva gira por España con banda completa.',
+    title: 'TWICE — Barcelona',
+    date: new Date('2026-05-10T20:00:00.000Z'),
+    price: 70, currency: 'EUR',
+    location: 'Palau Sant Jordi, Barcelona',
+    description: 'El grupo de K‑pop TWICE actuará en Barcelona para celebrar su nueva gira mundial:contentReference[oaicite:3]{index=3}.',
     category: OID('66fca0010000000000000001'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1521335629791-ce4aec67dd53',
-    images: ['https://images.unsplash.com/photo-1540039155733-5bb30b53aa14'],
-    slug: 'aitana-sevilla-2026-05-18',
+    images: [
+      'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14',
+      'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc'
+    ],
+    slug: 'twice-barcelona-2026-05-10',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000005'),
-    title: 'Metallica — Madrid',
-    date: new Date('2026-10-22T20:30:00.000Z'),
-    price: 88, currency: 'EUR',
-    location: 'WiZink Center, Madrid',
-    description: 'Metal al máximo con un setlist histórico.',
+    title: 'Hans Zimmer — Madrid',
+    date: new Date('2026-03-29T20:30:00.000Z'),
+    price: 90, currency: 'EUR',
+    location: 'WiZink Center, Madrid',
+    description: 'Hans Zimmer despide su gira en Madrid con un espectacular show en directo:contentReference[oaicite:4]{index=4}.',
     category: OID('66fca0010000000000000001'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3',
-    images: ['https://images.unsplash.com/photo-1499364615650-ec38552f4f34'],
-    slug: 'metallica-madrid-2026-10-22',
+    images: [
+      'https://images.unsplash.com/photo-1499364615650-ec38552f4f34',
+      'https://images.unsplash.com/photo-1483412033650-1015ddeb83d1'
+    ],
+    slug: 'hans-zimmer-madrid-2026-03-29',
     favouritesCount: 0
   },
 
-  // Festivales / Electrónica
+  // Festivales / Electrónica – varias fotos de festivales
   {
     _id: OID('66fca0020000000000000006'),
-    title: 'Primavera Sound — Barcelona',
-    date: new Date('2026-06-01T17:00:00.000Z'),
+    title: 'Primavera Sound — Barcelona',
+    date: new Date('2026-06-04T17:00:00.000Z'),
     price: 195, currency: 'EUR',
     location: 'Parc del Fòrum, Barcelona',
-    description: 'Cartel internacional con decenas de artistas.',
+    description: 'El festival abarcará del 3 al 7 de junio de 2026, con las jornadas principales del 4 al 6:contentReference[oaicite:5]{index=5}.',
     category: OID('66fca0010000000000000002'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1464375117522-1311d6a5b81c',
-    images: ['https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf'],
-    slug: 'primavera-sound-barcelona-2026-06-01',
+    images: [
+      'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf',
+      'https://images.unsplash.com/photo-1521335629791-ce4aec67dd53'
+    ],
+    slug: 'primavera-sound-barcelona-2026-06-04',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000007'),
-    title: 'Mad Cool — Madrid',
-    date: new Date('2026-07-12T17:00:00.000Z'),
+    title: 'Mad Cool — Madrid',
+    date: new Date('2026-07-08T17:00:00.000Z'),
     price: 180, currency: 'EUR',
-    location: 'Iberdrola Music, Madrid',
-    description: 'Los mejores artistas del momento en varios escenarios.',
+    location: 'Iberdrola Music, Villaverde, Madrid',
+    description: 'Mad Cool 2026 se celebrará del 8 al 11 de julio con un cartel repleto de artistas estelares:contentReference[oaicite:6]{index=6}.',
     category: OID('66fca0010000000000000002'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf',
-    images: ['https://images.unsplash.com/photo-1521335629791-ce4aec67dd53'],
-    slug: 'mad-cool-madrid-2026-07-12',
+    images: [
+      'https://images.unsplash.com/photo-1521335629791-ce4aec67dd53',
+      'https://images.unsplash.com/photo-1464375117522-1311d6a5b81c'
+    ],
+    slug: 'mad-cool-madrid-2026-07-08',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000008'),
-    title: 'BBF Barcelona Beach Festival',
-    date: new Date('2026-07-20T18:00:00.000Z'),
+    title: 'Arenal Sound — Burriana',
+    date: new Date('2026-07-30T18:00:00.000Z'),
     price: 65, currency: 'EUR',
-    location: 'Platja del Fòrum, Barcelona',
-    description: 'EDM frente al mar.',
+    location: 'Playa El Arenal, Burriana',
+    description: 'Festival a orillas de la playa con un cartel variado que durará hasta el 2 de agosto:contentReference[oaicite:7]{index=7}.',
     category: OID('66fca0010000000000000008'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1518972559570-7cc1309f3229',
-    images: ['https://images.unsplash.com/photo-1487180144351-b8472da7d491'],
-    slug: 'bbf-barcelona-2026-07-20',
+    images: [
+      'https://images.unsplash.com/photo-1487180144351-b8472da7d491',
+      'https://images.unsplash.com/photo-1464375117522-1311d6a5b81c'
+    ],
+    slug: 'arenal-sound-burriana-2026-07-30',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000009'),
-    title: 'DGTL — Barcelona',
-    date: new Date('2026-04-14T18:00:00.000Z'),
+    title: 'Reggaeton Beach Festival — Barcelona',
+    date: new Date('2026-06-27T18:00:00.000Z'),
     price: 55, currency: 'EUR',
-    location: 'Parc del Fòrum, Barcelona',
-    description: 'Techno y house con visuales brutales.',
+    location: 'Platja del Fòrum, Barcelona',
+    description: 'El RBF tendrá dos días de fiesta urbana frente al mar los días 27 y 28 de junio:contentReference[oaicite:8]{index=8}.',
     category: OID('66fca0010000000000000008'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1518972559570-7cc1309f3229',
-    images: ['https://images.unsplash.com/photo-1464375117522-1311d6a5b81c'],
-    slug: 'dgtl-barcelona-2026-04-14',
+    images: [
+      'https://images.unsplash.com/photo-1464375117522-1311d6a5b81c',
+      'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf'
+    ],
+    slug: 'rbf-barcelona-2026-06-27',
     favouritesCount: 0
   },
 
-  // Teatro / Musicales
+  // Teatro / Musicales – descripciones uniformes y varias fotos
   {
     _id: OID('66fca002000000000000000a'),
-    title: 'El Rey León — Madrid',
-    date: new Date('2026-03-15T19:30:00.000Z'),
+    title: 'El Rey León — Madrid',
+    date: new Date('2026-01-15T19:30:00.000Z'),
     price: 65, currency: 'EUR',
-    location: 'Teatro Lope de Vega, Madrid',
-    description: 'Musical emblemático para toda la familia.',
+    location: 'Teatro Lope de Vega, Madrid',
+    description: 'Musical familiar de gran éxito que sigue en cartel hasta febrero de 2026:contentReference[oaicite:9]{index=9}.',
     category: OID('66fca0010000000000000003'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-    images: ['https://images.unsplash.com/photo-1478720568477-152d9b164e26'],
-    slug: 'el-rey-leon-madrid-2026-03-15',
+    images: [
+      'https://images.unsplash.com/photo-1478720568477-152d9b164e26',
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee'
+    ],
+    slug: 'el-rey-leon-madrid-2026-01-15',
     favouritesCount: 0
   },
   {
     _id: OID('66fca002000000000000000b'),
-    title: 'La vida es sueño — Madrid',
-    date: new Date('2026-02-21T19:00:00.000Z'),
+    title: 'Mamma Mia! — Alicante',
+    date: new Date('2026-01-22T19:30:00.000Z'),
     price: 28, currency: 'EUR',
-    location: 'Teatro Español, Madrid',
-    description: 'Clásico de Calderón con puesta en escena moderna.',
+    location: 'Teatro Principal, Alicante',
+    description: 'El musical con canciones de ABBA se representa en Alicante del 22 de enero al 8 de febrero:contentReference[oaicite:10]{index=10}.',
     category: OID('66fca0010000000000000003'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-    images: ['https://images.unsplash.com/photo-1515165562835-c3b8c8d966cc'],
-    slug: 'la-vida-es-sueno-madrid-2026-02-21',
+    images: [
+      'https://images.unsplash.com/photo-1515165562835-c3b8c8d966cc',
+      'https://images.unsplash.com/photo-1478720568477-152d9b164e26'
+    ],
+    slug: 'mamma-mia-alicante-2026-01-22',
     favouritesCount: 0
   },
 
-  // Deportes
+  // Deportes – varias fotos deportivas y descripciones coherentes
   {
     _id: OID('66fca002000000000000000c'),
-    title: 'GP de España de F1 — Barcelona',
-    date: new Date('2026-06-07T13:00:00.000Z'),
+    title: 'UFC 324: Ilia Topuria vs Justin Gaethje',
+    date: new Date('2026-01-24T19:00:00.000Z'),
     price: 210, currency: 'EUR',
-    location: 'Circuit de Barcelona-Catalunya',
-    description: 'El gran circo de la F1 en Montmeló.',
+    location: 'T‑Mobile Arena, Las Vegas',
+    description: 'El evento de artes marciales mixtas UFC 324 tendrá como atractivo principal al español Ilia Topuria:contentReference[oaicite:11]{index=11}.',
     category: OID('66fca0010000000000000004'),
     status: 'published',
-    mainImage: 'https://images.unsplash.com/photo-1502877338535-766e1452684a',
-    images: ['https://images.unsplash.com/photo-1517649763962-0c623066013b'],
-    slug: 'f1-gp-espana-barcelona-2026-06-07',
+    mainImage: 'https://images.unsplash.com/photo-1517649763962-0c623066013b',
+    images: [
+      'https://images.unsplash.com/photo-1518611012118-f0c5d859f8d8',
+      'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3'
+    ],
+    slug: 'topuria-gaethje-ufc-324-2026-01-24',
     favouritesCount: 0
   },
   {
     _id: OID('66fca002000000000000000d'),
-    title: 'FC Barcelona vs Real Madrid',
-    date: new Date('2026-10-26T19:00:00.000Z'),
+    title: 'FC Barcelona vs Real Madrid',
+    date: new Date('2026-05-09T18:00:00.000Z'),
     price: 140, currency: 'EUR',
     location: 'Estadi Olímpic Lluís Companys, Barcelona',
-    description: 'El Clásico con ambiente de final.',
+    description: 'El Clásico de LaLiga se disputará en el Estadi Olímpic el 9 de mayo de 2026:contentReference[oaicite:12]{index=12}.',
     category: OID('66fca0010000000000000004'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211',
-    images: ['https://images.unsplash.com/photo-1461896836934-ffe607ba8211'],
-    slug: 'clasico-barcelona-real-madrid-2026-10-26',
+    images: [
+      'https://images.unsplash.com/photo-1502877338535-766e1452684a',
+      'https://images.unsplash.com/photo-1517649763962-0c623066013b'
+    ],
+    slug: 'clasico-barcelona-real-madrid-2026-05-09',
     favouritesCount: 0
   },
   {
     _id: OID('66fca002000000000000000e'),
-    title: 'Maratón Valencia Trinidad Alfonso',
-    date: new Date('2026-12-06T08:30:00.000Z'),
+    title: 'Barcelona Open Banc Sabadell',
+    date: new Date('2026-04-11T13:00:00.000Z'),
     price: 70, currency: 'EUR',
-    location: 'Valencia',
-    description: 'La maratón más rápida de España.',
+    location: 'Real Club de Tenis Barcelona‑1899',
+    description: 'El torneo de tenis ATP 500 se celebra del 11 al 19 de abril con la participación de estrellas como Carlos Alcaraz:contentReference[oaicite:13]{index=13}.',
     category: OID('66fca0010000000000000004'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1518611012118-f0c5d859f8d8',
-    images: ['https://images.unsplash.com/photo-1518611012118-f0c5d859f8d8'],
-    slug: 'maraton-valencia-2026-12-06',
+    images: [
+      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211',
+      'https://images.unsplash.com/photo-1502877338535-766e1452684a'
+    ],
+    slug: 'barcelona-open-2026-04-11',
     favouritesCount: 0
   },
 
-  // Conferencias / Tech
+  // Conferencias / Tech – imágenes de conferencias
   {
     _id: OID('66fca002000000000000000f'),
-    title: 'Mobile World Congress — Barcelona',
-    date: new Date('2026-02-24T09:00:00.000Z'),
+    title: 'Mobile World Congress — Barcelona',
+    date: new Date('2026-03-02T09:00:00.000Z'),
     price: 799, currency: 'EUR',
-    location: 'Fira Gran Via, Barcelona',
-    description: 'La cita mundial del móvil y conectividad.',
+    location: 'Fira Gran Via, Barcelona',
+    description: 'MWC Barcelona 2026, el mayor evento del sector móvil, tendrá lugar del 2 al 5 de marzo:contentReference[oaicite:14]{index=14}.',
     category: OID('66fca0010000000000000005'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
-    images: ['https://images.unsplash.com/photo-1520607162513-77705c0f0d4a'],
-    slug: 'mwc-barcelona-2026-02-24',
+    images: [
+      'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a',
+      'https://images.unsplash.com/photo-1498050108023-c5249f4df085'
+    ],
+    slug: 'mwc-barcelona-2026-03-02',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000010'),
-    title: 'OpenExpo Europe — Madrid',
-    date: new Date('2026-06-19T09:30:00.000Z'),
+    title: 'OpenExpo Europe — Madrid',
+    date: new Date('2026-03-25T09:30:00.000Z'),
     price: 45, currency: 'EUR',
     location: 'IFEMA, Madrid',
-    description: 'Conferencia sobre Open Source y transformación digital.',
+    description: 'La feria OpenExpo Europe 2026 se enfocará en open source y transformación digital del 25 al 27 de marzo:contentReference[oaicite:15]{index=15}.',
     category: OID('66fca0010000000000000005'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
-    images: ['https://images.unsplash.com/photo-1551836022-4c4c79ecde51'],
-    slug: 'openexpo-europe-madrid-2026-06-19',
+    images: [
+      'https://images.unsplash.com/photo-1551836022-4c4c79ecde51',
+      'https://images.unsplash.com/photo-1519389950473-47ba0277781c'
+    ],
+    slug: 'openexpo-europe-madrid-2026-03-25',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000011'),
-    title: 'NodeConf — Barcelona',
-    date: new Date('2026-09-28T09:00:00.000Z'),
+    title: 'DigiMarCon Spain — Barcelona',
+    date: new Date('2026-09-07T09:00:00.000Z'),
     price: 120, currency: 'EUR',
-    location: 'CCIB, Barcelona',
-    description: 'Node.js, backend moderno y escalabilidad.',
+    location: 'Hotel W Barcelona, Barcelona',
+    description: 'Conferencia dedicada al marketing digital, medios y publicidad los días 7 y 8 de septiembre:contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}.',
     category: OID('66fca0010000000000000005'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
-    images: ['https://images.unsplash.com/photo-1498050108023-c5249f4df085'],
-    slug: 'nodeconf-barcelona-2026-09-28',
+    images: [
+      'https://images.unsplash.com/photo-1498050108023-c5249f4df085',
+      'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a'
+    ],
+    slug: 'digimarcon-barcelona-2026-09-07',
     favouritesCount: 0
   },
 
-  // Comedia
+  // Comedia – varias imágenes y descripciones de longitud similar
   {
     _id: OID('66fca0020000000000000012'),
-    title: 'Goyo Jiménez — Aiguantulivinamérica 3',
-    date: new Date('2026-04-09T20:00:00.000Z'),
+    title: 'Goyo Jiménez — Misery Class',
+    date: new Date('2026-02-07T20:00:00.000Z'),
     price: 28, currency: 'EUR',
-    location: 'Teatro Olympia, Valencia',
-    description: 'Monólogo hilarante sobre costumbres y contrastes.',
+    location: 'Teatro Capitol Gran Vía, Madrid',
+    description: 'Monólogo satírico y desternillante de Goyo Jiménez con funciones hasta el 1 de marzo:contentReference[oaicite:18]{index=18}.',
     category: OID('66fca0010000000000000006'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57',
-    images: ['https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57'],
-    slug: 'goyo-jimenez-valencia-2026-04-09',
+    images: [
+      'https://images.unsplash.com/photo-1525182008055-f88b95ff7980',
+      'https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57'
+    ],
+    slug: 'goyo-jimenez-madrid-2026-02-07',
     favouritesCount: 0
   },
   {
     _id: OID('66fca0020000000000000013'),
-    title: 'Carlos Latre — One Man Show',
-    date: new Date('2026-05-16T20:30:00.000Z'),
+    title: 'Hora Treintaypico — Madrid',
+    date: new Date('2026-03-15T20:30:00.000Z'),
     price: 30, currency: 'EUR',
-    location: 'Teatro Coliseum, Madrid',
-    description: 'Imitaciones y humor para todos los públicos.',
+    location: 'Teatro La Latina, Madrid',
+    description: 'Versión en directo del programa de humor Hora Veintipico, recomendada para mayores de 16 años:contentReference[oaicite:19]{index=19}:contentReference[oaicite:20]{index=20}.',
     category: OID('66fca0010000000000000006'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57',
-    images: ['https://images.unsplash.com/photo-1525182008055-f88b95ff7980'],
-    slug: 'carlos-latre-madrid-2026-05-16',
+    images: [
+      'https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57',
+      'https://images.unsplash.com/photo-1525182008055-f88b95ff7980'
+    ],
+    slug: 'hora-treintaypico-madrid-2026-03-15',
     favouritesCount: 0
   },
 
-  // Familia
+  // Familia – imágenes temáticas sobre hielo
   {
     _id: OID('66fca0020000000000000014'),
-    title: 'Disney On Ice — Madrid',
-    date: new Date('2026-01-18T17:00:00.000Z'),
+    title: 'Disney On Ice — Valencia',
+    date: new Date('2026-02-05T17:00:00.000Z'),
     price: 35, currency: 'EUR',
-    location: 'WiZink Center, Madrid',
-    description: 'Espectáculo sobre hielo para toda la familia.',
+    location: 'ROIG Arena, Valencia',
+    description: 'Espectáculo sobre hielo “Into the Magic” que visitará Valencia del 5 al 8 de febrero:contentReference[oaicite:21]{index=21}.',
     category: OID('66fca0010000000000000007'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1517341721142-35a7d495bd4c',
-    images: ['https://images.unsplash.com/photo-1517341721142-35a7d495bd4c'],
-    slug: 'disney-on-ice-madrid-2026-01-18',
+    images: [
+      'https://images.unsplash.com/photo-1517341721142-35a7d495bd4c',
+      'https://images.unsplash.com/photo-1517341721142-35a7d495bd4c'
+    ],
+    slug: 'disney-on-ice-valencia-2026-02-05',
     favouritesCount: 0
   },
 
-  // Cine
+  // Cine – imágenes de festivales de cine
   {
     _id: OID('66fca0020000000000000015'),
-    title: 'Maratón Star Wars — Barcelona',
-    date: new Date('2026-05-04T18:00:00.000Z'),
+    title: 'Festival de Sitges — Sitges',
+    date: new Date('2026-10-08T18:00:00.000Z'),
     price: 22, currency: 'EUR',
-    location: 'Cinesa Diagonal, Barcelona',
-    description: 'Celebración May the 4th con maratón original.',
+    location: 'Auditori Melià Sitges, Sitges',
+    description: 'El Festival Internacional de Cinema Fantàstic de Catalunya se desarrollará del 8 al 18 de octubre:contentReference[oaicite:22]{index=22}.',
     category: OID('66fca0010000000000000009'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1517602302552-471fe67acf66',
-    images: ['https://images.unsplash.com/photo-1517602302552-471fe67acf66'],
-    slug: 'maraton-star-wars-barcelona-2026-05-04',
+    images: [
+      'https://images.unsplash.com/photo-1517602302552-471fe67acf66',
+      'https://images.unsplash.com/photo-1517602302552-471fe67acf66'
+    ],
+    slug: 'festival-sitges-2026-10-08',
     favouritesCount: 0
   },
 
-  // Arte
+  // Arte – imágenes de exposiciones de arte
   {
     _id: OID('66fca0020000000000000016'),
-    title: 'Sorolla — Exposición permanente',
-    date: new Date('2026-03-10T10:00:00.000Z'),
+    title: 'ARCOmadrid — Madrid',
+    date: new Date('2026-03-04T10:00:00.000Z'),
     price: 10, currency: 'EUR',
-    location: 'Museo Sorolla, Madrid',
-    description: 'Obra del maestro de la luz valenciano.',
+    location: 'IFEMA Madrid, Madrid',
+    description: 'La feria de arte contemporáneo ARCOmadrid 2026 abrirá sus puertas del 4 al 8 de marzo.',
     category: OID('66fca001000000000000000a'),
     status: 'published',
     mainImage: 'https://images.unsplash.com/photo-1529101091764-c3526daf38fe',
-    images: ['https://images.unsplash.com/photo-1529101091764-c3526daf38fe'],
-    slug: 'sorolla-madrid-2026-03-10',
+    images: [
+      'https://images.unsplash.com/photo-1529101091764-c3526daf38fe',
+      'https://images.unsplash.com/photo-1529101091764-c3526daf38fe'
+    ],
+    slug: 'arco-madrid-2026-03-04',
     favouritesCount: 0
   }
 ];
+
 
 // ==========================
 // 2) HELPERS
