@@ -1,24 +1,24 @@
-import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { ProductModule } from './product/product.module';
-import { ProductCategoryModule } from './product-category/product-category.module';
-import { EnterpriseModule } from './enterprise/enterprise.module';
-import { ProxyMiddleware } from './gateway/proxy.middleware';
 
+/**
+ * Módulo raíz del API Gateway
+ * 
+ * Responsabilidades:
+ * - Configurar variables de entorno (.env)
+ * - Registrar el health check controller
+ * - Los proxies a microservicios se configuran en main.ts
+ */
 @Module({
   imports: [
-    PrismaModule,
-    ProductModule,
-    ProductCategoryModule,
-    EnterpriseModule,
+    // Configuración global de variables de entorno
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ProxyMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}

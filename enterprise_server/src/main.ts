@@ -1,32 +1,41 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { config } from 'dotenv';
-
-// Cargar variables de entorno
-config();
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
-  // Configurar CORS
-  app.enableCors({
-    origin: process.env.CORS_ORIGIN || '*',
-    credentials: true,
-  });
+  app.enableCors({ origin: '*' });
 
-  // Puerto y host
-  const port = process.env.PORT || 5000;
-  const host = process.env.HOST || '0.0.0.0';
+  const expressApp = app.getHttpAdapter().getInstance();
 
-  await app.listen(5000);
+  expressApp.use('/enterprise', createProxyMiddleware({
+    target: 'http://localhost:5001',
+    changeOrigin: true,
+    pathRewrite: { '^/enterprise': '' },
+  }));
 
-  console.log(`Enterprise Server running on http://${host}:${port}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Database: 
-    ${process.env.DATABASE_URL ? 'Connected' : 'Not configured'}`);
+  expressApp.use('/product', createProxyMiddleware({
+    target: 'http://localhost:5002',
+    changeOrigin: true,
+    pathRewrite: { '^/product': '' },
+  }));
+
+  expressApp.use('/category', createProxyMiddleware({
+    target: 'http://localhost:5003',
+    changeOrigin: true,
+    pathRewrite: { '^/category': '' },
+  }));
+
+  const config = new DocumentBuilder().setTitle('Gateway API').setVersion('1.0').build();
+  SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, config));
+
+  const port = configService.get<number>('PORT') || 5000;
+  await app.listen(port);
+  console.log('Gateway on http://localhost:' + port);
 }
 
-bootstrap().catch((error) => {
-  console.error(' Error starting server:', error);
-  process.exit(1);
-});
+bootstrap();

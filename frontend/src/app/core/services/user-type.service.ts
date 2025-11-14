@@ -3,9 +3,10 @@ import { Observable } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { UserService } from './user.service';
 import { AdminAuthService } from './admin-auth.service';
+import { EnterpriseAuthService } from './enterprise-auth.service';
 import { Router } from '@angular/router';
 
-export type UserRole = 'admin' | 'cliente' | null;
+export type UserRole = 'admin' | 'enterprise' | 'cliente' | null;
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ export class UserTypeService {
 
     public currentRole = this.currentRoleSignal.asReadonly();
     public isAdmin = computed(() => this.currentRoleSignal() === 'admin');
+    public isEnterprise = computed(() => this.currentRoleSignal() === 'enterprise');
     public isCliente = computed(() => this.currentRoleSignal() === 'cliente');
     public isAuthenticated = computed(() => this.currentRoleSignal() !== null);
 
@@ -22,6 +24,7 @@ export class UserTypeService {
         private jwtService: JwtService,
         private userService: UserService,
         private adminAuthService: AdminAuthService,
+        private enterpriseAuthService: EnterpriseAuthService,
         private router: Router
     ) {
         this.updateRole();
@@ -43,6 +46,7 @@ export class UserTypeService {
 
     private handleTokenLoss(): void {
         this.adminAuthService.purgeAuth();
+        this.enterpriseAuthService.purgeAuth();
         this.userService.purgeAuth();
         this.router.navigate(['/']);
     }
@@ -56,10 +60,13 @@ export class UserTypeService {
 
         if (role === 'admin') {
             this.adminAuthService.populate();
+        } else if (role === 'enterprise') {
+            this.enterpriseAuthService.populate();
         } else if (role === 'cliente') {
             this.userService.populate();
         } else {
             this.adminAuthService.purgeAuth();
+            this.enterpriseAuthService.purgeAuth();
             this.userService.purgeAuth();
         }
     }
@@ -69,6 +76,8 @@ export class UserTypeService {
 
         if (role === 'admin') {
             this.adminAuthService.logout();
+        } else if (role === 'enterprise') {
+            this.enterpriseAuthService.logout();
         } else if (role === 'cliente') {
             this.userService.logout().subscribe();
         }
@@ -78,15 +87,15 @@ export class UserTypeService {
 
     public getAuthenticationObservable(): Observable<boolean> {
         const role = this.currentRoleSignal();
-        return role === 'admin'
-            ? this.adminAuthService.isAuthenticated$
-            : this.userService.isAuthenticated$;
+        if (role === 'admin') return this.adminAuthService.isAuthenticated$;
+        if (role === 'enterprise') return this.enterpriseAuthService.isAuthenticated$;
+        return this.userService.isAuthenticated$;
     }
 
     public getCurrentUserData(): Observable<any> {
         const role = this.currentRoleSignal();
-        return role === 'admin'
-            ? this.adminAuthService.currentAdmin$
-            : this.userService.currentUser$;
+        if (role === 'admin') return this.adminAuthService.currentAdmin$;
+        if (role === 'enterprise') return this.enterpriseAuthService.currentEnterprise$;
+        return this.userService.currentUser$;
     }
 }

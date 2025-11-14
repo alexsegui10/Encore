@@ -3,6 +3,11 @@
 /node_modules
 /build
 
+# Microservices node_modules and dist
+microservices/*/node_modules
+microservices/*/dist
+microservices/*/.env
+
 # Logs
 logs
 *.log

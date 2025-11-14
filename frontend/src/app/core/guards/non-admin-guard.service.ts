@@ -15,13 +15,16 @@ export class NonAdminGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     this.userTypeService.updateRole();
     
-    // Si es admin, redirigir al dashboard
     if (this.userTypeService.isAdmin()) {
       this.router.navigate(['/admin/dashboard']);
       return of(false);
     }
     
-    // Permitir acceso a usuarios no autenticados y clientes
+    if (this.userTypeService.isEnterprise()) {
+      this.router.navigate(['/enterprise/dashboard']);
+      return of(false);
+    }
+    
     return of(true);
   }
 }

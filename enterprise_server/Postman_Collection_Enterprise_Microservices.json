@@ -1,0 +1,556 @@
+{
+  "info": {
+    "_postman_id": "enterprise-microservices-001",
+    "name": "Enterprise Microservices API",
+    "description": "Colección completa para probar todos los microservicios a través del Gateway (Puerto 5000)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Enterprise Service",
+      "item": [
+        {
+          "name": "Crear Empresa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"empresa-001\",\n  \"name\": \"TechCorp Solutions\",\n  \"description\": \"Empresa de soluciones tecnológicas\",\n  \"logo\": \"https://example.com/logo.png\",\n  \"website\": \"https://techcorp.com\",\n  \"contactEmail\": \"contacto@techcorp.com\",\n  \"phone\": \"+34 900 123 456\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/enterprise",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todas las Empresas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/enterprise",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Empresa por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/enterprise/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Empresa por UID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/enterprise/uid/empresa-001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise", "uid", "empresa-001"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Empresa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TechCorp Solutions S.A.\",\n  \"description\": \"Empresa líder en soluciones tecnológicas\",\n  \"status\": \"active\",\n  \"isVerified\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/enterprise/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Empresa",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/enterprise/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category Service",
+      "item": [
+        {
+          "name": "Crear Categoría",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electrónica\",\n  \"description\": \"Productos electrónicos y tecnológicos\",\n  \"image\": \"https://example.com/electronics.jpg\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/category",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todas las Categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/category",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Categorías Activas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/category/active",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category", "active"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Categoría por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/category/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Categoría con Productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/category/PEGA_AQUI_EL_ID/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category", "PEGA_AQUI_EL_ID", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Categoría",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electrónica y Gadgets\",\n  \"description\": \"Productos electrónicos, gadgets y tecnología\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/category/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Categoría",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/category/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product Service",
+      "item": [
+        {
+          "name": "Crear Producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop HP Pavilion 15\",\n  \"description\": \"Laptop de alta gama con Intel Core i7, 16GB RAM, 512GB SSD\",\n  \"price\": 1299.99,\n  \"currency\": \"EUR\",\n  \"stockTotal\": 50,\n  \"image\": \"https://example.com/laptop.jpg\",\n  \"status\": \"active\",\n  \"categoryId\": \"PEGA_AQUI_CATEGORY_ID\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/product",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos los Productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/product",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Productos por Categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/product?categoryId=PEGA_AQUI_CATEGORY_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "PEGA_AQUI_CATEGORY_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Productos por Estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/product?status=active",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por Categoría y Estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/product?categoryId=PEGA_AQUI_CATEGORY_ID&status=active",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "PEGA_AQUI_CATEGORY_ID"
+                },
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Producto por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/product/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Producto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop HP Pavilion 15 (Actualizada)\",\n  \"description\": \"Laptop de alta gama con Intel Core i7, 16GB RAM, 512GB SSD - Modelo 2025\",\n  \"price\": 1199.99,\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/product/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Añadir Stock",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 20,\n  \"operation\": \"add\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/product/PEGA_AQUI_EL_ID/stock",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product", "PEGA_AQUI_EL_ID", "stock"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restar Stock",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 5,\n  \"operation\": \"subtract\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/product/PEGA_AQUI_EL_ID/stock",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product", "PEGA_AQUI_EL_ID", "stock"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Producto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/product/PEGA_AQUI_EL_ID",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product", "PEGA_AQUI_EL_ID"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔥 FLUJO COMPLETO - Ejecuta en orden",
+      "item": [
+        {
+          "name": "1️⃣ Crear Categoría Ropa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ropa y Accesorios\",\n  \"description\": \"Moda y complementos\",\n  \"image\": \"https://example.com/ropa.jpg\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/category",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2️⃣ Crear Producto (usa el ID de arriba)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Camiseta Nike Deportiva\",\n  \"description\": \"Camiseta deportiva de alta calidad\",\n  \"price\": 29.99,\n  \"currency\": \"EUR\",\n  \"stockTotal\": 100,\n  \"image\": \"https://example.com/camiseta.jpg\",\n  \"status\": \"active\",\n  \"categoryId\": \"PEGA_AQUI_CATEGORY_ID_DEL_PASO_1\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/product",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3️⃣ Ver Categoría con Productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/category/PEGA_AQUI_CATEGORY_ID_DEL_PASO_1/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["category", "PEGA_AQUI_CATEGORY_ID_DEL_PASO_1", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4️⃣ Restar Stock del Producto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 10,\n  \"operation\": \"subtract\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/product/PEGA_AQUI_PRODUCT_ID_DEL_PASO_2/stock",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["product", "PEGA_AQUI_PRODUCT_ID_DEL_PASO_2", "stock"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

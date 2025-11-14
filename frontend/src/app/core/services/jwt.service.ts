@@ -41,11 +41,11 @@ export class JwtService {
   }
 
   // Obtiene el role del usuario desde el token
-  getUserRole(): 'admin' | 'cliente' | null {
+  getUserRole(): 'admin' | 'enterprise' | 'cliente' | null {
     const decoded = this.decodeToken();
     if (!decoded) return null;
     
-    // El admin server guarda el role directamente en el payload
+    // El admin server y enterprise server guardan el role directamente en el payload
     // El booking client lo guarda en decoded.user.role
     return decoded.role || decoded.user?.role || null;
   }
