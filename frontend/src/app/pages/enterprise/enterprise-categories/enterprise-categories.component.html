@@ -1,0 +1,116 @@
+<div class="admin-categories-page">
+  <div class="page-header">
+    <h1>Gestión de Categorías</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      <span class="icon">+</span> Nueva Categoría
+    </button>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar por nombre o descripción..."
+      (input)="onSearch($event)"
+      class="search-input"
+    />
+  </div>
+
+  <!-- Loading state -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando categorías...</p>
+    </div>
+  }
+
+  <!-- Grid de categorías -->
+  @else if (filteredCategories().length > 0) {
+    <div class="categories-grid">
+      @for (category of filteredCategories(); track category.id) {
+        <div class="category-card">
+          <div class="category-content">
+            <div class="category-header">
+              <h3>{{ category.name }}</h3>
+            </div>
+
+            <p class="category-description">
+              {{ category.description || 'Sin descripción' }}
+            </p>
+
+            <div class="category-meta">
+              <span class="created-date">Creada: {{ category.createdAt | date: 'short' }}</span>
+            </div>
+          </div>
+
+          <div class="category-actions">
+            <button class="btn-edit" (click)="openEditForm(category)">
+              ✏️ Editar
+            </button>
+            <button class="btn-delete" (click)="deleteCategory(category)">
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>No se encontraron categorías</p>
+    </div>
+  }
+
+  <!-- Modal de formulario -->
+  @if (showForm()) {
+    <div class="modal-overlay" (click)="closeForm()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ isEditing() ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+          <button class="btn-close" (click)="closeForm()">×</button>
+        </div>
+
+        <form [formGroup]="categoryForm" (ngSubmit)="submitForm()" class="category-form">
+          <div class="form-group">
+            <label for="name">Nombre de la categoría *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+              [class.is-invalid]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
+              placeholder="Electrónica, Ropa, Alimentos..."
+            />
+            @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+              <div class="invalid-feedback">
+                El nombre es requerido (mínimo 3 caracteres)
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              class="form-control"
+              rows="4"
+              placeholder="Describe esta categoría..."
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="closeForm()">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn-primary"
+              [disabled]="isSubmitting || categoryForm.invalid">
+              {{ isSubmitting ? 'Guardando...' : (isEditing() ? 'Actualizar' : 'Crear') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,41 @@
+<div class="admin-layout" [class.sidebar-collapsed]="!sidebarOpen">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>Enterprise Dashboard</h2>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <span>☰</span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/enterprise/dashboard/categories" routerLinkActive="active">
+        <span class="icon">📁</span>
+        <span class="text">Categorías</span>
+      </a>
+      <a routerLink="/enterprise/dashboard/products" routerLinkActive="active">
+        <span class="icon">📦</span>
+        <span class="text">Productos</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      @if (currentEnterprise$ | async; as enterprise) {
+        <div class="admin-info">
+          <div class="admin-details">
+            <span class="admin-name">{{ enterprise.name }}</span>
+            <span class="admin-email">{{ enterprise.contactEmail || enterprise.uid }}</span>
+          </div>
+          <button class="logout-btn" (click)="logout()">
+            <span>🚪</span>
+          </button>
+        </div>
+      }
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

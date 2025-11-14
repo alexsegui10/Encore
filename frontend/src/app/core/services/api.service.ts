@@ -59,6 +59,14 @@ export class ApiService {
       .pipe(catchError(this.formatErrors));
   }
 
+  patch(path: string, body: object = {}, port: number = 4000, withAuth: boolean = false): Observable<any> {
+    const options = this.buildOptions(undefined, withAuth);
+    const headers = options.headers.set('Content-Type', 'application/json');
+    return this.http
+      .patch(`${environment.api_url}:${port}${path}`, body, { ...options, headers })
+      .pipe(catchError(this.formatErrors));
+  }
+
   delete(path: string, port: number = 4000, withAuth: boolean = false): Observable<any> {
     return this.http
       .delete(`${environment.api_url}:${port}${path}`, this.buildOptions(undefined, withAuth))

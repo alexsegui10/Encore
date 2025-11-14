@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AdminGuard, NonAdminGuard, AuthGuard } from './core/guards';
+import { AdminGuard, NonAdminGuard, AuthGuard, EnterpriseGuard } from './core/guards';
 
 export const routes: Routes = [
     {
@@ -68,6 +68,42 @@ export const routes: Routes = [
                         path: 'profile',
                         loadComponent: () => import('./pages/admin/admin-profile/admin-profile.component').then(m => m.AdminProfileComponent),
                         canActivate: [AdminGuard]
+                    }
+                ]
+            },
+            {
+                path: '',
+                redirectTo: 'login',
+                pathMatch: 'full'
+            }
+        ]
+    },
+    {
+        path: 'enterprise',
+        children: [
+            {
+                path: 'login',
+                loadComponent: () => import('./pages/enterprise/enterprise-login/enterprise-login.component').then(m => m.EnterpriseLoginComponent)
+            },
+            {
+                path: 'dashboard',
+                loadComponent: () => import('./pages/enterprise/enterprise-dashboard/enterprise-dashboard.component').then(m => m.EnterpriseDashboardComponent),
+                canActivate: [EnterpriseGuard],
+                children: [
+                    {
+                        path: '',
+                        redirectTo: 'categories',
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: 'categories',
+                        loadComponent: () => import('./pages/enterprise/enterprise-categories/enterprise-categories.component').then(m => m.EnterpriseCategoriesComponent),
+                        canActivate: [EnterpriseGuard]
+                    },
+                    {
+                        path: 'products',
+                        loadComponent: () => import('./pages/enterprise/enterprise-products/enterprise-products.component').then(m => m.EnterpriseProductsComponent),
+                        canActivate: [EnterpriseGuard]
                     }
                 ]
             },

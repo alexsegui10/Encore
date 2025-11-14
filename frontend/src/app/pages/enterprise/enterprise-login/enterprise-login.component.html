@@ -1,0 +1,38 @@
+<div class="admin-login-container">
+  <div class="login-card">
+    <h1>Enterprise Login</h1>
+    <p class="subtitle">Dashboard Empresarial</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="uid">ID Empresarial (UID)</label>
+        <input
+          type="text"
+          id="uid"
+          formControlName="uid"
+          placeholder="Tu UID empresarial"
+          [class.error]="loginForm.get('uid')?.invalid && loginForm.get('uid')?.touched">
+        @if (loginForm.get('uid')?.invalid && loginForm.get('uid')?.touched) {
+          <span class="error-message">UID requerido</span>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-error">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="isSubmitting || loginForm.invalid">
+        @if (isSubmitting) {
+          <span>Iniciando sesión...</span>
+        } @else {
+          <span>Iniciar Sesión</span>
+        }
+      </button>
+    </form>
+  </div>
+</div>
