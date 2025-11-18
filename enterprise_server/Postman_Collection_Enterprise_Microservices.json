@@ -7,10 +7,10 @@
   },
   "item": [
     {
-      "name": "Enterprise Service",
+      "name": "🔐 Enterprise Auth",
       "item": [
         {
-          "name": "Crear Empresa",
+          "name": "Login Enterprise",
           "request": {
             "method": "POST",
             "header": [
@@ -21,7 +21,91 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"uid\": \"empresa-001\",\n  \"name\": \"TechCorp Solutions\",\n  \"description\": \"Empresa de soluciones tecnológicas\",\n  \"logo\": \"https://example.com/logo.png\",\n  \"website\": \"https://techcorp.com\",\n  \"contactEmail\": \"contacto@techcorp.com\",\n  \"phone\": \"+34 900 123 456\",\n  \"status\": \"active\"\n}"
+              "raw": "{\n  \"email\": \"empresa@techcorp.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/enterprise/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me (Enterprise Profile)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Token JWT obtenido del login"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/enterprise/auth/me",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise", "auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Me (Enterprise Profile)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Token JWT obtenido del login"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TechCorp Solutions S.A.\",\n  \"description\": \"Empresa líder en soluciones tecnológicas\",\n  \"logo\": \"https://example.com/new-logo.png\",\n  \"website\": \"https://techcorp.com\",\n  \"contactEmail\": \"info@techcorp.com\",\n  \"phone\": \"+34 900 123 456\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/enterprise/auth/me",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["enterprise", "auth", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Enterprise Service",
+      "item": [
+        {
+          "name": "Crear Empresa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"empresa-002\",\n  \"email\": \"empresa2@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"TechCorp Solutions\",\n  \"description\": \"Empresa de soluciones tecnológicas\",\n  \"logo\": \"https://example.com/logo.png\",\n  \"website\": \"https://techcorp.com\",\n  \"contactEmail\": \"contacto@techcorp.com\",\n  \"phone\": \"+34 900 123 456\",\n  \"status\": \"active\"\n}"
             },
             "url": {
               "raw": "http://localhost:5000/enterprise",
@@ -86,6 +170,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
               }
             ],
             "body": {
@@ -106,7 +195,13 @@
           "name": "Eliminar Empresa",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
+              }
+            ],
             "url": {
               "raw": "http://localhost:5000/enterprise/PEGA_AQUI_EL_ID",
               "protocol": "http",
@@ -130,6 +225,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
               }
             ],
             "body": {
@@ -214,6 +314,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
               }
             ],
             "body": {
@@ -234,7 +339,13 @@
           "name": "Eliminar Categoría",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
+              }
+            ],
             "url": {
               "raw": "http://localhost:5000/category/PEGA_AQUI_EL_ID",
               "protocol": "http",
@@ -258,6 +369,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
               }
             ],
             "body": {
@@ -379,6 +495,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
               }
             ],
             "body": {
@@ -403,6 +524,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
               }
             ],
             "body": {
@@ -427,6 +553,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
               }
             ],
             "body": {
@@ -447,7 +578,13 @@
           "name": "Eliminar Producto",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{enterprise_token}}",
+                "description": "Requiere role: enterprise"
+              }
+            ],
             "url": {
               "raw": "http://localhost:5000/product/PEGA_AQUI_EL_ID",
               "protocol": "http",

@@ -1,3 +1,4 @@
 export class LoginEnterpriseDto {
-  uid: string;
+  email: string;
+  password: string;
 }

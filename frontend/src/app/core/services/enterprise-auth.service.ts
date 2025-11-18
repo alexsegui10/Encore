@@ -7,6 +7,7 @@ import { JwtService } from './jwt.service';
 export interface Enterprise {
   id: string;
   uid: string;
+  email: string;
   name: string;
   description?: string;
   logo?: string;
@@ -66,8 +67,8 @@ export class EnterpriseAuthService {
     this.isAuthenticatedSubject.next(false);
   }
 
-  login(uid: string): Observable<Enterprise> {
-    return this.apiService.post('/enterprise/auth/login', { uid }, 5000)
+  login(credentials: { email: string; password: string }): Observable<Enterprise> {
+    return this.apiService.post('/enterprise/auth/login', credentials, 5000)
       .pipe(
         tap(data => {
           this.setAuth({ ...data.enterprise, token: data.token });

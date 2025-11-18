@@ -1,5 +1,7 @@
 export class CreateEnterpriseDto {
   uid: string;
+  email: string;
+  password: string;
   name: string;
   description?: string;
   logo?: string;

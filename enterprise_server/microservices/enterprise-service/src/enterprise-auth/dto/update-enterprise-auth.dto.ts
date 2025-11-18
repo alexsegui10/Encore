@@ -1,4 +1,6 @@
 export class UpdateEnterpriseAuthDto {
+  email?: string;
+  password?: string;
   name?: string;
   description?: string;
   logo?: string;

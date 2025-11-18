@@ -5,15 +5,28 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="uid">ID Empresarial (UID)</label>
+        <label for="email">Email</label>
         <input
-          type="text"
-          id="uid"
-          formControlName="uid"
-          placeholder="Tu UID empresarial"
-          [class.error]="loginForm.get('uid')?.invalid && loginForm.get('uid')?.touched">
-        @if (loginForm.get('uid')?.invalid && loginForm.get('uid')?.touched) {
-          <span class="error-message">UID requerido</span>
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="tu@empresa.com"
+          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <span class="error-message">Email válido requerido</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Tu contraseña"
+          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <span class="error-message">Contraseña requerida (mínimo 6 caracteres)</span>
         }
       </div>
 
