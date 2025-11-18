@@ -24,8 +24,7 @@ export class EnterpriseLoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      uid: ['', [Validators.required]]
     });
   }
 
@@ -37,9 +36,9 @@ export class EnterpriseLoginComponent {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const credentials = this.loginForm.value;
+    const { uid } = this.loginForm.value;
 
-    this.enterpriseAuthService.login(credentials).subscribe({
+    this.enterpriseAuthService.login(uid).subscribe({
       next: () => {
         this.userTypeService.updateRole();
         this.router.navigate(['/enterprise/dashboard']);
