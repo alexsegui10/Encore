@@ -7,7 +7,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   
-  app.enableCors({ origin: '*' });
+  app.enableCors({
+    origin: ['http://localhost:4200', 'http://localhost:5000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  });
 
   const config = new DocumentBuilder().setTitle('Enterprise API').setVersion('1.0').build();
   SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, config));

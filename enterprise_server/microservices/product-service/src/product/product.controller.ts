@@ -8,32 +8,38 @@ export class ProductController {
   constructor(private readonly service: ProductService) {}
 
   @Post()
-  create(@Body() data: CreateProductDto) {
-    return this.service.create(data);
+  async create(@Body() data: CreateProductDto) {
+    const product = await this.service.create(data);
+    return { product };
   }
 
   @Get()
-  findAll(@Query('categoryId') categoryId?: string, @Query('status') status?: string) {
-    return this.service.findAll({ categoryId, status });
+  async findAll(@Query('categoryId') categoryId?: string, @Query('status') status?: string) {
+    const products = await this.service.findAll({ categoryId, status });
+    return { products };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const product = await this.service.findOne(id);
+    return { product };
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: UpdateProductDto) {
-    return this.service.update(id, data);
+  async update(@Param('id') id: string, @Body() data: UpdateProductDto) {
+    const product = await this.service.update(id, data);
+    return { product };
   }
 
   @Put(':id/stock')
-  updateStock(@Param('id') id: string, @Body() body: { quantity: number; operation: 'add' | 'subtract' }) {
-    return this.service.updateStock(id, body.quantity, body.operation);
+  async updateStock(@Param('id') id: string, @Body() body: { quantity: number; operation: 'add' | 'subtract' }) {
+    const product = await this.service.updateStock(id, body.quantity, body.operation);
+    return { product };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.service.remove(id);
+    return { message: 'Product deleted successfully' };
   }
 }

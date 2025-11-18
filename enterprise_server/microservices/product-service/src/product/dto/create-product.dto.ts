@@ -4,6 +4,7 @@ export class CreateProductDto {
   price: number;
   currency?: string;
   stockTotal?: number;
+  stockAvailable?: number;
   image?: string;
   status?: 'draft' | 'active' | 'hidden' | 'soldout';
   categoryId?: string;

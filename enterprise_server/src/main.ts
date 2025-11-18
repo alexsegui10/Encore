@@ -8,9 +8,20 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  app.enableCors({ origin: '*' });
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  });
 
   const expressApp = app.getHttpAdapter().getInstance();
+
+  expressApp.use('/enterprise-service', createProxyMiddleware({
+    target: 'http://localhost:5001',
+    changeOrigin: true,
+    pathRewrite: { '^/enterprise-service': '' },
+  }));
 
   expressApp.use('/enterprise', createProxyMiddleware({
     target: 'http://localhost:5001',

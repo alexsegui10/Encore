@@ -13,32 +13,38 @@ export class CategoryController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  async findAll() {
+    const categories = await this.service.findAll();
+    return { categories };
   }
 
   @Get('active')
-  findActive() {
-    return this.service.findActive();
+  async findActive() {
+    const categories = await this.service.findActive();
+    return { categories };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const category = await this.service.findOne(id);
+    return { category };
   }
 
   @Get(':id/products')
-  findWithProducts(@Param('id') id: string) {
-    return this.service.findWithProducts(id);
+  async findWithProducts(@Param('id') id: string) {
+    const category = await this.service.findWithProducts(id);
+    return { category };
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
-    return this.service.update(id, data);
+  async update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
+    const category = await this.service.update(id, data);
+    return { category };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.service.remove(id);
+    return { message: 'Category deleted successfully' };
   }
 }
