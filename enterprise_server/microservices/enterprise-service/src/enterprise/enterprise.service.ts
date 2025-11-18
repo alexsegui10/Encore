@@ -2,20 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEnterpriseDto } from './dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
-import * as argon2 from 'argon2';
 
 @Injectable()
 export class EnterpriseService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateEnterpriseDto) {
-    const hashedPassword = await argon2.hash(data.password);
-    return this.prisma.enterprise.create({
-      data: {
-        ...data,
-        password: hashedPassword,
-      },
-    });
+  create(data: CreateEnterpriseDto) {
+    return this.prisma.enterprise.create({ data });
   }
 
   findAll() {

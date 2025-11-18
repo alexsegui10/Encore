@@ -22,7 +22,9 @@ export class ProductModule implements NestModule {
       .forRoutes(
         { path: 'product', method: RequestMethod.POST },
         { path: 'product/:id', method: RequestMethod.PUT },
+        { path: 'product/:id', method: RequestMethod.PATCH },
         { path: 'product/:id/stock', method: RequestMethod.PUT },
+        { path: 'product/:id/stock', method: RequestMethod.PATCH },
         { path: 'product/:id', method: RequestMethod.DELETE },
       );
   }
