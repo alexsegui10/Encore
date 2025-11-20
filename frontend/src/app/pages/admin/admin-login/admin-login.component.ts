@@ -4,12 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AdminAuthService } from '../../../core/services/admin-auth.service';
 import { UserTypeService } from '../../../core/services/user-type.service';
-import { NgxGalaxyComponent } from '@omnedia/ngx-galaxy';
+import { NgxVortexComponent } from '@omnedia/ngx-vortex';
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxGalaxyComponent],
+  imports: [CommonModule, ReactiveFormsModule, NgxVortexComponent],
   templateUrl: './admin-login.component.html',
   styleUrls: ['./admin-login.component.css']
 })

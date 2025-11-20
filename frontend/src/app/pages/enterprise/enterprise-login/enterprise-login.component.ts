@@ -4,12 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { EnterpriseAuthService } from '../../../core/services/enterprise-auth.service';
 import { UserTypeService } from '../../../core/services/user-type.service';
-import { NgxGalaxyComponent } from '@omnedia/ngx-galaxy';
+import { NgxHaloComponent } from '@omnedia/ngx-halo';
 
 @Component({
   selector: 'app-enterprise-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxGalaxyComponent],
+  imports: [CommonModule, ReactiveFormsModule, NgxHaloComponent],
   templateUrl: './enterprise-login.component.html',
   styleUrls: ['./enterprise-login.component.css']
 })
