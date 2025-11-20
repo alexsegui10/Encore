@@ -5,7 +5,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   create(data: CreateProductDto) {
     return this.prisma.product.create({
@@ -43,6 +43,19 @@ export class ProductService {
       where: { id },
       data: { stockAvailable: newStock, status: newStock === 0 ? 'soldout' : product.status },
     });
+  }
+
+  async findRandom(count: number = 3) {
+    // Get all active products (exclude draft, hidden, soldout)
+    const products = await this.prisma.product.findMany({
+      where: {
+        status: 'active'
+      }
+    });
+
+    // Shuffle and take random products
+    const shuffled = products.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.min(count, shuffled.length));
   }
 
   async remove(id: string) {

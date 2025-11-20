@@ -28,6 +28,24 @@ async function generateUniqueSlug(prisma, title, date, excludeId = null) {
     return `${base}-${Math.random().toString(36).slice(2, 6)}`
 }
 
+// Fetch random merchandising from enterprise server
+async function fetchRandomMerchandising(count = 3) {
+    try {
+        const response = await fetch(`http://localhost:5000/product/random?count=${count}`)
+
+        if (!response.ok) {
+            console.warn(`Failed to fetch merchandising: ${response.status} ${response.statusText}`)
+            return []
+        }
+
+        const data = await response.json()
+        return data.products || []
+    } catch (error) {
+        console.warn('Error fetching merchandising:', error.message)
+        return []
+    }
+}
+
 
 // Format event response
 function formatEventResponse(event) {
@@ -45,6 +63,7 @@ function formatEventResponse(event) {
         isActive: event.isActive,
         mainImage: event.mainImage,
         images: event.images,
+        merchandising: event.merchandising || [],
         favouritesCount: event.favouritesCount,
         comments: event.comments,
         createdAt: event.createdAt,
@@ -103,8 +122,19 @@ export default async function eventsRoutes(server) {
                     }
                 })
 
+                // Fetch random merchandising and assign to event
+                const merchandisingProducts = await fetchRandomMerchandising(3)
+                console.log('📦 Merchandising products fetched:', merchandisingProducts)
+
+                // Update event with merchandising
+                const eventWithMerchandising = await server.prisma.events.update({
+                    where: { id: newEvent.id },
+                    data: { merchandising: merchandisingProducts }
+                })
+                console.log('✅ Event with merchandising:', eventWithMerchandising.merchandising)
+
                 return reply.code(201).send({
-                    event: formatEventResponse(newEvent)
+                    event: formatEventResponse(eventWithMerchandising)
                 })
             } catch (error) {
                 req.log.error(error)
