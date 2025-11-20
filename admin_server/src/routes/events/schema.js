@@ -16,6 +16,26 @@ const eventResponse = {
         isActive: { type: 'boolean' },
         mainImage: { type: ['string', 'null'] },
         images: { type: 'array', items: { type: 'string' } },
+        merchandising: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' },
+                    name: { type: 'string' },
+                    description: { type: 'string' },
+                    price: { type: 'number' },
+                    currency: { type: 'string' },
+                    stockTotal: { type: 'number' },
+                    stockAvailable: { type: 'number' },
+                    image: { type: 'string' },
+                    status: { type: 'string' },
+                    createdAt: { type: 'string' },
+                    updatedAt: { type: 'string' },
+                    categoryId: { type: 'string' }
+                }
+            }
+        },
         favouritesCount: { type: 'number' },
         comments: { type: 'array', items: { type: 'string' } },
         createdAt: { type: 'string', format: 'date-time' },

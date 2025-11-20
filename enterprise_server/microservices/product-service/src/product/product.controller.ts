@@ -5,7 +5,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller()
 export class ProductController {
-  constructor(private readonly service: ProductService) {}
+  constructor(private readonly service: ProductService) { }
 
   @Post()
   async create(@Body() data: CreateProductDto) {
@@ -16,6 +16,13 @@ export class ProductController {
   @Get()
   async findAll(@Query('categoryId') categoryId?: string, @Query('status') status?: string) {
     const products = await this.service.findAll({ categoryId, status });
+    return { products };
+  }
+
+  @Get('random')
+  async getRandomProducts(@Query('count') count?: string) {
+    const productCount = count ? parseInt(count, 10) : 3;
+    const products = await this.service.findRandom(productCount);
     return { products };
   }
 
