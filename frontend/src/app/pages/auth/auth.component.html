@@ -3,13 +3,13 @@
     <div class="row">
 
       <div class="col-md-6 offset-md-3 col-xs-12">
-  <h1 class="text-xs-center">{{ title() }}</h1>
+        <h1 class="text-xs-center">{{ title() }}</h1>
         <p class="text-xs-center">
           @if (authType() === 'register') {
-            <a [routerLink]="['/auth/login']">Have an account?</a>
+          <a [routerLink]="['/auth/login']">Have an account?</a>
           }
           @if (authType() === 'login') {
-            <a [routerLink]="['/auth/register']">Need an account?</a>
+          <a [routerLink]="['/auth/register']">Need an account?</a>
           }
         </p>
 
@@ -18,64 +18,55 @@
         <form [formGroup]="authForm" (ngSubmit)="submitForm()">
           <fieldset [disabled]="isSubmitting()">
             @if (authType() === 'register') {
-              <fieldset class="form-group">
-                <input
-                  formControlName="username"
-                  placeholder="Username"
-                  class="form-control form-control-lg"
-                  [class.is-invalid]="authForm.get('username')?.invalid && authForm.get('username')?.touched"
-                  type="text" />
-                @if (authForm.get('username')?.hasError('serverError')) {
-                  <div class="text-danger small mt-1">{{ authForm.get('username')?.errors?.['serverError'] }}</div>
-                } @else if (authForm.get('username')?.hasError('required') && authForm.get('username')?.touched) {
-                  <div class="text-danger small mt-1">El nombre de usuario es requerido</div>
-                }
-              </fieldset>
+            <fieldset class="form-group">
+              <input formControlName="username" placeholder="Username" class="form-control form-control-lg"
+                [class.is-invalid]="authForm.get('username')?.invalid && authForm.get('username')?.touched"
+                type="text" />
+              @if (authForm.get('username')?.hasError('serverError')) {
+              <div class="text-danger small mt-1">{{ authForm.get('username')?.errors?.['serverError'] }}</div>
+              } @else if (authForm.get('username')?.hasError('required') && authForm.get('username')?.touched) {
+              <div class="text-danger small mt-1">El nombre de usuario es requerido</div>
+              }
+            </fieldset>
             }
 
             <fieldset class="form-group">
-              <input
-                formControlName="email"
-                placeholder="Email"
-                class="form-control form-control-lg"
-                [class.is-invalid]="authForm.get('email')?.invalid && authForm.get('email')?.touched"
-                type="text" />
+              <input formControlName="email" placeholder="Email" class="form-control form-control-lg"
+                [class.is-invalid]="authForm.get('email')?.invalid && authForm.get('email')?.touched" type="text" />
               @if (authForm.get('email')?.hasError('serverError')) {
-                <div class="text-danger small mt-1">{{ authForm.get('email')?.errors?.['serverError'] }}</div>
+              <div class="text-danger small mt-1">{{ authForm.get('email')?.errors?.['serverError'] }}</div>
               } @else if (authForm.get('email')?.hasError('required') && authForm.get('email')?.touched) {
-                <div class="text-danger small mt-1">El email es requerido</div>
+              <div class="text-danger small mt-1">El email es requerido</div>
               } @else if (authForm.get('email')?.hasError('email') && authForm.get('email')?.touched) {
-                <div class="text-danger small mt-1">El formato del email es inválido</div>
+              <div class="text-danger small mt-1">El formato del email es inválido</div>
               }
             </fieldset>
 
             <fieldset class="form-group">
-              <input
-                formControlName="password"
-                placeholder="Password"
-                class="form-control form-control-lg"
+              <input formControlName="password" placeholder="Password" class="form-control form-control-lg"
                 [class.is-invalid]="authForm.get('password')?.invalid && authForm.get('password')?.touched"
                 type="password" />
               @if (authForm.get('password')?.hasError('serverError')) {
-                <div class="text-danger small mt-1">{{ authForm.get('password')?.errors?.['serverError'] }}</div>
+              <div class="text-danger small mt-1">{{ authForm.get('password')?.errors?.['serverError'] }}</div>
               } @else if (authForm.get('password')?.hasError('required') && authForm.get('password')?.touched) {
-                <div class="text-danger small mt-1">La contraseña es requerida</div>
+              <div class="text-danger small mt-1">La contraseña es requerida</div>
               }
             </fieldset>
 
-            <button class="btn btn-lg btn-primary pull-xs-right"
-                    [disabled]="!authForm.valid"
-                    type="submit">
+            <button class="btn btn-lg btn-primary pull-xs-right" [disabled]="!authForm.valid" type="submit">
               {{ title() }}
             </button>
           </fieldset>
         </form>
 
         @if (errors().errors['general']) {
-          <div class="alert alert-danger mt-3">
-            {{ errors().errors['general'] }}
-          </div>
+        <div class="alert alert-danger mt-3">
+          {{ errors().errors['general'] }}
+        </div>
         }
+        <div class="login-enterprise">
+          <p [routerLink]="['/enterprise/']">Login with Enterprise</p>
+        </div>
       </div>
 
     </div>
