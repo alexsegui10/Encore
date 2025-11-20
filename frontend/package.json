@@ -30,6 +30,7 @@
     "@angular/material": "^20.2.5",
     "@angular/platform-browser": "^20.3.2",
     "@angular/router": "^20.3.2",
+    "@omnedia/ngx-dark-veil": "^3.0.0",
     "@omnedia/ngx-faulty-terminal": "^3.0.0",
     "@omnedia/ngx-galaxy": "^3.0.0",
     "@omnedia/ngx-halo": "^3.0.1",
