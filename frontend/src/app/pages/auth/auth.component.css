@@ -1,5 +1,5 @@
 /* ===== Auth Page Styles (scoped) ===== */
-::ng-deep om-dark-veil {
+::ng-deep om-background-beams {
   display: block;
   width: 100%;
   min-height: 100vh;
