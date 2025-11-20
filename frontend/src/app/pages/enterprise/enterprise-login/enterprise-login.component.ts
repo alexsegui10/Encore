@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { EnterpriseAuthService } from '../../../core/services/enterprise-auth.service';
 import { UserTypeService } from '../../../core/services/user-type.service';
+import { NgxGalaxyComponent } from '@omnedia/ngx-galaxy';
 
 @Component({
   selector: 'app-enterprise-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxGalaxyComponent],
   templateUrl: './enterprise-login.component.html',
   styleUrls: ['./enterprise-login.component.css']
 })
@@ -24,7 +25,8 @@ export class EnterpriseLoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      uid: ['', [Validators.required]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -36,9 +38,12 @@ export class EnterpriseLoginComponent {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const { uid } = this.loginForm.value;
+    const credentials = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    };
 
-    this.enterpriseAuthService.login(uid).subscribe({
+    this.enterpriseAuthService.login(credentials).subscribe({
       next: () => {
         this.userTypeService.updateRole();
         this.router.navigate(['/enterprise/dashboard']);

@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } 
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { UserTypeService } from '../../core/services/user-type.service';
+import { NgxGalaxyComponent } from '@omnedia/ngx-galaxy';
 import Swal from 'sweetalert2';
 
 interface Errors { errors: { [k: string]: string } }
@@ -23,7 +24,7 @@ const ERROR_MESSAGES: { [key: string]: string } = {
   selector: 'app-auth-page',
   standalone: true,
   styleUrls: ['./auth.component.css'],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, NgxGalaxyComponent],
   templateUrl: './auth.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
