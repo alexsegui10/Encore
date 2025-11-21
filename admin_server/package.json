@@ -20,7 +20,8 @@
     "dotenv": "^17.2.3",
     "fastify": "^5.6.1",
     "fastify-plugin": "^5.1.0",
-    "fluent-json-schema": "^6.0.0"
+    "fluent-json-schema": "^6.0.0",
+    "stripe": "^20.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

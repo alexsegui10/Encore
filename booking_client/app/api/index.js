@@ -6,13 +6,14 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "../config/database.config.js";
-import eventosRoutes from "../routes/evento.routes.js"; 
+import eventosRoutes from "../routes/evento.routes.js";
 import categoryRoutes from "../routes/category.routes.js";
 import carouselRoutes from "../routes/carousel.routes.js";
 import authRoutes from "../routes/auth.routes.js";
 import CommentsRoutes from "../routes/comments.routes.js";
 import userRoutes from "../routes/user.routes.js";
 import profileRoutes from "../routes/profile.routes.js";
+import paymentRoutes from "../routes/payment.routes.js";
 import { startTokenCleanup } from "../jobs/tokenCleanup.js";
 
 const app = express();
@@ -27,7 +28,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser()); // Para leer cookies del request
 
-await connectDB(); 
+await connectDB();
 
 startTokenCleanup();
 
@@ -41,6 +42,7 @@ app.use("/api", CommentsRoutes);
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", profileRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
@@ -54,4 +56,3 @@ app.use((err, _req, res, _next) => {
 app.listen(PORT, "127.0.0.1", () => {
   console.log(`Servidor escuchando en http://127.0.0.1:${PORT}`);
 });
-//

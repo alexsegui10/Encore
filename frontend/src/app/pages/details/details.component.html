@@ -1,28 +1,23 @@
 @if (!isLoading()) {
-  <div class="details">
+<div class="details">
   <app-carousel></app-carousel>
 
-    @if (event()) {
-      <div class="details_content">
+  @if (event()) {
+  <div class="details_content">
     <h1>{{ event()!.title }}</h1>
     <p>{{ event()!.description }}</p>
     <p>Fecha: {{ event()!.date | date:'dd/MM/yyyy HH:mm' }}</p>
     <p>Precio: {{ event()!.price | currency:event()!.currency:'symbol':'1.2-2' }}</p>
-        @if (event()!.location) {
-          <p>Ubicación: {{ event()!.location }}</p>
-        }
+    @if (event()!.location) {
+    <p>Ubicación: {{ event()!.location }}</p>
+    }
 
     <!-- Event Meta Component -->
-    <app-event-meta 
-      [event]="event()!" 
-      [enableUserActions]="!isEventOwner" 
-      [enableAuthorActions]="isEventOwner"
-      [likesCount]="event()!.likesCount || 0" 
-      [isLiked]="event()!.isLiked || false" 
-      (liked)="toggleEventLiked($event)">
+    <app-event-meta [event]="event()!" [enableUserActions]="!isEventOwner" [enableAuthorActions]="isEventOwner"
+      [likesCount]="event()!.likesCount || 0" [isLiked]="event()!.isLiked || false" (liked)="toggleEventLiked($event)">
     </app-event-meta>
-      </div>
-    }
+  </div>
+  }
 
   <h2 class="map-title">Ubicación del evento</h2>
   <app-comments></app-comments>
@@ -31,7 +26,7 @@
 
 }
 @if (isLoading()) {
-  <div class="loading">
-    <p>Cargando evento...</p>
-  </div>
+<div class="loading">
+  <p>Cargando evento...</p>
+</div>
 }

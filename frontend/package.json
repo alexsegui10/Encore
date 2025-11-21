@@ -36,6 +36,7 @@
     "@omnedia/ngx-galaxy": "^3.0.0",
     "@omnedia/ngx-halo": "^3.0.1",
     "@omnedia/ngx-vortex": "^3.0.1",
+    "@stripe/stripe-js": "^8.5.2",
     "@sweetalert2/ngx-sweetalert2": "^14.0.0",
     "leaflet": "^1.9.4",
     "ngx-infinite-scroll": "^20.0.0",

@@ -8,15 +8,20 @@ import swaggerUI from '@fastify/swagger-ui'
 import prismaPlugin from './plugins/prisma.js'
 import argon2Plugin from './plugins/argon2.js'
 import jwtPlugin from './plugins/jwt.js'
+import stripePlugin from './plugins/stripe.js'
+import rawBodyPlugin from './plugins/rawBody.js'
 import authRoutes from './routes/auth/index.js'
 import usersRoutes from './routes/users/index.js'
 import categoriesRoutes from './routes/category/index.js'
 import eventsRoutes from './routes/events/index.js'
+import paymentRoutes from './routes/payments/index.js'
+import webhookRoute from './routes/payments/webhook.js'
+import orderRoutes from './routes/payments/orders.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const app = Fastify({ 
+const app = Fastify({
   logger: {
     level: process.env.LOG_LEVEL || 'info'
   }
@@ -35,9 +40,9 @@ await app.register(cors, {
 })
 
 await app.register(swagger, {
-  openapi: { 
-    info: { 
-      title: 'Encore Admin API', 
+  openapi: {
+    info: {
+      title: 'Encore Admin API',
       version: '1.0.0',
       description: 'Admin API for Encore platform'
     },
@@ -56,8 +61,8 @@ await app.register(swagger, {
   }
 })
 
-await app.register(swaggerUI, { 
-  routePrefix: '/docs', 
+await app.register(swaggerUI, {
+  routePrefix: '/docs',
   staticCSP: true,
   uiConfig: {
     docExpansion: 'list',
@@ -68,10 +73,15 @@ await app.register(swaggerUI, {
 await app.register(prismaPlugin)
 await app.register(argon2Plugin)
 await app.register(jwtPlugin)
+await app.register(stripePlugin)
+await app.register(rawBodyPlugin)
 await app.register(authRoutes, { prefix: '/api' })
 await app.register(usersRoutes, { prefix: '/api' })
 await app.register(categoriesRoutes, { prefix: '/api' })
 await app.register(eventsRoutes, { prefix: '/api' })
+await app.register(paymentRoutes)
+await app.register(webhookRoute)
+await app.register(orderRoutes)
 
 app.setErrorHandler((error, req, reply) => {
   req.log.error(error)
@@ -102,8 +112,8 @@ app.setNotFoundHandler((req, reply) => {
 })
 
 app.addHook('onRequest', async (req, reply) => {
-  if (req.headers['content-type'] === 'application/json' && 
-      req.headers['content-length'] === '0') {
+  if (req.headers['content-type'] === 'application/json' &&
+    req.headers['content-length'] === '0') {
     req.headers['content-type'] = 'empty'
   }
 })
