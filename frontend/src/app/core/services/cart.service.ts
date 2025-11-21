@@ -1,27 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
-
-export interface CartItem {
-  event: any;
-  quantity: number;
-  price: number;
-  subtotal: number;
-}
-
-export interface Cart {
-  _id: string;
-  userId: string;
-  items: CartItem[];
-  total: number;
-  itemCount: number;
-  updatedAt: string;
-}
-
-export interface CartResponse {
-  cart: Cart;
-}
+import { Cart, CartResponse } from '../models/cart.model';
 
 @Injectable({
   providedIn: 'root'
