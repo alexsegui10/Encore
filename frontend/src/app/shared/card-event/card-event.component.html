@@ -28,7 +28,7 @@
     <p class="desc" *ngIf="event.description">{{ event.description }}</p>
 
     <div class="cta-row">
-      <a class="cta" href="#" (click)="$event.preventDefault(); $event.stopPropagation()" tabindex="0">Comprar entradas</a>
+      <button class="cta" (click)="addToCart($event)" type="button">Añadir al carrito</button>
       
       <!-- Botón de Like -->
       <button 

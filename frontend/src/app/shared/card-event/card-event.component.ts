@@ -4,6 +4,7 @@ import { Event } from '../../core/models/event.model';
 import { Router, RouterLink } from '@angular/router';
 import { EventMetaComponent } from '../event-meta/event-meta.component';
 import { EventService } from '../../core/services/event.service';
+import { CartService } from '../../core/services/cart.service';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -20,6 +21,7 @@ export class CardEventComponent {
 
   constructor(
     private eventService: EventService,
+    private cartService: CartService,
     private router: Router
   ) { }
 
@@ -78,6 +80,48 @@ export class CardEventComponent {
       return this.eventService.likeEvent(this.event.slug!);
     }
     return this.eventService.unlikeEvent(this.event.slug!);
+  }
+
+  public addToCart(event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!this.event._id) return;
+
+    this.cartService.addToCart(this.event._id).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Añadido al carrito',
+          text: `${this.event.title} se añadió correctamente`,
+          timer: 2000,
+          showConfirmButton: false
+        });
+      },
+      error: (err) => {
+        if (err.status === 401 || err.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Inicia sesión',
+            text: 'Debes iniciar sesión para añadir al carrito',
+            confirmButtonText: 'Ir al login',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigateByUrl('/auth/login');
+            }
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo añadir al carrito',
+            confirmButtonText: 'OK'
+          });
+        }
+      }
+    });
   }
 
   public navigateToDetail(event: MouseEvent): void {

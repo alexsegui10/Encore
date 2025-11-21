@@ -14,6 +14,7 @@ import CommentsRoutes from "../routes/comments.routes.js";
 import userRoutes from "../routes/user.routes.js";
 import profileRoutes from "../routes/profile.routes.js";
 import paymentRoutes from "../routes/payment.routes.js";
+import cartRoutes from "../routes/cart.routes.js";
 import { startTokenCleanup } from "../jobs/tokenCleanup.js";
 
 const app = express();
@@ -43,6 +44,7 @@ app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", profileRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/cart", cartRoutes);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ error: "Not found" }));

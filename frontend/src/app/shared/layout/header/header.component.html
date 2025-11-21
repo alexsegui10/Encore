@@ -22,6 +22,10 @@
       </ul>
 
       <div class="actions">
+        <a *ngIf="!isAdmin && isAuthenticated" routerLink="/cart" class="cart-btn" title="Ver carrito">
+
+          <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+        </a>
         <ng-container *ngIf="!isAuthenticated; else loggedIn">
           <a routerLink="/auth/login" class="btn login">Ingresar</a>
           <a routerLink="/auth/register" class="btn primary">Registrarse</a>

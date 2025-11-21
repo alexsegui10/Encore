@@ -33,6 +33,16 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'cart',
+        loadComponent: () => import('./pages/cart/cart.component').then(m => m.CartComponent),
+        canActivate: [AuthGuard, NonAdminGuard]
+    },
+    {
+        path: 'checkout',
+        loadComponent: () => import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent),
+        canActivate: [AuthGuard, NonAdminGuard]
+    },
+    {
         path: 'admin',
         children: [
             {
