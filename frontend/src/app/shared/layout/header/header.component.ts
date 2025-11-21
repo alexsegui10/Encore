@@ -2,6 +2,7 @@ import { Component, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserTypeService } from '../../../core/services/user-type.service';
+import { CartService } from '../../../core/services/cart.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,8 +25,13 @@ export class HeaderComponent implements OnInit {
     return this.userTypeService.isAuthenticated();
   }
 
+  get cartCount() {
+    return this.cartService.cartCount();
+  }
+
   constructor(
-    private userTypeService: UserTypeService
+    private userTypeService: UserTypeService,
+    public cartService: CartService
   ) {
     // Effect para actualizar datos del usuario cuando cambie el role
     effect(() => {

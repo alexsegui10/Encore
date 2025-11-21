@@ -1,0 +1,146 @@
+import Cart from '../models/cart.model.js';
+import Event from '../models/evento.model.js';
+
+export const getCart = async (req, res) => {
+  try {
+    const userId = req.userId;
+    let cart = await Cart.findOne({ userId }).populate('items.event');
+    
+    if (!cart) {
+      cart = await Cart.create({ userId, items: [], total: 0 });
+    }
+    
+    return res.status(200).json({ cart: cart.toCartResponse() });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const addToCart = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { eventId, quantity = 1 } = req.body;
+    
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: 'Evento no encontrado' });
+    }
+    
+    let cart = await Cart.findOne({ userId });
+    
+    if (!cart) {
+      cart = await Cart.create({ userId, items: [], total: 0 });
+    }
+    
+    const existingItemIndex = cart.items.findIndex(
+      item => item.event.toString() === eventId
+    );
+    
+    if (existingItemIndex > -1) {
+      cart.items[existingItemIndex].quantity += quantity;
+    } else {
+      cart.items.push({
+        event: eventId,
+        quantity,
+        price: event.price
+      });
+    }
+    
+    cart.calculateTotal();
+    await cart.save();
+    await cart.populate('items.event');
+    
+    return res.status(200).json({ cart: cart.toCartResponse() });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateCartItem = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { eventId } = req.params;
+    const { quantity } = req.body;
+    
+    if (quantity < 1) {
+      return res.status(400).json({ message: 'La cantidad debe ser al menos 1' });
+    }
+    
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ message: 'Carrito no encontrado' });
+    }
+    
+    const item = cart.items.find(item => item.event.toString() === eventId);
+    if (!item) {
+      return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
+    }
+    
+    item.quantity = quantity;
+    cart.calculateTotal();
+    await cart.save();
+    await cart.populate('items.event');
+    
+    return res.status(200).json({ cart: cart.toCartResponse() });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const removeFromCart = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { eventId } = req.params;
+    
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ message: 'Carrito no encontrado' });
+    }
+    
+    cart.items = cart.items.filter(item => item.event.toString() !== eventId);
+    cart.calculateTotal();
+    await cart.save();
+    await cart.populate('items.event');
+    
+    return res.status(200).json({ cart: cart.toCartResponse() });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const clearCart = async (req, res) => {
+  try {
+    const userId = req.userId;
+    
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ message: 'Carrito no encontrado' });
+    }
+    
+    cart.items = [];
+    cart.total = 0;
+    await cart.save();
+    
+    return res.status(200).json({ cart: cart.toCartResponse() });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getCartForCheckout = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const cart = await Cart.findOne({ userId }).populate('items.event');
+    
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ message: 'El carrito está vacío' });
+    }
+    
+    return res.status(200).json({
+      cart: cart.toCartResponse(),
+      stripeLineItems: cart.toStripeLineItems()
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};

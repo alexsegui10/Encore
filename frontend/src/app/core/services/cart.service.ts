@@ -1,0 +1,97 @@
+import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+export interface CartItem {
+  event: any;
+  quantity: number;
+  price: number;
+  subtotal: number;
+}
+
+export interface Cart {
+  _id: string;
+  userId: string;
+  items: CartItem[];
+  total: number;
+  itemCount: number;
+  updatedAt: string;
+}
+
+export interface CartResponse {
+  cart: Cart;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CartService {
+  private apiUrl = `http://localhost:4000/api/cart`;
+  
+  public cartCount = signal<number>(0);
+  public cartTotal = signal<number>(0);
+
+  constructor(private http: HttpClient) {
+    this.loadCart();
+  }
+
+  private loadCart(): void {
+    this.getCart().subscribe({
+      next: (response) => {
+        this.cartCount.set(response.cart.itemCount);
+        this.cartTotal.set(response.cart.total);
+      },
+      error: () => {}
+    });
+  }
+
+  getCart(): Observable<CartResponse> {
+    return this.http.get<CartResponse>(this.apiUrl).pipe(
+      tap(response => {
+        this.cartCount.set(response.cart.itemCount);
+        this.cartTotal.set(response.cart.total);
+      })
+    );
+  }
+
+  addToCart(eventId: string, quantity: number = 1): Observable<CartResponse> {
+    return this.http.post<CartResponse>(`${this.apiUrl}/add`, { eventId, quantity }).pipe(
+      tap(response => {
+        this.cartCount.set(response.cart.itemCount);
+        this.cartTotal.set(response.cart.total);
+      })
+    );
+  }
+
+  updateQuantity(eventId: string, quantity: number): Observable<CartResponse> {
+    return this.http.put<CartResponse>(`${this.apiUrl}/item/${eventId}`, { quantity }).pipe(
+      tap(response => {
+        this.cartCount.set(response.cart.itemCount);
+        this.cartTotal.set(response.cart.total);
+      })
+    );
+  }
+
+  removeItem(eventId: string): Observable<CartResponse> {
+    return this.http.delete<CartResponse>(`${this.apiUrl}/item/${eventId}`).pipe(
+      tap(response => {
+        this.cartCount.set(response.cart.itemCount);
+        this.cartTotal.set(response.cart.total);
+      })
+    );
+  }
+
+  clearCart(): Observable<CartResponse> {
+    return this.http.delete<CartResponse>(`${this.apiUrl}/clear`).pipe(
+      tap(response => {
+        this.cartCount.set(0);
+        this.cartTotal.set(0);
+      })
+    );
+  }
+
+  getCheckout(): Observable<CartResponse & { stripeLineItems: any[] }> {
+    return this.http.get<CartResponse & { stripeLineItems: any[] }>(`${this.apiUrl}/checkout`);
+  }
+}
