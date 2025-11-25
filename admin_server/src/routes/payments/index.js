@@ -4,6 +4,9 @@ import { createPaymentIntentSchema } from './schema.js';
 export default async function paymentRoutes(fastify, opts) {
     const { prisma, stripe } = fastify;
 
+    fastify.log.info(`Prisma available: ${Boolean(prisma)}`);
+    fastify.log.info(`Stripe available: ${Boolean(stripe)}`);
+
     fastify.post('/api/create-payment-intent', {
         schema: createPaymentIntentSchema,
     }, async (request, reply) => {
