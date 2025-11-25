@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { createPaymentIntentSchema } from './schema.js';
 
 /**
- * Payment routes for handling Stripe payment intents
+ * Payment routes for handling Stripe payment intents with SAGA pattern
  * @param {import('fastify').FastifyInstance} fastify 
  * @param {Object} opts 
  */
@@ -12,127 +12,174 @@ export default async function paymentRoutes(fastify, opts) {
     /**
      * POST /api/create-payment-intent
      * Creates a new order and Stripe PaymentIntent
+     * Implements SAGA pattern: reserve stock -> create order -> create payment -> rollback on failure
      */
     fastify.post('/api/create-payment-intent', {
         schema: createPaymentIntentSchema,
     }, async (request, reply) => {
-        const { userId, currency = 'eur', items = [], products = [] } = request.body;
+        const { userUid, events = [], billingDetails } = request.body;
+
+        // SAGA compensation tracking
+        const compensationLog = {
+            stockReserved: [],
+            orderId: null,
+            paymentId: null,
+        };
 
         try {
-            // Validate that we have items to purchase
-            if (items.length === 0 && products.length === 0) {
-                return reply.code(400).send({ error: 'No items or products to purchase' });
+            // Validate that we have events to purchase
+            if (events.length === 0) {
+                return reply.code(400).send({ error: 'No events to purchase' });
             }
 
-            // Verify user exists
+            // Verify user exists by UID
             const user = await prisma.users.findUnique({
-                where: { id: userId }
+                where: { uid: userUid }
             });
 
             if (!user) {
                 return reply.code(400).send({ error: 'User not found' });
             }
 
-            // Validate events and check stock
-            const eventIds = items.map(item => item.eventId);
-            const events = await prisma.events.findMany({
-                where: { id: { in: eventIds } }
+            // Validate events by slug
+            const eventSlugs = events.map(item => item.eventSlug);
+            const eventRecords = await prisma.events.findMany({
+                where: { slug: { in: eventSlugs } }
             });
 
-            if (events.length !== eventIds.length) {
+            if (eventRecords.length !== eventSlugs.length) {
                 return reply.code(400).send({ error: 'One or more events not found' });
             }
 
-            // Validate products and check stock
-            const productIds = products.map(p => p.productId);
-            let productRecords = [];
-            if (productIds.length > 0) {
-                productRecords = await prisma.product.findMany({
-                    where: { id: { in: productIds } }
+            // Build event map for price lookup (by slug)
+            const eventMap = {};
+            eventRecords.forEach(event => {
+                eventMap[event.slug] = event;
+            });
+
+            // IDEMPOTENCY: Generate deterministic order UID
+            // Same user + same items = same UUID (prevents duplicate orders)
+            const sortedItems = events
+                .map(e => ({ eventSlug: e.eventSlug, quantity: e.quantity }))
+                .sort((a, b) => a.eventSlug.localeCompare(b.eventSlug));
+            const idempotencyKey = crypto
+                .createHash('sha256')
+                .update(`${userUid}-${JSON.stringify(sortedItems)}-${Date.now().toString().slice(0, -7)}`)
+                .digest('hex')
+                .substring(0, 32);
+            const orderUid = `order-${idempotencyKey}`;
+
+            // Check if order with this UID already exists (idempotency)
+            const existingOrder = await prisma.order.findFirst({
+                where: { uid: orderUid }
+            });
+
+            if (existingOrder) {
+                fastify.log.info(`Order ${orderUid} already exists, returning existing payment intent`);
+                const existingPayment = await prisma.payment.findFirst({
+                    where: { orderId: existingOrder.id }
                 });
 
-                if (productRecords.length !== productIds.length) {
-                    return reply.code(400).send({ error: 'One or more products not found' });
-                }
+                if (existingPayment && existingPayment.transactionRef) {
+                    // Return existing PaymentIntent
+                    const existingPaymentIntent = await stripe.paymentIntents.retrieve(
+                        existingPayment.transactionRef
+                    );
 
-                // Check product stock
-                for (const productItem of products) {
-                    const product = productRecords.find(p => p.id === productItem.productId);
-                    if (product.stockAvailable < productItem.quantity) {
-                        return reply.code(400).send({
-                            error: `Insufficient stock for product ${product.name}. Available: ${product.stockAvailable}, Requested: ${productItem.quantity}`
-                        });
-                    }
+                    return reply.send({
+                        clientSecret: existingPaymentIntent.client_secret,
+                        orderId: existingOrder.id,
+                        amount: existingPaymentIntent.amount,
+                    });
                 }
             }
 
-            // Calculate total amount
+            // SAGA STEP 1: Reserve stock and calculate total
             let totalAmount = 0;
-            items.forEach(item => {
-                totalAmount += item.unitPrice * item.quantity;
-            });
-            products.forEach(product => {
-                totalAmount += product.unitPrice * product.quantity;
-            });
+            const items = [];
 
-            // Create unique order UID
-            const orderUid = `order-${crypto.randomUUID()}`;
+            for (const eventItem of events) {
+                const event = eventMap[eventItem.eventSlug];
 
-            // Create order with PENDING status
+                // Check stock availability
+                if (event.stock !== null && event.stock < eventItem.quantity) {
+                    // Rollback any reserved stock
+                    await rollbackStockReservation(prisma, compensationLog.stockReserved, fastify);
+                    return reply.code(400).send({
+                        error: `Insufficient stock for event "${event.title}". Available: ${event.stock}, Requested: ${eventItem.quantity}`
+                    });
+                }
+
+                // Reserve stock (decrement)
+                if (event.stock !== null) {
+                    await prisma.events.update({
+                        where: { id: event.id },
+                        data: { stock: { decrement: eventItem.quantity } }
+                    });
+                    compensationLog.stockReserved.push({
+                        eventId: event.id,
+                        quantity: eventItem.quantity
+                    });
+                    fastify.log.info(`Reserved ${eventItem.quantity} tickets for event ${event.title}`);
+                }
+
+                const unitPrice = event.price || 0;
+                totalAmount += unitPrice * eventItem.quantity;
+
+                items.push({
+                    eventId: event.id,
+                    quantity: eventItem.quantity,
+                    unitPrice
+                });
+            }
+
+            // SAGA STEP 2: Create order with PENDING status
             const order = await prisma.order.create({
                 data: {
                     uid: orderUid,
                     totalAmount,
-                    currency: currency.toUpperCase(),
+                    currency: 'EUR',
                     status: 'pending',
-                    userId,
+                    userId: user.id, // Use the user.id from the query above
                     items: {
-                        create: [
-                            ...items.map(item => ({
-                                quantity: item.quantity,
-                                unitPrice: item.unitPrice,
-                                itemType: 'event',
-                                eventId: item.eventId,
-                            })),
-                            ...products.map(product => ({
-                                quantity: product.quantity,
-                                unitPrice: product.unitPrice,
-                                itemType: 'product',
-                                productId: product.productId,
-                            }))
-                        ]
+                        create: items.map(item => ({
+                            quantity: item.quantity,
+                            unitPrice: item.unitPrice,
+                            itemType: 'event',
+                            eventId: item.eventId,
+                        }))
                     }
                 },
-                include: {
-                    items: true
-                }
+                include: { items: true }
             });
+            compensationLog.orderId = order.id;
+            fastify.log.info(`Order created: ${order.uid}`);
 
-            // Create Payment record with PENDING status
-            // We'll update transactionRef after creating PaymentIntent
+            // SAGA STEP 3: Create Payment record
             const payment = await prisma.payment.create({
                 data: {
                     amount: totalAmount,
                     method: 'stripe',
-                    currency: currency.toUpperCase(),
+                    currency: 'EUR',
                     status: 'pending',
                     orderId: order.id,
                 }
             });
+            compensationLog.paymentId = payment.id;
 
-            // Create Stripe PaymentIntent
-            // Use order UID as idempotency key to prevent duplicate charges
+            // SAGA STEP 4: Create Stripe PaymentIntent with idempotency
             const paymentIntent = await stripe.paymentIntents.create({
-                amount: Math.round(totalAmount * 100), // Stripe expects amount in cents
-                currency: currency.toLowerCase(),
+                amount: Math.round(totalAmount * 100), // Stripe expects cents
+                currency: 'eur',
                 metadata: {
                     orderId: order.id,
                     orderUid: order.uid,
-                    userId,
+                    userUid: user.uid,
                 },
-                description: `Order ${order.uid}`,
+                description: `Order ${order.uid} - ${billingDetails?.name || user.username}`,
+                receipt_email: billingDetails?.email || user.email,
             }, {
-                idempotencyKey: orderUid, // Ensures idempotency
+                idempotencyKey: orderUid, // Ensures idempotency in Stripe
             });
 
             // Update payment with Stripe PaymentIntent ID
@@ -141,18 +188,70 @@ export default async function paymentRoutes(fastify, opts) {
                 data: { transactionRef: paymentIntent.id }
             });
 
-            fastify.log.info(`PaymentIntent created for order ${order.uid}: ${paymentIntent.id}`);
+            fastify.log.info(`✅ SAGA completed: PaymentIntent ${paymentIntent.id} for order ${order.uid}`);
 
             return reply.send({
                 clientSecret: paymentIntent.client_secret,
                 orderId: order.id,
-                orderUid: order.uid,
-                amount: totalAmount,
+                amount: paymentIntent.amount,
             });
 
         } catch (error) {
-            fastify.log.error('Error creating payment intent:', error);
+            // SAGA COMPENSATION: Rollback all operations
+            fastify.log.error('❌ SAGA failed, rolling back:', error);
+            await rollbackTransaction(prisma, compensationLog, fastify);
             return reply.code(500).send({ error: error.message || 'Failed to create payment intent' });
         }
     });
+}
+
+/**
+ * Rollback stock reservations (SAGA compensation)
+ */
+async function rollbackStockReservation(prisma, stockReserved, fastify) {
+    for (const reservation of stockReserved) {
+        try {
+            await prisma.events.update({
+                where: { id: reservation.eventId },
+                data: { stock: { increment: reservation.quantity } }
+            });
+            fastify.log.info(`Rolled back ${reservation.quantity} tickets for event ${reservation.eventId}`);
+        } catch (err) {
+            fastify.log.error(`Failed to rollback stock for event ${reservation.eventId}:`, err);
+        }
+    }
+}
+
+/**
+ * Complete SAGA rollback (compensation)
+ */
+async function rollbackTransaction(prisma, compensationLog, fastify) {
+    // Rollback stock
+    await rollbackStockReservation(prisma, compensationLog.stockReserved, fastify);
+
+    // Cancel payment
+    if (compensationLog.paymentId) {
+        try {
+            await prisma.payment.update({
+                where: { id: compensationLog.paymentId },
+                data: { status: 'cancelled' }
+            });
+            fastify.log.info(`Cancelled payment ${compensationLog.paymentId}`);
+        } catch (err) {
+            fastify.log.error('Failed to cancel payment:', err);
+        }
+    }
+
+    // Cancel order
+    if (compensationLog.orderId) {
+        try {
+            await prisma.order.update({
+                where: { id: compensationLog.orderId },
+                data: { status: 'cancelled' }
+            });
+            fastify.log.info(`Cancelled order ${compensationLog.orderId}`);
+        } catch (err) {
+            fastify.log.error('Failed to cancel order:', err);
+        }
+    }
 }

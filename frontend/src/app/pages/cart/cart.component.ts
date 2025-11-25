@@ -1,7 +1,8 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { CartService, Cart } from '../../core/services/cart.service';
+import { CartService } from '../../core/services/cart.service';
+import { Cart } from '../../core/models/cart.model';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,7 +19,7 @@ export class CartComponent implements OnInit {
   constructor(
     public cartService: CartService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCart();

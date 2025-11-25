@@ -63,6 +63,7 @@ function formatEventResponse(event) {
         isActive: event.isActive,
         mainImage: event.mainImage,
         images: event.images,
+        stock: event.stock,
         merchandising: event.merchandising || [],
         favouritesCount: event.favouritesCount,
         comments: event.comments,
@@ -118,7 +119,8 @@ export default async function eventsRoutes(server) {
                         status: eventData.status || 'draft',
                         isActive: eventData.isActive !== undefined ? eventData.isActive : true,
                         mainImage: eventData.mainImage || null,
-                        images: eventData.images || []
+                        images: eventData.images || [],
+                        stock: eventData.stock !== undefined ? eventData.stock : null
                     }
                 })
 
@@ -189,6 +191,7 @@ export default async function eventsRoutes(server) {
                 if (eventData.isActive !== undefined) updateData.isActive = eventData.isActive
                 if (eventData.mainImage !== undefined) updateData.mainImage = eventData.mainImage
                 if (eventData.images !== undefined) updateData.images = eventData.images
+                if (eventData.stock !== undefined) updateData.stock = eventData.stock
 
                 // Regenerate slug if title or date changed
                 if (eventData.title || eventData.date) {

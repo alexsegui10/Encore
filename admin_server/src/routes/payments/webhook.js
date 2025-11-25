@@ -119,7 +119,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
 
         // Process each order item
         for (const item of order.items) {
-            // Deduct stock
+            // Deduct stock for products
             if (item.itemType === 'product' && item.productId) {
                 const product = await prisma.product.findUnique({
                     where: { id: item.productId }
@@ -158,6 +158,12 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
                 });
 
                 fastify.log.info(`Deducted ${item.quantity} stock from product ${product.name}`);
+            }
+
+            // Stock for events was already reserved during order creation (SAGA pattern)
+            // No need to deduct here, but we log it for tracking
+            if (item.itemType === 'event' && item.eventId) {
+                fastify.log.info(`Event ${item.eventId} stock was reserved during order creation`);
             }
 
             // Generate tickets for this order item
@@ -205,7 +211,14 @@ async function handlePaymentIntentFailed(fastify, paymentIntent) {
 
     try {
         const payment = await prisma.payment.findUnique({
-            where: { transactionRef }
+            where: { transactionRef },
+            include: {
+                order: {
+                    include: {
+                        items: true
+                    }
+                }
+            }
         });
 
         if (!payment) {
@@ -225,7 +238,29 @@ async function handlePaymentIntentFailed(fastify, paymentIntent) {
             data: { status: 'failed' }
         });
 
-        fastify.log.info(`Order marked as failed for payment ${transactionRef}`);
+        // SAGA COMPENSATION: Return reserved stock to inventory
+        for (const item of payment.order.items) {
+            if (item.itemType === 'event' && item.eventId) {
+                const event = await prisma.events.findUnique({
+                    where: { id: item.eventId }
+                });
+
+                // Return stock only if event has stock tracking
+                if (event && event.stock !== null) {
+                    await prisma.events.update({
+                        where: { id: item.eventId },
+                        data: {
+                            stock: {
+                                increment: item.quantity
+                            }
+                        }
+                    });
+                    fastify.log.info(`Returned ${item.quantity} tickets to event ${event.title} due to payment failure`);
+                }
+            }
+        }
+
+        fastify.log.info(`✅ Order marked as failed and stock returned for payment ${transactionRef}`);
 
     } catch (error) {
         fastify.log.error(`Error processing payment_intent.payment_failed: ${error.message}`);

@@ -10,7 +10,7 @@ export class EnterpriseAuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async login(data: LoginEnterpriseDto) {
     if (!data.email || !data.password) {

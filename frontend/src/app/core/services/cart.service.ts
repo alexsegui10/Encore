@@ -1,19 +1,26 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { Cart, CartResponse } from '../models/cart.model';
+import { CartResponse } from '../models/cart.model';
+import { JwtService } from './jwt.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = `http://localhost:4000/api/cart`;
-  
+  private apiUrl = 'http://localhost:4000/api/cart';
+  private http = inject(HttpClient);
+  private jwtService = inject(JwtService);
+
   public cartCount = signal<number>(0);
   public cartTotal = signal<number>(0);
 
-  constructor(private http: HttpClient) {
-    this.loadCart();
+  constructor() {
+    // Solo cargar el carrito si el usuario es cliente (NO admin ni enterprise)
+    const role = this.jwtService.getUserRole();
+    if (role === 'cliente' || role === null) {
+      this.loadCart();
+    }
   }
 
   private loadCart(): void {
@@ -22,7 +29,7 @@ export class CartService {
         this.cartCount.set(response.cart.itemCount);
         this.cartTotal.set(response.cart.total);
       },
-      error: () => {}
+      error: () => { }
     });
   }
 

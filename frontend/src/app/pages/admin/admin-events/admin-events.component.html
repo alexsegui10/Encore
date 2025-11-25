@@ -217,6 +217,21 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="stock">Stock disponible</label>
+                        <input type="number" id="stock" formControlName="stock" class="form-control" min="0" step="1"
+                            placeholder="Dejar vacío para stock ilimitado"
+                            [class.is-invalid]="eventForm.get('stock')?.invalid && eventForm.get('stock')?.touched" />
+                        @if (eventForm.get('stock')?.invalid && eventForm.get('stock')?.touched) {
+                        <div class="invalid-feedback">
+                            <span>El stock debe ser mayor o igual a 0</span>
+                        </div>
+                        }
+                        <small class="form-text">Dejar vacío o en 0 para stock ilimitado</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="status">Estado *</label>
                         <select id="status" formControlName="status" class="form-control">
                             <option value="draft">Borrador</option>

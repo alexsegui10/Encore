@@ -16,6 +16,7 @@ const eventResponse = {
         isActive: { type: 'boolean' },
         mainImage: { type: ['string', 'null'] },
         images: { type: 'array', items: { type: 'string' } },
+        stock: { type: ['number', 'null'] },
         merchandising: {
             type: 'array',
             items: {
@@ -69,7 +70,8 @@ export const createEvent = {
                         type: 'array',
                         items: { type: 'string', maxLength: 500 },
                         default: []
-                    }
+                    },
+                    stock: { type: ['number', 'null'], minimum: 0 }
                 }
             }
         }
@@ -130,7 +132,8 @@ export const updateEvent = {
                     images: {
                         type: 'array',
                         items: { type: 'string', maxLength: 500 }
-                    }
+                    },
+                    stock: { type: ['number', 'null'], minimum: 0 }
                 }
             }
         }

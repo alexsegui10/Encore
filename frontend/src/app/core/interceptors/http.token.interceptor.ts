@@ -43,10 +43,19 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
+        // Solo intentar refresh token si:
+        // 1. Hay token
+        // 2. Error es 401 o 403
+        // 3. NO es una petición de refresh-token o logout
+        // 4. NO es una petición al admin server (puerto 3000 o /api/auth/*)
+        // 5. Es una petición específica de cliente (puerto 4000 explícito)
         if (token &&
           (error.status === 401 || error.status === 403) &&
           !req.url.includes('/refresh-token') &&
-          !req.url.includes('/logout')) {
+          !req.url.includes('/logout') &&
+          !req.url.includes(':3000') &&
+          !req.url.includes('/api/auth/') &&
+          req.url.includes(':4000')) {
           return this.handle401Error(req, next);
         }
 

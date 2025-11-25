@@ -3,27 +3,21 @@ import S from 'fluent-json-schema';
 // Schema for creating a payment intent
 export const createPaymentIntentSchema = {
     body: S.object()
-        .prop('userId', S.string().required().description('User ID making the purchase'))
+        .prop('userUid', S.string().required().description('User UID making the purchase'))
         .prop('currency', S.string().default('eur').description('Currency code (e.g., eur, usd)'))
-        .prop('items', S.array()
+        .prop('events', S.array()
             .items(
                 S.object()
-                    .prop('eventId', S.string().required().description('Event ID'))
+                    .prop('eventSlug', S.string().required().description('Event slug'))
                     .prop('quantity', S.integer().minimum(1).required().description('Quantity of tickets'))
-                    .prop('unitPrice', S.number().minimum(0).required().description('Price per ticket'))
             )
-            .default([])
+            .required()
             .description('Array of event items to purchase')
         )
-        .prop('products', S.array()
-            .items(
-                S.object()
-                    .prop('productId', S.string().required().description('Product ID'))
-                    .prop('quantity', S.integer().minimum(1).required().description('Quantity of products'))
-                    .prop('unitPrice', S.number().minimum(0).required().description('Price per product'))
-            )
-            .default([])
-            .description('Array of products to purchase')
+        .prop('billingDetails', S.object()
+            .prop('name', S.string())
+            .prop('email', S.string().format('email'))
+            .description('Optional billing details')
         ),
     response: {
         200: S.object()

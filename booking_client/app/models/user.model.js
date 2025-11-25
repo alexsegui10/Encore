@@ -49,12 +49,12 @@ userSchema.pre('save', function (next) {
 
 userSchema.methods.toUserResponse = function (jwt_access) {
   return {
+    uid: this.uid,
     username: this.username,
     email: this.email,
     bio: this.bio,
     image: this.image,
     role: this.role,
-    uid: this.uid,
     slug: this.slug,
     isActive: this.isActive,
     status: this.status,

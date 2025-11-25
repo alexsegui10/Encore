@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nodemon --watch src --ext js --exec \"node src/server.js\"",
     "start": "node src/server.js",
+    "seed": "node seed.js",
     "prisma:generate": "npx prisma generate --schema ./prisma/schema.prisma",
     "prisma:push": "npx prisma db push --schema ./prisma/schema.prisma"
   },

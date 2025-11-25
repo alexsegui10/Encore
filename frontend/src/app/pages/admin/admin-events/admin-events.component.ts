@@ -45,7 +45,8 @@ export class AdminEventsComponent implements OnInit {
       status: ['draft', Validators.required],
       isActive: [true],
       mainImage: ['', Validators.maxLength(500)],
-      images: [[]]
+      images: [[]],
+      stock: [null, Validators.min(0)]
     });
   }
 
@@ -142,7 +143,8 @@ export class AdminEventsComponent implements OnInit {
       isActive: true,
       currency: 'EUR',
       price: 0,
-      images: []
+      images: [],
+      stock: null
     });
     this.showForm.set(true);
     this.cd.markForCheck();
@@ -166,7 +168,8 @@ export class AdminEventsComponent implements OnInit {
       status: event.status,
       isActive: event.isActive,
       mainImage: event.mainImage || '',
-      images: event.images || []
+      images: event.images || [],
+      stock: event.stock
     });
     this.showForm.set(true);
     this.cd.markForCheck();

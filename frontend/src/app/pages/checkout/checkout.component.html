@@ -1,45 +1,47 @@
 <div class="checkout-container">
   @if (loading()) {
-    <div class="loading">
-      <p>Cargando resumen...</p>
-    </div>
+  <div class="loading">
+    <p>Cargando resumen...</p>
+  </div>
   } @else if (cart()) {
-    <div class="checkout-content">
-      <div class="checkout-header">
-        <h1>Confirmar pedido</h1>
-        <p class="subtitle">Revisa tu pedido antes de proceder al pago</p>
-      </div>
+  <div class="checkout-content">
+    <div class="checkout-header">
+      <h1>Finalizar compra</h1>
+      <p class="subtitle">Revisa tu pedido e ingresa los datos de pago</p>
+    </div>
 
+    <div class="checkout-grid">
+      <!-- Order Summary Section -->
       <div class="order-summary">
         <h2>Resumen del pedido</h2>
-        
+
         <div class="items-list">
           @for (item of cart()!.items; track item.event._id) {
-            <div class="summary-item">
-              <div class="item-image">
-                @if (item.event.mainImage) {
-                  <img [src]="item.event.mainImage" [alt]="item.event.title">
-                } @else {
-                  <div class="no-image">🎫</div>
-                }
-              </div>
-              
-              <div class="item-info">
-                <h3>{{ item.event.title }}</h3>
-                @if (item.event.date) {
-                  <p class="item-date">📅 {{ item.event.date | date: 'dd/MM/yyyy' }}</p>
-                }
-                @if (item.event.location) {
-                  <p class="item-location">📍 {{ item.event.location }}</p>
-                }
-                <p class="item-quantity">Cantidad: {{ item.quantity }}</p>
-              </div>
-              
-              <div class="item-price">
-                <p class="unit-price">{{ item.price | currency: 'EUR' }} c/u</p>
-                <p class="subtotal">{{ item.subtotal | currency: 'EUR' }}</p>
-              </div>
+          <div class="summary-item">
+            <div class="item-image">
+              @if (item.event.mainImage) {
+              <img [src]="item.event.mainImage" [alt]="item.event.title">
+              } @else {
+              <div class="no-image">🎫</div>
+              }
             </div>
+
+            <div class="item-info">
+              <h3>{{ item.event.title }}</h3>
+              @if (item.event.date) {
+              <p class="item-date">📅 {{ item.event.date | date: 'dd/MM/yyyy' }}</p>
+              }
+              @if (item.event.location) {
+              <p class="item-location">📍 {{ item.event.location }}</p>
+              }
+              <p class="item-quantity">Cantidad: {{ item.quantity }}</p>
+            </div>
+
+            <div class="item-price">
+              <p class="unit-price">{{ item.price | currency: 'EUR' }} c/u</p>
+              <p class="subtotal">{{ item.subtotal | currency: 'EUR' }}</p>
+            </div>
+          </div>
           }
         </div>
 
@@ -48,7 +50,7 @@
             <span>Total de eventos:</span>
             <span>{{ cart()!.itemCount }}</span>
           </div>
-          
+
           <div class="total-row total-final">
             <span>Total a pagar:</span>
             <span class="total-amount">{{ cart()!.total | currency: 'EUR' }}</span>
@@ -56,19 +58,64 @@
         </div>
       </div>
 
-      <div class="stripe-info">
-        <p>💳 El pago se procesará de forma segura con Stripe</p>
-        <small>Los datos del array están listos para la integración</small>
-      </div>
+      <!-- Payment Form Section -->
+      <div class="payment-section">
+        <h2>Datos de facturación</h2>
 
-      <div class="actions">
-        <button class="btn-back" (click)="goBack()">
-          Volver al carrito
-        </button>
-        <button class="btn-confirm" (click)="confirmOrder()">
-          Confirmar pedido
-        </button>
+        <form class="payment-form" (submit)="$event.preventDefault(); processPayment()">
+          <div class="form-group">
+            <label for="billing-name">Nombre completo</label>
+            <input type="text" id="billing-name" [(ngModel)]="billingName" name="billingName" placeholder="Juan Pérez"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="billing-email">Email</label>
+            <input type="email" id="billing-email" [(ngModel)]="billingEmail" name="billingEmail"
+              placeholder="juan@ejemplo.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="card-element">Datos de la tarjeta</label>
+            <div id="card-element" class="stripe-card-element">
+              <!-- Stripe card element will be mounted here -->
+            </div>
+            <div id="card-errors" class="card-errors" role="alert"></div>
+          </div>
+
+          <div class="stripe-info">
+            <p>🔒 Pago seguro procesado por Stripe</p>
+            <small>Tus datos de pago están protegidos y encriptados</small>
+          </div>
+
+          <div class="test-cards-info">
+            <details>
+              <summary>Tarjetas de prueba</summary>
+              <ul>
+                <li><strong>Éxito:</strong> 4242 4242 4242 4242</li>
+                <li><strong>Fallo:</strong> 4000 0000 0000 0002</li>
+                <li><strong>3D Secure:</strong> 4000 0025 0000 3155</li>
+                <li>Fecha: Cualquier fecha futura</li>
+                <li>CVC: Cualquier 3 dígitos</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn-back" (click)="goBack()" [disabled]="processing()">
+              Volver al carrito
+            </button>
+            <button type="submit" class="btn-confirm" [disabled]="processing()">
+              @if (processing()) {
+              <span>Procesando pago...</span>
+              } @else {
+              <span>Pagar {{ cart()!.total | currency: 'EUR' }}</span>
+              }
+            </button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
   }
 </div>

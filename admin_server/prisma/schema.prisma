@@ -89,6 +89,7 @@ model events {
   images          String[]
   merchandising   Json?       @default("[]")
   comments        String[]    @db.ObjectId
+  stock           Int?        // null = unlimited stock
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 

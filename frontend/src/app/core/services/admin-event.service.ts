@@ -17,6 +17,7 @@ export interface AdminEvent {
     isActive: boolean;
     mainImage: string | null;
     images: string[];
+    stock: number | null;
     favouritesCount: number;
     comments: string[];
     createdAt: string;
