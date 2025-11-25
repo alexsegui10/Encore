@@ -188,7 +188,7 @@ export class CheckoutComponent implements OnInit {
 
       // Determine error message
       let errorMessage = 'Hubo un problema al procesar tu pago. Por favor, intenta de nuevo.';
-      
+
       if (error.message) {
         errorMessage = error.message;
       }

@@ -9,6 +9,10 @@ import { createPaymentIntentSchema } from './schema.js';
 export default async function paymentRoutes(fastify, opts) {
     const { prisma, stripe } = fastify;
 
+    // Log to verify plugins are available
+    fastify.log.info(`Prisma available: ${Boolean(prisma)}`);
+    fastify.log.info(`Stripe available: ${Boolean(stripe)}`);
+
     /**
      * POST /api/create-payment-intent
      * Creates a new order and Stripe PaymentIntent
