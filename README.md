@@ -8,21 +8,3 @@ Descripción breve del proyecto.
 git clone https://github.com/usuario/repositorio.git
 cd repositorio
 npm install
-
-
-DATABASE_URL="mongodb://127.0.0.1:27017/encore"
-PORT=3000
-HOST=0.0.0.0
-NODE_ENV=development
-LOG_LEVEL=info
-CORS_ORIGIN=*
-
-JWT_SECRET="your-secret-key-must-be-at-least-32-characters-long"
-JWT_EXPIRES_IN="7d"
-JWT_ISSUER="encore-admin"
-STRIPE_SECRET_KEY=sk_test_51SVvwF4tOgB3mFkyz6v1wuxssgb0JBW3CHjkKY0bsy9NntWj7E754ebGGNn9dKXRLgbqC9Ic8fmFWFcNOf0eFB8700GoalZJif
-STRIPE_WEBHOOK_SECRET=whsec_2fea147a343191e29933d01c585e640ed224a1183b4e7cf17b5f641a538437c8
-STRIPE_PUBLISHABLE_KEY=pk_test_51SVvwF4tOgB3mFkyb8kEVsiVJ5dsQWbUmqZmnNxGKFPruKqWGncrvb3KgiBmNo2XpEfU4BE4USnkX0Or6RCWBG8n00E6X3Cmke
-
-CLIENT_URL=http://localhost:4200
-BOOKING_CLIENT_URL=http://localhost:4000

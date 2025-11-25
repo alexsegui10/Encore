@@ -1,0 +1,23 @@
+node_modules/
+
+# Angular cache
+.angular/
+frontend/.angular/
+*.tsbuildinfo
+
+# Vite cache and build
+.vite/
+vite.config.js.timestamp-*
+
+# Environment files with secrets
+*.env
+!*.env.example
+
+# Build outputs
+dist/
+build/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
