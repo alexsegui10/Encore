@@ -4,10 +4,10 @@ import Event from '../models/evento.model.js';
 export const getCart = async (req, res) => {
   try {
     const userId = req.userId;
-    let cart = await Cart.findOne({ userId }).populate('items.event');
+    let cart = await Cart.findOne({ userId, status: 'active' }).populate('items.event');
     
     if (!cart) {
-      cart = await Cart.create({ userId, items: [], total: 0 });
+      cart = await Cart.create({ userId, items: [], total: 0, status: 'active' });
     }
     
     return res.status(200).json({ cart: cart.toCartResponse() });
@@ -26,10 +26,10 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({ message: 'Evento no encontrado' });
     }
     
-    let cart = await Cart.findOne({ userId });
+    let cart = await Cart.findOne({ userId, status: 'active' });
     
     if (!cart) {
-      cart = await Cart.create({ userId, items: [], total: 0 });
+      cart = await Cart.create({ userId, items: [], total: 0, status: 'active' });
     }
     
     const existingItemIndex = cart.items.findIndex(
@@ -66,7 +66,7 @@ export const updateCartItem = async (req, res) => {
       return res.status(400).json({ message: 'La cantidad debe ser al menos 1' });
     }
     
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({ userId, status: 'active' });
     if (!cart) {
       return res.status(404).json({ message: 'Carrito no encontrado' });
     }
@@ -92,7 +92,7 @@ export const removeFromCart = async (req, res) => {
     const userId = req.userId;
     const { eventId } = req.params;
     
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({ userId, status: 'active' });
     if (!cart) {
       return res.status(404).json({ message: 'Carrito no encontrado' });
     }
@@ -112,16 +112,18 @@ export const clearCart = async (req, res) => {
   try {
     const userId = req.userId;
     
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({ userId, status: 'active' });
     if (!cart) {
       return res.status(404).json({ message: 'Carrito no encontrado' });
     }
     
-    cart.items = [];
-    cart.total = 0;
-    await cart.save();
+    // Borrar físicamente el carrito
+    await Cart.deleteOne({ _id: cart._id });
     
-    return res.status(200).json({ cart: cart.toCartResponse() });
+    // Crear un nuevo carrito vacío
+    const newCart = await Cart.create({ userId, items: [], total: 0, status: 'active' });
+    
+    return res.status(200).json({ cart: newCart.toCartResponse() });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -130,7 +132,7 @@ export const clearCart = async (req, res) => {
 export const getCartForCheckout = async (req, res) => {
   try {
     const userId = req.userId;
-    const cart = await Cart.findOne({ userId }).populate('items.event');
+    const cart = await Cart.findOne({ userId, status: 'active' }).populate('items.event');
     
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ message: 'El carrito está vacío' });
@@ -139,6 +141,28 @@ export const getCartForCheckout = async (req, res) => {
     return res.status(200).json({
       cart: cart.toCartResponse(),
       stripeLineItems: cart.toStripeLineItems()
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const completeCart = async (req, res) => {
+  try {
+    const userId = req.userId;
+    
+    const cart = await Cart.findOne({ userId, status: 'active' });
+    if (!cart) {
+      return res.status(404).json({ message: 'Carrito activo no encontrado' });
+    }
+    
+    // Marcar el carrito como completado
+    cart.status = 'completed';
+    await cart.save();
+    
+    return res.status(200).json({ 
+      message: 'Carrito marcado como completado',
+      cart: cart.toCartResponse() 
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });

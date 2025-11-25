@@ -6,7 +6,8 @@ import {
   updateCartItem,
   removeFromCart,
   clearCart,
-  getCartForCheckout
+  getCartForCheckout,
+  completeCart
 } from '../controllers/cart.controller.js';
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.post('/add', verifyJWT, addToCart);
 router.put('/item/:eventId', verifyJWT, updateCartItem);
 router.delete('/item/:eventId', verifyJWT, removeFromCart);
 router.delete('/clear', verifyJWT, clearCart);
+router.post('/complete', verifyJWT, completeCart);
 router.get('/checkout', verifyJWT, getCartForCheckout);
 
 export default router;
