@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
-
+import { EventService } from '../../core/services/event.service';
 import { CartService} from '../../core/services/cart.service';
 import { Cart, CartResponse } from '../../core/models/cart.model';
 import { StripePaymentService } from '../../core/services/stripe-payment.service';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
+import { DirectPurchaseService } from '../../core/services/direct-purchase.service';
 
 @Component({
   selector: 'app-checkout',
@@ -20,6 +21,7 @@ import { User } from '../../core/models/user.model';
 })
 export class CheckoutComponent implements OnInit {
   cart = signal<Cart | null>(null);
+  comprando = signal(false);
   loading = signal(true);
   processing = signal(false);
   currentUser = signal<User | null>(null);
@@ -28,11 +30,13 @@ export class CheckoutComponent implements OnInit {
   billingEmail = '';
 
   constructor(
+    private eventService: EventService,
     private cartService: CartService,
     private stripePaymentService: StripePaymentService,
     private userService: UserService,
     private router: Router,
-    private injector: Injector
+    private injector: Injector,
+    private directPurchaseService: DirectPurchaseService
   ) {
     // Mount Stripe card element after render
     afterNextRender(() => {
@@ -41,6 +45,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     // Subscribe to current user
     this.userService.currentUser$.subscribe(user => {
       if (user && user.uid) {
@@ -52,13 +57,42 @@ export class CheckoutComponent implements OnInit {
         this.currentUser.set(null);
       }
     });
-
     this.loadCart();
   }
 
   loadCart(): void {
     this.loading.set(true);
-    this.cartService.getCart().subscribe({
+
+    // Check if it's a direct purchase
+    const directPurchaseEvent = this.directPurchaseService.getDirectPurchase();
+
+    if (directPurchaseEvent) {
+      console.log('[Checkout] Loading direct purchase for:', directPurchaseEvent.title);
+      const quantity = 1;
+      const price = directPurchaseEvent.price || 0;
+      const cart: Cart = {
+        _id: 'direct-purchase',
+        userId: this.currentUser()?.uid || '',
+        items: [
+          {
+            event: directPurchaseEvent,
+            quantity: quantity,
+            price: price,
+            subtotal: quantity * price
+          }
+        ],
+        itemCount: 1,
+        total: price,
+        updatedAt: new Date().toISOString()
+      };
+      this.cart.set(cart);
+      this.loading.set(false);
+
+      // Clear direct purchase after loading
+      this.directPurchaseService.clearDirectPurchase();
+    } else {
+      console.log('[Checkout] Loading normal cart...');
+      this.cartService.getCart().subscribe({
       next: (response: CartResponse) => {
         if (!response.cart || response.cart.items.length === 0) {
           Swal.fire({
@@ -85,6 +119,7 @@ export class CheckoutComponent implements OnInit {
         this.loading.set(false);
       }
     });
+    }
   }
 
   async processPayment(): Promise<void> {

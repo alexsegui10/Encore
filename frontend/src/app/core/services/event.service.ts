@@ -159,5 +159,5 @@ export class EventService {
 
     getLikedEvents(): Observable<Event[]> {
         return this.apiService.get('/api/eventos/liked', undefined, 4000, true);
-    }  
+    }
 }

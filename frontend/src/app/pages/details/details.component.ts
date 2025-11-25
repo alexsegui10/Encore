@@ -1,10 +1,12 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit,Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
 import { UserService } from '../../core/services/user.service';
+import { DirectPurchaseService } from '../../core/services/direct-purchase.service';
 import Swal from 'sweetalert2';
+import { CartService } from '../../core/services/cart.service';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { EventMetaComponent } from "../../shared/event-meta/event-meta.component";
@@ -30,7 +32,9 @@ export class DetailsComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private eventService: EventService,
-        private userService: UserService
+        private userService: UserService,
+        private cartService: CartService,
+        private directPurchaseService: DirectPurchaseService
     ) { }
 
     ngOnInit(): void {
@@ -109,12 +113,10 @@ export class DetailsComponent implements OnInit {
 
         this._constructToggleLikeRequest(liked).subscribe({
             next: (response) => {
-                // Actualizar el evento con la respuesta del servidor
                 this.event.set(response);
             },
             error: (err) => {
                 console.error('Error al dar like:', err);
-                // Si el usuario no está autenticado, redirigir al login
                 if (err.status === 401 || err.status === 403) {
                     Swal.fire({
                         icon: 'warning',
@@ -137,6 +139,58 @@ export class DetailsComponent implements OnInit {
             }
         });
     }
+  public addToCart(event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+        const currentEvent = this.event()!;
+
+    if (!currentEvent._id) return;
+
+    this.cartService.addToCart(currentEvent._id).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Añadido al carrito',
+          text: `${currentEvent.title} se añadió correctamente`,
+          timer: 2000,
+          showConfirmButton: false
+        });
+      },
+      error: (err) => {
+        if (err.status === 401 || err.status === 403) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Inicia sesión',
+            text: 'Debes iniciar sesión para añadir al carrito',
+            confirmButtonText: 'Ir al login',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigateByUrl('/auth/login');
+            }
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo añadir al carrito',
+            confirmButtonText: 'OK'
+          });
+        }
+      }
+    });
+  }
+  public buyNow(event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+    const currentEvent = this.event();
+    if (!currentEvent) return;
+
+    this.directPurchaseService.setDirectPurchase(currentEvent);
+    this.router.navigate(['/checkout']);
+  }
+
 
     private _constructToggleLikeRequest(liked: boolean): Observable<Event> {
         const currentEvent = this.event()!;

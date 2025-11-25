@@ -62,13 +62,13 @@ export default async function paymentRoutes(fastify, opts) {
             });
 
             // IDEMPOTENCY: Generate deterministic order UID
-            // Same user + same items = same UUID (prevents duplicate orders)
+            // Same user + same items in same minute = same orderUid (prevents duplicate orders)
             const sortedItems = events
                 .map(e => ({ eventSlug: e.eventSlug, quantity: e.quantity }))
                 .sort((a, b) => a.eventSlug.localeCompare(b.eventSlug));
             const idempotencyKey = crypto
                 .createHash('sha256')
-                .update(`${userUid}-${JSON.stringify(sortedItems)}-${Date.now().toString().slice(0, -7)}`)
+                .update(`${userUid}-${JSON.stringify(sortedItems)}-${Math.floor(Date.now() / 60000)}`)
                 .digest('hex')
                 .substring(0, 32);
             const orderUid = `order-${idempotencyKey}`;
@@ -79,22 +79,59 @@ export default async function paymentRoutes(fastify, opts) {
             });
 
             if (existingOrder) {
-                fastify.log.info(`Order ${orderUid} already exists, returning existing payment intent`);
+                fastify.log.info(`Order ${orderUid} already exists`);
+                
+                // Check payment status
                 const existingPayment = await prisma.payment.findFirst({
                     where: { orderId: existingOrder.id }
                 });
 
-                if (existingPayment && existingPayment.transactionRef) {
-                    // Return existing PaymentIntent
-                    const existingPaymentIntent = await stripe.paymentIntents.retrieve(
-                        existingPayment.transactionRef
-                    );
+                if (existingPayment) {
+                    // If payment already succeeded, don't allow retry
+                    if (existingPayment.status === 'completed') {
+                        return reply.code(400).send({ 
+                            error: 'Este pedido ya fue completado exitosamente' 
+                        });
+                    }
 
-                    return reply.send({
-                        clientSecret: existingPaymentIntent.client_secret,
-                        orderId: existingOrder.id,
-                        amount: existingPaymentIntent.amount,
-                    });
+                    // If payment is still pending and has a Stripe reference, retrieve it
+                    if (existingPayment.transactionRef) {
+                        const existingPaymentIntent = await stripe.paymentIntents.retrieve(
+                            existingPayment.transactionRef
+                        );
+
+                        // If already succeeded in Stripe, update our DB
+                        if (existingPaymentIntent.status === 'succeeded') {
+                            await prisma.payment.update({
+                                where: { id: existingPayment.id },
+                                data: { status: 'completed' }
+                            });
+                            await prisma.order.update({
+                                where: { id: existingOrder.id },
+                                data: { status: 'completed' }
+                            });
+                            return reply.code(400).send({ 
+                                error: 'Este pedido ya fue completado' 
+                            });
+                        }
+
+                        // If payment requires action or is processing, return it
+                        if (existingPaymentIntent.status === 'requires_payment_method' || 
+                            existingPaymentIntent.status === 'requires_confirmation') {
+                            return reply.send({
+                                clientSecret: existingPaymentIntent.client_secret,
+                                orderId: existingOrder.id,
+                                amount: existingPaymentIntent.amount,
+                            });
+                        }
+
+                        // If payment is canceled or failed, create a new one
+                        if (existingPaymentIntent.status === 'canceled' || 
+                            existingPaymentIntent.status === 'requires_action') {
+                            fastify.log.info(`Previous payment failed, creating new one`);
+                            // Continue to create a new payment intent below
+                        }
+                    }
                 }
             }
 

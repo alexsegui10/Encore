@@ -28,5 +28,5 @@ export const moveExpiredTokensToBlacklist = async () => {
 
 export const startTokenCleanup = () => {
     setInterval(moveExpiredTokensToBlacklist, 60000);
-    moveExpiredTokensToBlacklist(); // Ejecutar al inicio también
+    moveExpiredTokensToBlacklist(); 
 };
