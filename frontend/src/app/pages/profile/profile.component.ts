@@ -8,13 +8,15 @@ import { RouterModule } from '@angular/router';
 import { SettingsComponent } from '../../shared/settings/settings.component';
 import { ListLikedEventsComponent } from '../../shared/list-liked-events/list-liked-events.component';
 import { ListFollowingUsersComponent } from '../../shared/list-following-users/list-following-users.component';
+import { ListUsersOrdersComponent } from '../../shared/list-user-orders/list-user-orders.component';
+
 import Swal from 'sweetalert2';
 @Component({
     selector: 'app-profile-page',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, SettingsComponent, ListLikedEventsComponent, ListFollowingUsersComponent],
+    imports: [CommonModule, RouterModule, SettingsComponent, ListLikedEventsComponent, ListFollowingUsersComponent, ListUsersOrdersComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
@@ -160,6 +162,10 @@ export class ProfileComponent {
 
     showSettings() {
         this.currentView.set('settings');
+    }
+
+    showOrders() {
+        this.currentView.set('orders');
     }
 
     isActive(view: string): boolean {

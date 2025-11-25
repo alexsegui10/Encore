@@ -1,0 +1,62 @@
+<div class="orders-container">
+    @if (userOrders().length === 0) {
+        <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <h3>No tienes pedidos</h3>
+            <p>Cuando realices un pedido, aparecerá aquí</p>
+        </div>
+    } @else {
+        <div class="orders-list">
+            @for (order of userOrders(); track order._id) {
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h3 class="order-id">Pedido #{{ order.uid.slice(-8) }}</h3>
+                            <span class="order-date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                        </div>
+                        <div class="order-status">
+                            <span class="status-badge" [ngClass]="'status-' + order.status">
+                                {{ getStatusText(order.status) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        @for (item of order.items; track item._id) {
+                            <div class="item-card">
+                                <div class="item-image">
+                                    <img [src]="item.eventId.mainImage" [alt]="item.eventId.title" />
+                                </div>
+                                <div class="item-details">
+                                    <h4 class="item-title">{{ item.eventId.title }}</h4>
+                                    <p class="item-location">
+                                        <span class="icon">📍</span>
+                                        {{ item.eventId.location }}
+                                    </p>
+                                    <p class="item-date">
+                                        <span class="icon">📅</span>
+                                        {{ item.eventId.date | date: 'dd/MM/yyyy HH:mm' }}
+                                    </p>
+                                    <div class="item-quantity">
+                                        <span>Cantidad: {{ item.quantity }}</span>
+                                    </div>
+                                </div>
+                                <div class="item-price">
+                                    <span class="price-label">Precio</span>
+                                    <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span class="total-label">Total:</span>
+                            <span class="total-amount">{{ order.totalAmount }} {{ order.currency }}</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

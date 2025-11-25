@@ -16,6 +16,9 @@ function Start-Server {
     Start-Sleep -Seconds 2
 }
 
+# Iniciar Stripe CLI Webhook Listener
+Start-Server -Name "Stripe Webhook" -Path "$PSScriptRoot\admin_server" -Command "stripe listen --forward-to localhost:3000/webhook" -Color "Cyan"
+
 # Iniciar Admin Server (Puerto 3000)
 Start-Server -Name "Admin Server" -Path "$PSScriptRoot\admin_server" -Command "npm run dev" -Color "Magenta"
 
@@ -37,6 +40,7 @@ Write-Host ""
 Write-Host "✅ Todos los servidores están iniciando..." -ForegroundColor Green
 Write-Host ""
 Write-Host "📍 URLs de los servidores:" -ForegroundColor Cyan
+Write-Host "   🔹 Stripe Webhook:     Listening on /webhook" -ForegroundColor Cyan
 Write-Host "   🔹 Admin Server:      http://localhost:3000" -ForegroundColor Magenta
 Write-Host "   🔹 Booking Client:    http://localhost:4000" -ForegroundColor Yellow
 Write-Host "   🔹 Enterprise Gateway: http://localhost:5000" -ForegroundColor Green
