@@ -28,11 +28,8 @@ const blacklistedTokenSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Índice para búsquedas rápidas por token
 blacklistedTokenSchema.index({ token: 1 });
 
-// Índice para limpiar tokens antiguos automáticamente (TTL)
-// Los tokens se eliminarán de la blacklist después de su fecha de expiración original + 7 días
 blacklistedTokenSchema.index({ blacklistedAt: 1 }, { 
     expireAfterSeconds: 7 * 24 * 60 * 60 // 7 días
 });

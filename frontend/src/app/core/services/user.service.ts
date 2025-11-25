@@ -142,5 +142,9 @@ export class UserService {
   getFollowingUsers(): Observable<{ users: User[], usersCount: number }> {
     return this.apiService.get('/api/user/following', undefined, 4000, true);
   }
+
+  getUserOrders(): Observable<{ orders: any[] }> {
+    return this.apiService.get('/api/orders', undefined, 4000, true);
+  }
 }
 

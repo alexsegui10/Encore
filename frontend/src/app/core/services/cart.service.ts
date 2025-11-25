@@ -78,6 +78,15 @@ export class CartService {
     );
   }
 
+  completeCart(): Observable<CartResponse> {
+    return this.http.post<CartResponse>(`${this.apiUrl}/complete`, {}).pipe(
+      tap(response => {
+        this.cartCount.set(0);
+        this.cartTotal.set(0);
+      })
+    );
+  }
+
   getCheckout(): Observable<CartResponse & { stripeLineItems: any[] }> {
     return this.http.get<CartResponse & { stripeLineItems: any[] }>(`${this.apiUrl}/checkout`);
   }

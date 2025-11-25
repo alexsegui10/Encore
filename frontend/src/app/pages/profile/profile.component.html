@@ -51,6 +51,9 @@
                     <li class="nav-item following" [class.active]="isActive('following')">
                         <a class="nav-link" (click)="showFollowing()">Siguiendo</a>
                     </li>
+                    <li class="nav-item orders" [class.active]="isActive('orders')">
+                        <a class="nav-link" (click)="showOrders()">Mis pedidos</a>
+                    </li>
                     } @else {
                     <li class="nav-item" [class.active]="isActive('profile')">
                         <a class="nav-link perfil" (click)="showProfile()">Perfil</a>
@@ -91,6 +94,13 @@
                 <h2>Usuarios que sigo</h2>
                 <hr>
                 <app-list-following-users></app-list-following-users>
+            </div>
+            }
+            @if (currentView() === 'orders' && isOwnProfile) {
+            <div>
+                <h2>Mis pedidos</h2>
+                <hr>
+                <app-list-user-orders></app-list-user-orders>
             </div>
             }
         </main>

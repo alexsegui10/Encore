@@ -1,23 +1,12 @@
 import crypto from 'crypto';
 import { createPaymentIntentSchema } from './schema.js';
 
-/**
- * Payment routes for handling Stripe payment intents with SAGA pattern
- * @param {import('fastify').FastifyInstance} fastify 
- * @param {Object} opts 
- */
 export default async function paymentRoutes(fastify, opts) {
     const { prisma, stripe } = fastify;
 
-    // Log to verify plugins are available
     fastify.log.info(`Prisma available: ${Boolean(prisma)}`);
     fastify.log.info(`Stripe available: ${Boolean(stripe)}`);
 
-    /**
-     * POST /api/create-payment-intent
-     * Creates a new order and Stripe PaymentIntent
-     * Implements SAGA pattern: reserve stock -> create order -> create payment -> rollback on failure
-     */
     fastify.post('/api/create-payment-intent', {
         schema: createPaymentIntentSchema,
     }, async (request, reply) => {
@@ -61,8 +50,6 @@ export default async function paymentRoutes(fastify, opts) {
                 eventMap[event.slug] = event;
             });
 
-            // IDEMPOTENCY: Generate deterministic order UID
-            // Same user + same items in same minute = same orderUid (prevents duplicate orders)
             const sortedItems = events
                 .map(e => ({ eventSlug: e.eventSlug, quantity: e.quantity }))
                 .sort((a, b) => a.eventSlug.localeCompare(b.eventSlug));

@@ -206,12 +206,12 @@ export class CheckoutComponent implements OnInit {
         confirmButtonText: 'Ver mis entradas'
       });
 
-      // Step 4: Clear cart
+      // Step 4: Complete cart (mark as completed instead of clearing)
       try {
-        await firstValueFrom(this.cartService.clearCart());
-        console.log('[Checkout] Cart cleared');
+        await firstValueFrom(this.cartService.completeCart());
+        console.log('[Checkout] Cart marked as completed');
       } catch (error) {
-        console.warn('[Checkout] Failed to clear cart:', error);
+        console.warn('[Checkout] Failed to complete cart:', error);
         // Don't throw error, payment was successful
       }
 
