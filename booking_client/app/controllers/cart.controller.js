@@ -26,10 +26,17 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({ message: 'Evento no encontrado' });
     }
     
+    // Buscar carrito activo, si no existe crear uno nuevo
     let cart = await Cart.findOne({ userId, status: 'active' });
     
     if (!cart) {
-      cart = await Cart.create({ userId, items: [], total: 0, status: 'active' });
+      // Crear un nuevo carrito activo (puede ser después de una compra completada)
+      cart = new Cart({ 
+        userId, 
+        items: [], 
+        total: 0, 
+        status: 'active' 
+      });
     }
     
     const existingItemIndex = cart.items.findIndex(
@@ -52,6 +59,7 @@ export const addToCart = async (req, res) => {
     
     return res.status(200).json({ cart: cart.toCartResponse() });
   } catch (error) {
+    console.error('Error adding to cart:', error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -160,11 +168,22 @@ export const completeCart = async (req, res) => {
     cart.status = 'completed';
     await cart.save();
     
+    // Crear un nuevo carrito vacío para futuras compras
+    const newCart = new Cart({
+      userId,
+      items: [],
+      total: 0,
+      status: 'active'
+    });
+    await newCart.save();
+    
     return res.status(200).json({ 
-      message: 'Carrito marcado como completado',
-      cart: cart.toCartResponse() 
+      message: 'Carrito marcado como completado y nuevo carrito creado',
+      completedCart: cart.toCartResponse(),
+      newCart: newCart.toCartResponse()
     });
   } catch (error) {
+    console.error('Error completing cart:', error);
     return res.status(500).json({ message: error.message });
   }
 };

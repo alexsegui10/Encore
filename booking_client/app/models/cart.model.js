@@ -37,6 +37,12 @@ const CartSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+// Índice compuesto: permite múltiples carritos por usuario, pero solo uno activo
+CartSchema.index({ userId: 1, status: 1 }, { 
+  unique: true, 
+  partialFilterExpression: { status: 'active' } 
+});
+
 CartSchema.methods.calculateTotal = function() {
   this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   return this.total;
