@@ -1,0 +1,216 @@
+<div class="admin-orders-page">
+    <div class="page-header">
+        <h1>Gestión de Órdenes</h1>
+    </div>
+
+    <!-- Componente de búsqueda compartido -->
+    <app-admin-search
+        placeholder="Buscar por ID, usuario o email..."
+        (searchChange)="onSearchChange($event)">
+    </app-admin-search>
+
+    <!-- Componente de filtros compartido -->
+    <app-admin-filters
+        title="Filtros"
+        filterLabel="Estado"
+        [filterOptions]="statusFilterOptions"
+        (filterChange)="onFilterChange($event)">
+    </app-admin-filters>
+
+    <!-- Loading state -->
+    @if (isLoading()) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando órdenes...</p>
+    </div>
+    }
+
+    <!-- Tabla de órdenes -->
+    @else if (filteredOrders().length > 0) {
+    <div class="table-container">
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>ID Orden</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Items</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (order of filteredOrders(); track order.id) {
+                <tr>
+                    <td>
+                        <span class="order-uid">{{ order.uid }}</span>
+                    </td>
+                    <td>
+                        <div class="user-cell">
+                            <span class="user-name">{{ order.user.username }}</span>
+                            <span class="user-email">{{ order.user.email }}</span>
+                        </div>
+                    </td>
+                    <td>{{ formatDate(order.createdAt) }}</td>
+                    <td>
+                        <span class="amount">{{ formatCurrency(order.totalAmount, order.currency) }}</span>
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="getStatusClass(order.status)">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="items-count">{{ order.items.length }}</span>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn-icon btn-view" (click)="viewDetails(order)" title="Ver detalles">
+                                👁️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Componente de paginación compartido -->
+    <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        (pageChange)="setPageTo($event)">
+    </app-pagination>
+    } @else {
+    <div class="empty-state">
+        <p>No se encontraron órdenes</p>
+    </div>
+    }
+
+    <!-- Modal de detalles -->
+    @if (showDetailModal() && selectedOrder()) {
+    <div class="modal-overlay" (click)="closeDetailModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Detalles de la Orden</h2>
+                <button class="btn-close" (click)="closeDetailModal()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Información general -->
+                <div class="detail-section">
+                    <h3>Información General</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">ID Orden:</span>
+                            <span class="value">{{ selectedOrder()!.uid }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Fecha de creación:</span>
+                            <span class="value">{{ formatDate(selectedOrder()!.createdAt) }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Estado:</span>
+                            <span class="status-badge" [ngClass]="getStatusClass(selectedOrder()!.status)">
+                                {{ selectedOrder()!.status }}
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Total:</span>
+                            <span class="value amount">{{ formatCurrency(selectedOrder()!.totalAmount, selectedOrder()!.currency) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información del usuario -->
+                <div class="detail-section">
+                    <h3>Cliente</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Usuario:</span>
+                            <span class="value">{{ selectedOrder()!.user.username }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Email:</span>
+                            <span class="value">{{ selectedOrder()!.user.email }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información del pago -->
+                @if (selectedOrder()!.payment; as payment) {
+                <div class="detail-section">
+                    <h3>Información de Pago</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Método:</span>
+                            <span class="value">{{ payment.method }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Estado:</span>
+                            <span class="payment-badge" [ngClass]="getPaymentStatusClass(payment.status)">
+                                {{ payment.status }}
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Monto:</span>
+                            <span class="value">{{ formatCurrency(payment.amount, payment.currency) }}</span>
+                        </div>
+                        @if (payment.transactionRef) {
+                        <div class="detail-item">
+                            <span class="label">Ref. Transacción:</span>
+                            <span class="value ref">{{ payment.transactionRef }}</span>
+                        </div>
+                        }
+                        @if (payment.paidAt) {
+                        <div class="detail-item">
+                            <span class="label">Pagado el:</span>
+                            <span class="value">{{ formatDate(payment.paidAt) }}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+                }
+
+                <!-- Items de la orden -->
+                <div class="detail-section">
+                    <h3>Items ({{ selectedOrder()!.items.length }})</h3>
+                    <div class="items-list">
+                        @for (item of selectedOrder()!.items; track item.id) {
+                        <div class="item-card">
+                            <div class="item-image">
+                                @if (item.event && item.event.mainImage) {
+                                <img [src]="item.event.mainImage" [alt]="item.event.title" />
+                                } @else if (item.product && item.product.image) {
+                                <img [src]="item.product.image" [alt]="item.product.name" />
+                                } @else {
+                                <div class="image-placeholder">
+                                    <span>{{ item.itemType === 'event' ? '🎫' : '📦' }}</span>
+                                </div>
+                                }
+                            </div>
+                            <div class="item-info">
+                                <h4>{{ item.event?.title || item.product?.name || 'Item' }}</h4>
+                                <div class="item-meta">
+                                    <span class="item-type">{{ item.itemType === 'event' ? 'Evento' : 'Producto' }}</span>
+                                    @if (item.event) {
+                                    <span class="item-date">{{ formatDate(item.event.date) }}</span>
+                                    }
+                                </div>
+                                <div class="item-pricing">
+                                    <span>Cantidad: {{ item.quantity }}</span>
+                                    <span>Precio unitario: {{ formatCurrency(item.unitPrice) }}</span>
+                                    <span class="item-total">Subtotal: {{ formatCurrency(item.unitPrice * item.quantity) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

@@ -6,15 +6,19 @@
     </button>
   </div>
 
-  <!-- Barra de búsqueda -->
-  <div class="search-bar">
-    <input
-      type="text"
-      placeholder="Buscar por nombre, email o biografía..."
-      (input)="onSearch($event)"
-      class="search-input"
-    />
-  </div>
+  <!-- Componente de búsqueda compartido -->
+  <app-admin-search
+    placeholder="Buscar por nombre, email o biografía..."
+    (searchChange)="onSearchChange($event)">
+  </app-admin-search>
+
+  <!-- Componente de filtros compartido -->
+  <app-admin-filters
+    title="Filtros"
+    filterLabel="Estado"
+    [filterOptions]="statusFilterOptions"
+    (filterChange)="onFilterChange($event)">
+  </app-admin-filters>
 
   <!-- Loading state -->
   @if (isLoading()) {

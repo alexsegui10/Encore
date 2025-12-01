@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 import { CartService } from '../../core/services/cart.service';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
-import { EventMetaComponent } from "../../shared/event-meta/event-meta.component";
 import { CommentsComponent } from '../../shared/comments/comments.component';
 import { MapaComponent } from '../../shared/map/map.component';
 import { CarouselComponent } from '../../shared/carrusel/carousel.component';
@@ -19,7 +18,7 @@ import { CarouselComponent } from '../../shared/carrusel/carousel.component';
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, DatePipe, EventMetaComponent, CommentsComponent, MapaComponent, CarouselComponent],
+    imports: [CommonModule, RouterModule, DatePipe, CommentsComponent, MapaComponent, CarouselComponent],
 })
 
 export class DetailsComponent implements OnInit {

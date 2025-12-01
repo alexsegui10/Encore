@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AdminEventService, AdminEvent } from '../../../core/services/admin-event.service';
 import { AdminCategoryService, AdminCategory } from '../../../core/services/admin-category.service';
+import { AdminSearchComponent } from '../../../shared/admin-search/admin-search.component';
+import { AdminFiltersComponent, FilterOption } from '../../../shared/admin-filters/admin-filters.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-events',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AdminSearchComponent, AdminFiltersComponent],
   templateUrl: './admin-events.component.html',
   styleUrls: ['./admin-events.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,6 +29,15 @@ export class AdminEventsComponent implements OnInit {
   searchTerm = '';
   filterStatus: string = 'all';
   filterCategory: string = 'all';
+
+  statusFilterOptions: FilterOption[] = [
+    { value: 'all', label: 'Todos los estados' },
+    { value: 'draft', label: 'Borradores' },
+    { value: 'published', label: 'Publicados' },
+    { value: 'cancelled', label: 'Cancelados' }
+  ];
+
+  categoryFilterOptions = signal<FilterOption[]>([{ value: 'all', label: 'Todas las categorías' }]);
 
   constructor(
     private adminEventService: AdminEventService,
@@ -61,6 +72,14 @@ export class AdminEventsComponent implements OnInit {
         // Filtrar solo categorías activas
         const activeCategories = categories.filter(c => c.status === 'active' && c.isActive);
         this.categories.set(activeCategories);
+
+        // Actualizar opciones de filtro de categoría
+        const categoryOptions: FilterOption[] = [
+          { value: 'all', label: 'Todas las categorías' },
+          ...activeCategories.map(cat => ({ value: cat.slug, label: cat.name }))
+        ];
+        this.categoryFilterOptions.set(categoryOptions);
+
         this.cd.markForCheck();
       },
       error: (err) => {
@@ -120,18 +139,18 @@ export class AdminEventsComponent implements OnInit {
     this.cd.markForCheck();
   }
 
-  onSearch(event: Event) {
-    this.searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+  onSearchChange(searchTerm: string) {
+    this.searchTerm = searchTerm.toLowerCase();
     this.applyFilters();
   }
 
-  onStatusFilter(event: Event) {
-    this.filterStatus = (event.target as HTMLSelectElement).value;
+  onStatusFilterChange(status: string) {
+    this.filterStatus = status;
     this.applyFilters();
   }
 
-  onCategoryFilter(event: Event) {
-    this.filterCategory = (event.target as HTMLSelectElement).value;
+  onCategoryFilterChange(category: string) {
+    this.filterCategory = category;
     this.applyFilters();
   }
 

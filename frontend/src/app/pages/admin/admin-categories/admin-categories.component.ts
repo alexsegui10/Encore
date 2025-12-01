@@ -2,12 +2,14 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal }
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AdminCategoryService, AdminCategory } from '../../../core/services/admin-category.service';
+import { AdminSearchComponent } from '../../../shared/admin-search/admin-search.component';
+import { AdminFiltersComponent, FilterOption } from '../../../shared/admin-filters/admin-filters.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AdminSearchComponent, AdminFiltersComponent],
   templateUrl: './admin-categories.component.html',
   styleUrls: ['./admin-categories.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +25,13 @@ export class AdminCategoriesComponent implements OnInit {
   categoryForm: FormGroup;
   isSubmitting = false;
   searchTerm = '';
+  filterStatus = 'all';
+
+  statusFilterOptions: FilterOption[] = [
+    { value: 'all', label: 'Todos los estados' },
+    { value: 'active', label: 'Activas' },
+    { value: 'inactive', label: 'Inactivas' }
+  ];
 
   constructor(
     private adminCategoryService: AdminCategoryService,
@@ -67,18 +76,33 @@ export class AdminCategoriesComponent implements OnInit {
     });
   }
 
-  onSearch(event: Event) {
-    const term = (event.target as HTMLInputElement).value.toLowerCase();
-    this.searchTerm = term;
+  onSearchChange(searchTerm: string) {
+    this.searchTerm = searchTerm.toLowerCase();
+    this.applyFilters();
+  }
 
-    if (!term) {
-      this.filteredCategories.set(this.categories());
-    } else {
-      const filtered = this.categories().filter(category =>
-        category.name.toLowerCase().includes(term) ||
-        (category.description && category.description.toLowerCase().includes(term))
+  onFilterChange(status: string) {
+    this.filterStatus = status;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    let filtered = this.categories();
+
+    // Filtro por búsqueda
+    if (this.searchTerm) {
+      filtered = filtered.filter(category =>
+        category.name.toLowerCase().includes(this.searchTerm) ||
+        (category.description && category.description.toLowerCase().includes(this.searchTerm))
       );
-      this.filteredCategories.set(filtered);
+    }
+
+    // Filtro por estado
+    if (this.filterStatus !== 'all') {
+      filtered = filtered.filter(category => category.status === this.filterStatus);
+    }
+
+    this.filteredCategories.set(filtered);
     }
     this.cd.markForCheck();
   }
