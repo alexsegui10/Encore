@@ -16,6 +16,7 @@ import categoriesRoutes from './routes/category/index.js'
 import eventsRoutes from './routes/events/index.js'
 import paymentRoutes from './routes/payments/index.js'
 import webhookRoute from './routes/payments/webhook.js'
+import publicOrderRoutes from './routes/payments/orders.js'
 import adminOrderRoutes from './routes/orders/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -81,6 +82,7 @@ await app.register(categoriesRoutes, { prefix: '/api' })
 await app.register(eventsRoutes, { prefix: '/api' })
 await app.register(paymentRoutes)
 await app.register(webhookRoute)
+await app.register(publicOrderRoutes)
 await app.register(adminOrderRoutes)
 
 app.setErrorHandler((error, req, reply) => {
