@@ -55,6 +55,10 @@ const EventSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    merchandising: {
+      type: mongoose.Schema.Types.Mixed,
+      default: []
+    },
     images: {
       type: [String],
       default: [],
@@ -109,6 +113,7 @@ EventSchema.methods.toEventResponse = async function (user) {
     status: this.status,
     mainImage: this.mainImage,
     images: this.images,
+    merchandising: this.merchandising || [],
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
     isLiked: user ? user.isFavourite(this._id) : false,

@@ -1,0 +1,52 @@
+<div class="popup-overlay" (click)="skipMerchandise()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h2>¿Quieres añadir merchandising?</h2>
+      <p class="event-title">{{ eventTitle }}</p>
+      <button class="close-btn" (click)="skipMerchandise()" type="button">&times;</button>
+    </div>
+
+    <div class="popup-body">
+      <p class="description">Estos productos están disponibles para este evento:</p>
+      
+      <div class="products-grid">
+        <div 
+          *ngFor="let product of merchandising" 
+          class="product-card"
+          [class.selected]="isSelected(product)"
+          (click)="toggleProduct(product)">
+          
+          <div class="product-image">
+            <img 
+              [src]="product.image || 'assets/placeholder-product.png'" 
+              [alt]="product.name"
+              onerror="this.src='assets/placeholder-product.png'">
+          </div>
+          
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">{{ product.price | currency:'EUR':'symbol':'1.2-2' }}</p>
+          </div>
+          
+          <div class="selection-indicator" *ngIf="isSelected(product)">
+            <i class="pi pi-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <button class="btn-skip" (click)="skipMerchandise()" type="button">
+        No, gracias
+      </button>
+      <button 
+        class="btn-confirm" 
+        (click)="confirmSelection()" 
+        type="button"
+        [disabled]="selectedProducts.size === 0">
+        Añadir seleccionados ({{ selectedProducts.size }})
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,10 +1,19 @@
 import mongoose from 'mongoose';
 
 const CartItemSchema = new mongoose.Schema({
+  itemType: {
+    type: String,
+    enum: ['event', 'product'],
+    required: true
+  },
   event: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Event',
-    required: true
+    required: function () { return this.itemType === 'event'; }
+  },
+  product: {
+    type: mongoose.Schema.Types.Mixed, // Store product data from enterprise server
+    required: function () { return this.itemType === 'product'; }
   },
   quantity: {
     type: Number,
@@ -38,43 +47,72 @@ const CartSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Índice compuesto: permite múltiples carritos por usuario, pero solo uno activo
-CartSchema.index({ userId: 1, status: 1 }, { 
-  unique: true, 
-  partialFilterExpression: { status: 'active' } 
+CartSchema.index({ userId: 1, status: 1 }, {
+  unique: true,
+  partialFilterExpression: { status: 'active' }
 });
 
-CartSchema.methods.calculateTotal = function() {
+CartSchema.methods.calculateTotal = function () {
   this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   return this.total;
 };
 
-CartSchema.methods.toCartResponse = function() {
+CartSchema.methods.toCartResponse = function () {
   return {
     _id: this._id,
     userId: this.userId,
-    items: this.items.map(item => ({
-      event: item.event,
-      quantity: item.quantity,
-      price: item.price,
-      subtotal: item.price * item.quantity
-    })),
+    items: this.items.map(item => {
+      const baseItem = {
+        itemType: item.itemType,
+        quantity: item.quantity,
+        price: item.price,
+        subtotal: item.price * item.quantity
+      };
+
+      if (item.itemType === 'event') {
+        // Check if event is populated (is an object) or just an ID
+        if (item.event && typeof item.event === 'object' && item.event._id) {
+          baseItem.event = item.event;
+        } else if (item.event) {
+          // Just an ObjectId, return basic object
+          baseItem.event = { _id: item.event };
+        }
+      } else if (item.itemType === 'product') {
+        // Products are stored as plain objects, not references
+        if (item.product) {
+          baseItem.product = item.product;
+        }
+      }
+
+      return baseItem;
+    }),
     total: this.total,
     itemCount: this.items.reduce((sum, item) => sum + item.quantity, 0),
     updatedAt: this.updatedAt
   };
 };
 
-CartSchema.methods.toStripeLineItems = function() {
-  return this.items.map(item => ({
-    price_data: {
-      currency: 'eur',
-      product_data: {
-        name: item.event.title || 'Evento',
+CartSchema.methods.toStripeLineItems = function () {
+  return this.items.map(item => {
+    let productName = 'Item';
+
+    if (item.itemType === 'event' && item.event) {
+      productName = item.event.title || 'Evento';
+    } else if (item.itemType === 'product' && item.product) {
+      productName = item.product.name || 'Producto';
+    }
+
+    return {
+      price_data: {
+        currency: 'eur',
+        product_data: {
+          name: productName,
+        },
+        unit_amount: Math.round(item.price * 100),
       },
-      unit_amount: Math.round(item.price * 100),
-    },
-    quantity: item.quantity,
-  }));
+      quantity: item.quantity,
+    };
+  });
 };
 
 export default mongoose.model('Cart', CartSchema);

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EventService } from '../../core/services/event.service';
-import { CartService} from '../../core/services/cart.service';
+import { CartService } from '../../core/services/cart.service';
 import { Cart, CartResponse } from '../../core/models/cart.model';
 import { StripePaymentService } from '../../core/services/stripe-payment.service';
 import { UserService } from '../../core/services/user.service';
@@ -60,6 +60,15 @@ export class CheckoutComponent implements OnInit {
     this.loadCart();
   }
 
+  trackByItem(index: number, item: any): string {
+    if (item.itemType === 'event' && item.event) {
+      return item.event._id || index.toString();
+    } else if (item.itemType === 'product' && item.product) {
+      return item.product.id || index.toString();
+    }
+    return index.toString();
+  }
+
   loadCart(): void {
     this.loading.set(true);
 
@@ -75,6 +84,7 @@ export class CheckoutComponent implements OnInit {
         userId: this.currentUser()?.uid || '',
         items: [
           {
+            itemType: 'event',
             event: directPurchaseEvent,
             quantity: quantity,
             price: price,
@@ -93,32 +103,32 @@ export class CheckoutComponent implements OnInit {
     } else {
       console.log('[Checkout] Loading normal cart...');
       this.cartService.getCart().subscribe({
-      next: (response: CartResponse) => {
-        if (!response.cart || response.cart.items.length === 0) {
+        next: (response: CartResponse) => {
+          if (!response.cart || response.cart.items.length === 0) {
+            Swal.fire({
+              title: 'Carrito vacío',
+              text: 'No tienes eventos en tu carrito',
+              icon: 'info',
+              confirmButtonText: 'Ir a eventos'
+            }).then(() => {
+              this.router.navigate(['/']);
+            });
+          } else {
+            this.cart.set(response.cart);
+          }
+          this.loading.set(false);
+        },
+        error: (error) => {
+          console.error('Error loading cart:', error);
           Swal.fire({
-            title: 'Carrito vacío',
-            text: 'No tienes eventos en tu carrito',
-            icon: 'info',
-            confirmButtonText: 'Ir a eventos'
-          }).then(() => {
-            this.router.navigate(['/']);
+            title: 'Error',
+            text: 'No se pudo cargar el carrito',
+            icon: 'error',
+            confirmButtonText: 'OK'
           });
-        } else {
-          this.cart.set(response.cart);
+          this.loading.set(false);
         }
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading cart:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'No se pudo cargar el carrito',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-        this.loading.set(false);
-      }
-    });
+      });
     }
   }
 
@@ -167,10 +177,20 @@ export class CheckoutComponent implements OnInit {
       // Step 1: Create payment intent (SAGA starts in backend)
       const { clientSecret, orderId } = await this.stripePaymentService.createPaymentIntent({
         userUid: user.uid,
-        events: currentCart.items.map(item => ({
-          eventSlug: item.event.slug,
-          quantity: item.quantity
-        })),
+        events: currentCart.items
+          .filter(item => item.itemType === 'event' && item.event)
+          .map(item => ({
+            eventSlug: item.event!.slug,
+            quantity: item.quantity
+          })),
+        products: currentCart.items
+          .filter(item => item.itemType === 'product' && item.product)
+          .map(item => ({
+            id: item.product!.id,
+            name: item.product!.name,
+            price: item.product!.price,
+            quantity: item.quantity
+          })),
         billingDetails: {
           name: this.billingName,
           email: this.billingEmail

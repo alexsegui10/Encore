@@ -25,6 +25,24 @@ export class CartComponent implements OnInit {
     this.loadCart();
   }
 
+  trackByItem(index: number, item: any): string {
+    if (item.itemType === 'event' && item.event) {
+      return item.event._id || index.toString();
+    } else if (item.itemType === 'product' && item.product) {
+      return item.product.id || index.toString();
+    }
+    return index.toString();
+  }
+
+  getItemId(item: any): string {
+    if (item.itemType === 'event' && item.event) {
+      return item.event._id;
+    } else if (item.itemType === 'product' && item.product) {
+      return item.product.id;
+    }
+    return '';
+  }
+
   loadCart(): void {
     this.loading.set(true);
     this.cartService.getCart().subscribe({

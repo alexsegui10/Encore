@@ -10,7 +10,7 @@ export default async function paymentRoutes(fastify, opts) {
     fastify.post('/api/create-payment-intent', {
         schema: createPaymentIntentSchema,
     }, async (request, reply) => {
-        const { userUid, events = [], billingDetails } = request.body;
+        const { userUid, events = [], products = [], billingDetails } = request.body;
 
         // SAGA compensation tracking
         const compensationLog = {
@@ -20,9 +20,9 @@ export default async function paymentRoutes(fastify, opts) {
         };
 
         try {
-            // Validate that we have events to purchase
-            if (events.length === 0) {
-                return reply.code(400).send({ error: 'No events to purchase' });
+            // Validate that we have items to purchase
+            if (events.length === 0 && products.length === 0) {
+                return reply.code(400).send({ error: 'No items to purchase' });
             }
 
             // Verify user exists by UID
@@ -67,7 +67,7 @@ export default async function paymentRoutes(fastify, opts) {
 
             if (existingOrder) {
                 fastify.log.info(`Order ${orderUid} already exists`);
-                
+
                 // Check payment status
                 const existingPayment = await prisma.payment.findFirst({
                     where: { orderId: existingOrder.id }
@@ -76,8 +76,8 @@ export default async function paymentRoutes(fastify, opts) {
                 if (existingPayment) {
                     // If payment already succeeded, don't allow retry
                     if (existingPayment.status === 'completed') {
-                        return reply.code(400).send({ 
-                            error: 'Este pedido ya fue completado exitosamente' 
+                        return reply.code(400).send({
+                            error: 'Este pedido ya fue completado exitosamente'
                         });
                     }
 
@@ -97,13 +97,13 @@ export default async function paymentRoutes(fastify, opts) {
                                 where: { id: existingOrder.id },
                                 data: { status: 'completed' }
                             });
-                            return reply.code(400).send({ 
-                                error: 'Este pedido ya fue completado' 
+                            return reply.code(400).send({
+                                error: 'Este pedido ya fue completado'
                             });
                         }
 
                         // If payment requires action or is processing, return it
-                        if (existingPaymentIntent.status === 'requires_payment_method' || 
+                        if (existingPaymentIntent.status === 'requires_payment_method' ||
                             existingPaymentIntent.status === 'requires_confirmation') {
                             return reply.send({
                                 clientSecret: existingPaymentIntent.client_secret,
@@ -113,7 +113,7 @@ export default async function paymentRoutes(fastify, opts) {
                         }
 
                         // If payment is canceled or failed, create a new one
-                        if (existingPaymentIntent.status === 'canceled' || 
+                        if (existingPaymentIntent.status === 'canceled' ||
                             existingPaymentIntent.status === 'requires_action') {
                             fastify.log.info(`Previous payment failed, creating new one`);
                             // Continue to create a new payment intent below
@@ -161,6 +161,18 @@ export default async function paymentRoutes(fastify, opts) {
                 });
             }
 
+            // Process products (merchandise)
+            for (const productItem of products) {
+                const unitPrice = productItem.price || 0;
+                totalAmount += unitPrice * productItem.quantity;
+
+                items.push({
+                    productData: productItem, // Store full product data
+                    quantity: productItem.quantity,
+                    unitPrice
+                });
+            }
+
             // SAGA STEP 2: Create order with PENDING status
             const order = await prisma.order.create({
                 data: {
@@ -168,14 +180,27 @@ export default async function paymentRoutes(fastify, opts) {
                     totalAmount,
                     currency: 'EUR',
                     status: 'pending',
-                    userId: user.id, // Use the user.id from the query above
+                    userId: user.id,
                     items: {
-                        create: items.map(item => ({
-                            quantity: item.quantity,
-                            unitPrice: item.unitPrice,
-                            itemType: 'event',
-                            eventId: item.eventId,
-                        }))
+                        create: items.map(item => {
+                            if (item.eventId) {
+                                // Event item
+                                return {
+                                    quantity: item.quantity,
+                                    unitPrice: item.unitPrice,
+                                    itemType: 'event',
+                                    eventId: item.eventId,
+                                };
+                            } else {
+                                // Product item (merchandise from enterprise_server)
+                                return {
+                                    quantity: item.quantity,
+                                    unitPrice: item.unitPrice,
+                                    itemType: 'product',
+                                    productData: item.productData, // Store full product info
+                                };
+                            }
+                        })
                     }
                 },
                 include: { items: true }

@@ -5,19 +5,22 @@ import { Router, RouterLink } from '@angular/router';
 import { EventMetaComponent } from '../event-meta/event-meta.component';
 import { EventService } from '../../core/services/event.service';
 import { CartService } from '../../core/services/cart.service';
-import { Observable } from 'rxjs';
+import { MerchandisePopupComponent } from '../merchandise-popup/merchandise-popup.component';
+import { Observable, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-card-event',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MerchandisePopupComponent],
   templateUrl: './card-event.component.html',
   styleUrls: ['./card-event.component.css']
 })
 export class CardEventComponent {
   @Input() event!: Event;
   @Output() eventUnliked = new EventEmitter<string>(); // Emite el slug del evento cuando se quita el like
+
+  public showMerchandisePopup = false;
 
   constructor(
     private eventService: EventService,
@@ -48,7 +51,7 @@ export class CardEventComponent {
         console.error('Error al dar like:', err);
         console.log('Error status:', err.status);
         console.log('Error details:', err);
-        
+
         // Verificar si es error de autenticación (401 o 403)
         if (err.status === 401 || err.status === 403) {
           Swal.fire({
@@ -90,13 +93,18 @@ export class CardEventComponent {
 
     this.cartService.addToCart(this.event._id).subscribe({
       next: () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Añadido al carrito',
-          text: `${this.event.title} se añadió correctamente`,
-          timer: 2000,
-          showConfirmButton: false
-        });
+        // Check if event has merchandising
+        if (this.event.merchandising && this.event.merchandising.length > 0) {
+          this.showMerchandisePopup = true;
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Añadido al carrito',
+            text: `${this.event.title} se añadió correctamente`,
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
       },
       error: (err) => {
         if (err.status === 401 || err.status === 403) {
@@ -121,6 +129,58 @@ export class CardEventComponent {
           });
         }
       }
+    });
+  }
+
+  public onProductsSelected(products: any[]): void {
+    if (products.length === 0) {
+      this.showMerchandisePopup = false;
+      Swal.fire({
+        icon: 'success',
+        title: 'Añadido al carrito',
+        text: `${this.event.title} se añadió correctamente`,
+        timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    // Add all selected products to cart
+    const addProductRequests = products.map(product =>
+      this.cartService.addProductToCart(product.id, product, 1)
+    );
+
+    forkJoin(addProductRequests).subscribe({
+      next: () => {
+        this.showMerchandisePopup = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Añadido al carrito',
+          text: `${this.event.title} y ${products.length} producto(s) de merchandising añadidos`,
+          timer: 2500,
+          showConfirmButton: false
+        });
+      },
+      error: (err) => {
+        this.showMerchandisePopup = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al añadir los productos',
+          confirmButtonText: 'OK'
+        });
+      }
+    });
+  }
+
+  public onMerchandiseCancelled(): void {
+    this.showMerchandisePopup = false;
+    Swal.fire({
+      icon: 'success',
+      title: 'Añadido al carrito',
+      text: `${this.event.title} se añadió correctamente`,
+      timer: 2000,
+      showConfirmButton: false
     });
   }
 

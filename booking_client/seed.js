@@ -1,18 +1,11 @@
-// seed.js — ejecuta: npm run seed  (en package.json: "seed": "node seed.js")
 import 'dotenv/config.js';
 import mongoose from 'mongoose';
 
-// Modelos (solo Categoría y Evento)
 import Event from './app/models/evento.model.js';
 import Category from './app/models/category.model.js';
 
 const OID = (s) => new mongoose.Types.ObjectId(s);
 
-// ==========================
-// 1) DATOS (solo categorías y eventos)
-// ==========================
-
-// Categorías (añadiremos luego category.events: ObjectId[])
 const categories = [
   { _id: OID('66fca0010000000000000001'), name: 'Conciertos',   slug: 'conciertos',   description: 'Grandes conciertos y giras',                  image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4' },
   { _id: OID('66fca0010000000000000002'), name: 'Festivales',   slug: 'festivales',  description: 'Festivales de música',                       image: 'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf' },
@@ -26,9 +19,7 @@ const categories = [
   { _id: OID('66fca001000000000000000a'), name: 'Arte',         slug: 'arte',        description: 'Museos y exposiciones',                      image: 'https://images.unsplash.com/photo-1529101091764-c3526daf38fe' }
 ];
 
-// Eventos (distribuidos por categorías) — fotos reales (Unsplash)
 const events = [
-  // Conciertos – cada uno con varias fotos genéricas de conciertos
   {
     _id: OID('66fca0020000000000000001'),
     title: 'Hans Zimmer — Valencia',
@@ -115,7 +106,6 @@ const events = [
     favouritesCount: 0
   },
 
-  // Festivales / Electrónica – varias fotos de festivales
   {
     _id: OID('66fca0020000000000000006'),
     title: 'Primavera Sound — Barcelona',
@@ -185,7 +175,6 @@ const events = [
     favouritesCount: 0
   },
 
-  // Teatro / Musicales – descripciones uniformes y varias fotos
   {
     _id: OID('66fca002000000000000000a'),
     title: 'El Rey León — Madrid',
@@ -221,7 +210,6 @@ const events = [
     favouritesCount: 0
   },
 
-  // Deportes – varias fotos deportivas y descripciones coherentes
   {
     _id: OID('66fca002000000000000000c'),
     title: 'UFC 324: Ilia Topuria vs Justin Gaethje',
@@ -274,7 +262,6 @@ const events = [
     favouritesCount: 0
   },
 
-  // Conferencias / Tech – imágenes de conferencias
   {
     _id: OID('66fca002000000000000000f'),
     title: 'Mobile World Congress — Barcelona',
@@ -327,7 +314,6 @@ const events = [
     favouritesCount: 0
   },
 
-  // Comedia – varias imágenes y descripciones de longitud similar
   {
     _id: OID('66fca0020000000000000012'),
     title: 'Goyo Jiménez — Misery Class',
@@ -363,7 +349,6 @@ const events = [
     favouritesCount: 0
   },
 
-  // Familia – imágenes temáticas sobre hielo
   {
     _id: OID('66fca0020000000000000014'),
     title: 'Disney On Ice — Valencia',
@@ -382,7 +367,6 @@ const events = [
     favouritesCount: 0
   },
 
-  // Cine – imágenes de festivales de cine
   {
     _id: OID('66fca0020000000000000015'),
     title: 'Festival de Sitges — Sitges',
@@ -421,10 +405,6 @@ const events = [
   }
 ];
 
-
-// ==========================
-// 2) HELPERS
-// ==========================
 const upsertOps = (docs) =>
   docs.map((d) => ({
     updateOne: { filter: { _id: d._id }, update: { $set: d }, upsert: true }
@@ -439,39 +419,32 @@ function attachEventIdsToCategories() {
     arr.push(ev._id);
     map.set(String(ev.category), arr);
   }
-  // añade "events" (ObjectId[]) a cada categoría localmente
   for (const c of categories) {
     c.events = map.get(String(c._id)) || [];
   }
 }
 
-// ==========================
-/* 3) SEED (solo categorías y eventos) */
-// ==========================
 async function main() {
   const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/encore';
   console.log('Conectando a MongoDB:', uri);
   await mongoose.connect(uri, { autoIndex: true });
   console.log('Conectado');
 
-  // Rellenar categories.events con IDs de los eventos
   attachEventIdsToCategories();
 
-  // ------- EVENTS -------
   console.log('Upsert events...');
   await Event.bulkWrite(upsertOps(events));
 
-  // ------- CATEGORIES (sin intentar modificar _id si ya existe por slug) -------
   console.log('Upsert categories...');
   await Category.bulkWrite(
     categories.map((c) => {
-      const { _id, ...rest } = c; // no seteamos _id en update
+      const { _id, ...rest } = c; 
       return {
         updateOne: {
           filter: { $or: [{ _id }, { slug: c.slug }] },
           update: {
-            $set: rest,            // actualiza excepto _id
-            $setOnInsert: { _id }  // si inserta, fija _id
+            $set: rest,            
+            $setOnInsert: { _id }  
           },
           upsert: true
         }
@@ -479,7 +452,6 @@ async function main() {
     })
   );
 
-  // ------- Conteo final -------
   const [eC, catC] = await Promise.all([
     Event.countDocuments(),
     Category.countDocuments()

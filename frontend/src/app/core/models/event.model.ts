@@ -15,27 +15,28 @@ export interface Event {
   updatedAt?: Date | string;
   likesCount?: number;
   isLiked?: boolean;
+  merchandising?: any[];
 }
 
 
 export interface CreateEventRequest {
-    title: string;
-    date: Date;
-    price: number;
-    currency?: string;
-    location?: string;
-    description?: string;
-    category: string;
-    status?: 'draft' | 'published' | 'cancelled';
+  title: string;
+  date: Date;
+  price: number;
+  currency?: string;
+  location?: string;
+  description?: string;
+  category: string;
+  status?: 'draft' | 'published' | 'cancelled';
 }
 
 export interface UpdateEventRequest {
-    title?: string;
-    date?: Date;
-    price?: number;
-    currency?: string;
-    location?: string;
-    description?: string;
-    category?: string;
-    status?: 'draft' | 'published' | 'cancelled';
+  title?: string;
+  date?: Date;
+  price?: number;
+  currency?: string;
+  location?: string;
+  description?: string;
+  category?: string;
+  status?: 'draft' | 'published' | 'cancelled';
 }

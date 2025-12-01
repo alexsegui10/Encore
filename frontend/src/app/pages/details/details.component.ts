@@ -1,4 +1,4 @@
-import { Component, signal, OnInit,Input } from '@angular/core';
+import { Component, signal, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
@@ -8,18 +8,19 @@ import { DirectPurchaseService } from '../../core/services/direct-purchase.servi
 import Swal from 'sweetalert2';
 import { CartService } from '../../core/services/cart.service';
 import { DatePipe } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { EventMetaComponent } from "../../shared/event-meta/event-meta.component";
 import { CommentsComponent } from '../../shared/comments/comments.component';
 import { MapaComponent } from '../../shared/map/map.component';
 import { CarouselComponent } from '../../shared/carrusel/carousel.component';
+import { MerchandisePopupComponent } from '../../shared/merchandise-popup/merchandise-popup.component';
 
 @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, DatePipe, EventMetaComponent, CommentsComponent, MapaComponent, CarouselComponent],
+    imports: [CommonModule, RouterModule, DatePipe, EventMetaComponent, CommentsComponent, MapaComponent, CarouselComponent, MerchandisePopupComponent],
 })
 
 export class DetailsComponent implements OnInit {
@@ -27,6 +28,7 @@ export class DetailsComponent implements OnInit {
     public isLoading = signal(true);
     public event = signal<Event | null>(null);
     public isEventOwner = false;
+    public showMerchandisePopup = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -139,57 +141,117 @@ export class DetailsComponent implements OnInit {
             }
         });
     }
-  public addToCart(event: MouseEvent): void {
-    event.stopPropagation();
-    event.preventDefault();
+    public addToCart(event: MouseEvent): void {
+        event.stopPropagation();
+        event.preventDefault();
         const currentEvent = this.event()!;
 
-    if (!currentEvent._id) return;
+        if (!currentEvent._id) return;
 
-    this.cartService.addToCart(currentEvent._id).subscribe({
-      next: () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Añadido al carrito',
-          text: `${currentEvent.title} se añadió correctamente`,
-          timer: 2000,
-          showConfirmButton: false
-        });
-      },
-      error: (err) => {
-        if (err.status === 401 || err.status === 403) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Inicia sesión',
-            text: 'Debes iniciar sesión para añadir al carrito',
-            confirmButtonText: 'Ir al login',
-            showCancelButton: true,
-            cancelButtonText: 'Cancelar'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigateByUrl('/auth/login');
+        this.cartService.addToCart(currentEvent._id).subscribe({
+            next: () => {
+                // Check if event has merchandising
+                if (currentEvent.merchandising && currentEvent.merchandising.length > 0) {
+                    this.showMerchandisePopup = true;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Añadido al carrito',
+                        text: `${currentEvent.title} se añadió correctamente`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            },
+            error: (err) => {
+                if (err.status === 401 || err.status === 403) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Inicia sesión',
+                        text: 'Debes iniciar sesión para añadir al carrito',
+                        confirmButtonText: 'Ir al login',
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.router.navigateByUrl('/auth/login');
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo añadir al carrito',
+                        confirmButtonText: 'OK'
+                    });
+                }
             }
-          });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo añadir al carrito',
-            confirmButtonText: 'OK'
-          });
+        });
+    }
+    public onProductsSelected(products: any[]): void {
+        if (products.length === 0) {
+            this.showMerchandisePopup = false;
+            const currentEvent = this.event();
+            Swal.fire({
+                icon: 'success',
+                title: 'Añadido al carrito',
+                text: `${currentEvent?.title} se añadió correctamente`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            return;
         }
-      }
-    });
-  }
-  public buyNow(event: MouseEvent): void {
-    event.stopPropagation();
-    event.preventDefault();
-    const currentEvent = this.event();
-    if (!currentEvent) return;
 
-    this.directPurchaseService.setDirectPurchase(currentEvent);
-    this.router.navigate(['/checkout']);
-  }
+        // Add all selected products to cart
+        const addProductRequests = products.map(product =>
+            this.cartService.addProductToCart(product.id, product, 1)
+        );
+
+        forkJoin(addProductRequests).subscribe({
+            next: () => {
+                this.showMerchandisePopup = false;
+                const currentEvent = this.event();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Añadido al carrito',
+                    text: `${currentEvent?.title} y ${products.length} producto(s) de merchandising añadidos`,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+            },
+            error: (err) => {
+                this.showMerchandisePopup = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un problema al añadir los productos',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+
+    public onMerchandiseCancelled(): void {
+        this.showMerchandisePopup = false;
+        const currentEvent = this.event();
+        Swal.fire({
+            icon: 'success',
+            title: 'Añadido al carrito',
+            text: `${currentEvent?.title} se añadió correctamente`,
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }
+
+    public buyNow(event: MouseEvent): void {
+        event.stopPropagation();
+        event.preventDefault();
+        const currentEvent = this.event();
+        if (!currentEvent) return;
+
+        this.directPurchaseService.setDirectPurchase(currentEvent);
+        this.router.navigate(['/checkout']);
+    }
 
 
     private _constructToggleLikeRequest(liked: boolean): Observable<Event> {

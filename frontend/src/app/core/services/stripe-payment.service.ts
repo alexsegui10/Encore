@@ -10,7 +10,13 @@ export interface PaymentIntentRequest {
         eventSlug: string;
         quantity: number;
     }>;
-    billingDetails: {
+    products?: Array<{
+        id: string;
+        name: string;
+        price: number;
+        quantity: number;
+    }>;
+    billingDetails?: {
         name: string;
         email: string;
     };

@@ -99,6 +99,25 @@
   flex: 1;
 }
 
+.item-type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.event-badge {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.product-badge {
+  background: #fce7f3;
+  color: #be123c;
+}
+
 .item-name {
   font-size: 18px;
   font-weight: 600;
@@ -112,10 +131,18 @@
   margin: 0;
 }
 
-.item-date, .item-location {
+.item-date,
+.item-location {
   font-size: 14px;
   color: #9ca3af;
   margin: 4px 0 0 0;
+}
+
+.item-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+  line-height: 1.4;
 }
 
 /* Quantity Controls */

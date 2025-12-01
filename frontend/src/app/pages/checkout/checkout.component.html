@@ -16,8 +16,10 @@
         <h2>Resumen del pedido</h2>
 
         <div class="items-list">
-          @for (item of cart()!.items; track item.event._id) {
+          @for (item of cart()!.items; track trackByItem($index, item)) {
           <div class="summary-item">
+            <!-- Event Item -->
+            @if (item.itemType === 'event' && item.event) {
             <div class="item-image">
               @if (item.event.mainImage) {
               <img [src]="item.event.mainImage" [alt]="item.event.title">
@@ -28,6 +30,7 @@
 
             <div class="item-info">
               <h3>{{ item.event.title }}</h3>
+              <p class="item-type-badge event-badge">Evento</p>
               @if (item.event.date) {
               <p class="item-date">📅 {{ item.event.date | date: 'dd/MM/yyyy' }}</p>
               }
@@ -41,13 +44,39 @@
               <p class="unit-price">{{ item.price | currency: 'EUR' }} c/u</p>
               <p class="subtotal">{{ item.subtotal | currency: 'EUR' }}</p>
             </div>
+            }
+
+            <!-- Product Item -->
+            @if (item.itemType === 'product' && item.product) {
+            <div class="item-image">
+              @if (item.product.image) {
+              <img [src]="item.product.image" [alt]="item.product.name">
+              } @else {
+              <div class="no-image">📦</div>
+              }
+            </div>
+
+            <div class="item-info">
+              <h3>{{ item.product.name }}</h3>
+              <p class="item-type-badge product-badge">Merchandising</p>
+              @if (item.product.description) {
+              <p class="item-description">{{ item.product.description }}</p>
+              }
+              <p class="item-quantity">Cantidad: {{ item.quantity }}</p>
+            </div>
+
+            <div class="item-price">
+              <p class="unit-price">{{ item.price | currency: 'EUR' }} c/u</p>
+              <p class="subtotal">{{ item.subtotal | currency: 'EUR' }}</p>
+            </div>
+            }
           </div>
           }
         </div>
 
         <div class="totals">
           <div class="total-row">
-            <span>Total de eventos:</span>
+            <span>Total de artículos:</span>
             <span>{{ cart()!.itemCount }}</span>
           </div>
 

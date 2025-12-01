@@ -51,6 +51,15 @@ export class CartService {
     );
   }
 
+  addProductToCart(productId: string, product: any, quantity: number = 1): Observable<CartResponse> {
+    return this.http.post<CartResponse>(`${this.apiUrl}/add-product`, { productId, product, quantity }).pipe(
+      tap(response => {
+        this.cartCount.set(response.cart.itemCount);
+        this.cartTotal.set(response.cart.total);
+      })
+    );
+  }
+
   updateQuantity(eventId: string, quantity: number): Observable<CartResponse> {
     return this.http.put<CartResponse>(`${this.apiUrl}/item/${eventId}`, { quantity }).pipe(
       tap(response => {
@@ -78,11 +87,19 @@ export class CartService {
     );
   }
 
-  completeCart(): Observable<CartResponse> {
-    return this.http.post<CartResponse>(`${this.apiUrl}/complete`, {}).pipe(
+  completeCart(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/complete`, {}).pipe(
       tap(response => {
-        this.cartCount.set(0);
-        this.cartTotal.set(0);
+        // Backend returns both completedCart and newCart
+        // Reset to the new empty cart
+        if (response.newCart) {
+          this.cartCount.set(response.newCart.itemCount || 0);
+          this.cartTotal.set(response.newCart.total || 0);
+        } else {
+          // Fallback to zeros
+          this.cartCount.set(0);
+          this.cartTotal.set(0);
+        }
       })
     );
   }
