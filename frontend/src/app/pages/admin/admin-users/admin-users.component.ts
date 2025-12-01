@@ -2,12 +2,14 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal }
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AdminUserService, AdminUser } from '../../../core/services/admin-user.service';
+import { AdminSearchComponent } from '../../../shared/admin-search/admin-search.component';
+import { AdminFiltersComponent, FilterOption } from '../../../shared/admin-filters/admin-filters.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AdminSearchComponent, AdminFiltersComponent],
   templateUrl: './admin-users.component.html',
   styleUrls: ['./admin-users.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +25,14 @@ export class AdminUsersComponent implements OnInit {
   userForm: FormGroup;
   isSubmitting = false;
   searchTerm = '';
+  filterStatus = 'all';
+
+  statusFilterOptions: FilterOption[] = [
+    { value: 'all', label: 'Todos los estados' },
+    { value: 'active', label: 'Activos' },
+    { value: 'inactive', label: 'Inactivos' },
+    { value: 'banned', label: 'Baneados' }
+  ];
 
   constructor(
     private adminUserService: AdminUserService,
@@ -69,21 +79,36 @@ export class AdminUsersComponent implements OnInit {
     });
   }
 
-  onSearch(event: Event) {
-    const term = (event.target as HTMLInputElement).value.toLowerCase();
-    this.searchTerm = term;
+  applyFilters() {
+    let filtered = [...this.users()];
 
-    if (!term) {
-      this.filteredUsers.set(this.users());
-    } else {
-      const filtered = this.users().filter(user =>
+    // Filtrar por búsqueda
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(user =>
         user.username.toLowerCase().includes(term) ||
         user.email.toLowerCase().includes(term) ||
         (user.bio && user.bio.toLowerCase().includes(term))
       );
-      this.filteredUsers.set(filtered);
     }
+
+    // Filtrar por estado
+    if (this.filterStatus !== 'all') {
+      filtered = filtered.filter(user => user.status === this.filterStatus);
+    }
+
+    this.filteredUsers.set(filtered);
     this.cd.markForCheck();
+  }
+
+  onSearchChange(searchTerm: string) {
+    this.searchTerm = searchTerm;
+    this.applyFilters();
+  }
+
+  onFilterChange(status: string) {
+    this.filterStatus = status;
+    this.applyFilters();
   }
 
   openCreateForm() {

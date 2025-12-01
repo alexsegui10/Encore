@@ -6,15 +6,19 @@
     </button>
   </div>
 
-  <!-- Barra de búsqueda -->
-  <div class="search-bar">
-    <input
-      type="text"
+  <!-- Componente de búsqueda compartido -->
+  <app-admin-search
       placeholder="Buscar por nombre o descripción..."
-      (input)="onSearch($event)"
-      class="search-input"
-    />
-  </div>
+      (searchChange)="onSearchChange($event)">
+  </app-admin-search>
+
+  <!-- Filtro de estado -->
+  <app-admin-filters
+      title="Estado"
+      filterLabel="Estado de la categoría"
+      [filterOptions]="statusFilterOptions"
+      (filterChange)="onFilterChange($event)">
+  </app-admin-filters>
 
   <!-- Loading state -->
   @if (isLoading()) {
