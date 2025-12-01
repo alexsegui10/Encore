@@ -167,7 +167,7 @@ export default async function paymentRoutes(fastify, opts) {
                 totalAmount += unitPrice * productItem.quantity;
 
                 items.push({
-                    productData: productItem, // Store full product data
+                    productId: productItem.id, // Store product ID for reference
                     quantity: productItem.quantity,
                     unitPrice
                 });
@@ -197,7 +197,7 @@ export default async function paymentRoutes(fastify, opts) {
                                     quantity: item.quantity,
                                     unitPrice: item.unitPrice,
                                     itemType: 'product',
-                                    productData: item.productData, // Store full product info
+                                    productId: item.productId, // Store product ID
                                 };
                             }
                         })

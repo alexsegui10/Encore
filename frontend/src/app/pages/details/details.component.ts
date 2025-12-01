@@ -5,11 +5,12 @@ import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
 import { UserService } from '../../core/services/user.service';
 import { DirectPurchaseService } from '../../core/services/direct-purchase.service';
+import { EnterpriseProductService } from '../../core/services/enterprise-product.service';
 import Swal from 'sweetalert2';
 import { CartService } from '../../core/services/cart.service';
 import { DatePipe } from '@angular/common';
-import { Observable, forkJoin } from 'rxjs';
-import { EventMetaComponent } from "../../shared/event-meta/event-meta.component";
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { CommentsComponent } from '../../shared/comments/comments.component';
 import { MapaComponent } from '../../shared/map/map.component';
 import { CarouselComponent } from '../../shared/carrusel/carousel.component';
@@ -20,7 +21,7 @@ import { MerchandisePopupComponent } from '../../shared/merchandise-popup/mercha
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, RouterModule, DatePipe, EventMetaComponent, CommentsComponent, MapaComponent, CarouselComponent, MerchandisePopupComponent],
+    imports: [CommonModule, RouterModule, DatePipe, CommentsComponent, MapaComponent, CarouselComponent, MerchandisePopupComponent],
 })
 
 export class DetailsComponent implements OnInit {
@@ -29,6 +30,7 @@ export class DetailsComponent implements OnInit {
     public event = signal<Event | null>(null);
     public isEventOwner = false;
     public showMerchandisePopup = false;
+    public loadedMerchandising: any[] = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -36,7 +38,8 @@ export class DetailsComponent implements OnInit {
         private eventService: EventService,
         private userService: UserService,
         private cartService: CartService,
-        private directPurchaseService: DirectPurchaseService
+        private directPurchaseService: DirectPurchaseService,
+        private enterpriseProductService: EnterpriseProductService
     ) { }
 
     ngOnInit(): void {
@@ -150,16 +153,39 @@ export class DetailsComponent implements OnInit {
 
         this.cartService.addToCart(currentEvent._id).subscribe({
             next: () => {
-                // Check if event has merchandising
-                if (currentEvent.merchandising && currentEvent.merchandising.length > 0) {
+                // Check if event has merchandising from backend
+                const hasMerchandising = currentEvent.merchandising && currentEvent.merchandising.length > 0;
+                
+                if (hasMerchandising) {
+                    this.loadedMerchandising = currentEvent.merchandising!;
                     this.showMerchandisePopup = true;
                 } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Añadido al carrito',
-                        text: `${currentEvent.title} se añadió correctamente`,
-                        timer: 2000,
-                        showConfirmButton: false
+                    // Try to load random merchandising from enterprise server
+                    this.enterpriseProductService.getRandomProducts(3).pipe(
+                        catchError(() => of([]))
+                    ).subscribe({
+                        next: (products) => {
+                            if (products && products.length > 0) {
+                                // Transform enterprise products to merchandising format
+                                this.loadedMerchandising = products.map(p => ({
+                                    id: p.id,
+                                    name: p.name,
+                                    price: p.price,
+                                    description: p.description,
+                                    image: p.image
+                                }));
+                                this.showMerchandisePopup = true;
+                            } else {
+                                // No merchandising available
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Añadido al carrito',
+                                    text: `${currentEvent.title} se añadió correctamente`,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            }
+                        }
                     });
                 }
             },

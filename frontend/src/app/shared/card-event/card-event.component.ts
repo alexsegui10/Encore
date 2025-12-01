@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { EventMetaComponent } from '../event-meta/event-meta.component';
 import { EventService } from '../../core/services/event.service';
 import { CartService } from '../../core/services/cart.service';
+import { EnterpriseProductService } from '../../core/services/enterprise-product.service';
 import { MerchandisePopupComponent } from '../merchandise-popup/merchandise-popup.component';
 import { Observable, forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -21,10 +22,12 @@ export class CardEventComponent {
   @Output() eventUnliked = new EventEmitter<string>(); // Emite el slug del evento cuando se quita el like
 
   public showMerchandisePopup = false;
+  public merchandiseProducts: any[] = [];
 
   constructor(
     private eventService: EventService,
     private cartService: CartService,
+    private enterpriseProductService: EnterpriseProductService,
     private router: Router
   ) { }
 
@@ -95,14 +98,34 @@ export class CardEventComponent {
       next: () => {
         // Check if event has merchandising
         if (this.event.merchandising && this.event.merchandising.length > 0) {
+          this.merchandiseProducts = this.event.merchandising;
           this.showMerchandisePopup = true;
         } else {
-          Swal.fire({
-            icon: 'success',
-            title: 'Añadido al carrito',
-            text: `${this.event.title} se añadió correctamente`,
-            timer: 2000,
-            showConfirmButton: false
+          // Fetch random products as fallback
+          this.enterpriseProductService.getRandomProducts(3).subscribe({
+            next: (products) => {
+              if (products && products.length > 0) {
+                this.merchandiseProducts = products;
+                this.showMerchandisePopup = true;
+              } else {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Añadido al carrito',
+                  text: `${this.event.title} se añadió correctamente`,
+                  timer: 2000,
+                  showConfirmButton: false
+                });
+              }
+            },
+            error: () => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Añadido al carrito',
+                text: `${this.event.title} se añadió correctamente`,
+                timer: 2000,
+                showConfirmButton: false
+              });
+            }
           });
         }
       },

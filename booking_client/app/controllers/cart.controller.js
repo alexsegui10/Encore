@@ -39,7 +39,7 @@ export const addToCart = async (req, res) => {
     }
 
     const existingItemIndex = cart.items.findIndex(
-      item => item.event.toString() === eventId
+      item => item.event && item.event.toString() === eventId
     );
 
     if (existingItemIndex > -1) {

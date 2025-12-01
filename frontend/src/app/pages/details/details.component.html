@@ -121,6 +121,6 @@
 }
 
 <!-- Merchandise Popup -->
-<app-merchandise-popup *ngIf="showMerchandisePopup && event()" [merchandising]="event()!.merchandising || []"
+<app-merchandise-popup *ngIf="showMerchandisePopup && event()" [merchandising]="loadedMerchandising"
   [eventTitle]="event()!.title" (productsSelected)="onProductsSelected($event)" (cancelled)="onMerchandiseCancelled()">
 </app-merchandise-popup>

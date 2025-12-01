@@ -44,12 +44,12 @@
         </div>
 
         <div class="item-quantity">
-          <button class="qty-btn" (click)="updateQuantity(item.event._id, item.quantity - 1)"
+          <button class="qty-btn" (click)="updateQuantity(item.event._id, item.quantity - 1, 'event')"
             [disabled]="item.quantity <= 1">
             -
           </button>
           <span class="qty-value">{{ item.quantity }}</span>
-          <button class="qty-btn" (click)="updateQuantity(item.event._id, item.quantity + 1)">
+          <button class="qty-btn" (click)="updateQuantity(item.event._id, item.quantity + 1, 'event')">
             +
           </button>
         </div>
@@ -58,7 +58,7 @@
           <p class="subtotal">{{ item.subtotal | currency: 'EUR' }}</p>
         </div>
 
-        <button class="btn-remove" (click)="removeItem(item.event._id)" title="Eliminar">
+        <button class="btn-remove" (click)="removeItem(item.event._id, 'event')" title="Eliminar">
           🗑️
         </button>
         }
@@ -81,12 +81,12 @@
         </div>
 
         <div class="item-quantity">
-          <button class="qty-btn" (click)="updateQuantity(item.product.id, item.quantity - 1)"
+          <button class="qty-btn" (click)="updateQuantity(item.product.id, item.quantity - 1, 'product')"
             [disabled]="item.quantity <= 1">
             -
           </button>
           <span class="qty-value">{{ item.quantity }}</span>
-          <button class="qty-btn" (click)="updateQuantity(item.product.id, item.quantity + 1)">
+          <button class="qty-btn" (click)="updateQuantity(item.product.id, item.quantity + 1, 'product')">
             +
           </button>
         </div>
@@ -95,7 +95,7 @@
           <p class="subtotal">{{ item.subtotal | currency: 'EUR' }}</p>
         </div>
 
-        <button class="btn-remove" (click)="removeItem(item.product.id)" title="Eliminar">
+        <button class="btn-remove" (click)="removeItem(item.product.id, 'product')" title="Eliminar">
           🗑️
         </button>
         }

@@ -18,14 +18,22 @@ const orderItemSchema = new mongoose.Schema(
         },
         itemType: {
             type: String,
-            enum: ['event'],
+            enum: ['event', 'product'],
             default: 'event',
             required: true
         },
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Event',
-            required: true
+            required: false
+        },
+        productId: {
+            type: String,
+            required: false
+        },
+        productData: {
+            type: mongoose.Schema.Types.Mixed,
+            required: false
         }
     },
     { 

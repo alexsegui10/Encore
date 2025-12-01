@@ -54,4 +54,9 @@ export class EnterpriseProductService {
     return this.apiService.get(`/product-service/products/category/${categoryId}`, undefined, 5000, true)
       .pipe(map(data => data.products));
   }
+
+  getRandomProducts(count: number = 3): Observable<EnterpriseProduct[]> {
+    return this.apiService.get(`/product/random?count=${count}`, undefined, 5000, true)
+      .pipe(map(data => data.products || []));
+  }
 }

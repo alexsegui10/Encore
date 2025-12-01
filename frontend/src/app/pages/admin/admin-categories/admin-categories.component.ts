@@ -103,7 +103,6 @@ export class AdminCategoriesComponent implements OnInit {
     }
 
     this.filteredCategories.set(filtered);
-    }
     this.cd.markForCheck();
   }
 

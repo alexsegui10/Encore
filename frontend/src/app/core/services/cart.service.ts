@@ -60,8 +60,8 @@ export class CartService {
     );
   }
 
-  updateQuantity(eventId: string, quantity: number): Observable<CartResponse> {
-    return this.http.put<CartResponse>(`${this.apiUrl}/item/${eventId}`, { quantity }).pipe(
+  updateQuantity(itemId: string, quantity: number, itemType: 'event' | 'product' = 'event'): Observable<CartResponse> {
+    return this.http.put<CartResponse>(`${this.apiUrl}/item/${itemId}`, { quantity, itemType }).pipe(
       tap(response => {
         this.cartCount.set(response.cart.itemCount);
         this.cartTotal.set(response.cart.total);
@@ -69,8 +69,8 @@ export class CartService {
     );
   }
 
-  removeItem(eventId: string): Observable<CartResponse> {
-    return this.http.delete<CartResponse>(`${this.apiUrl}/item/${eventId}`).pipe(
+  removeItem(itemId: string, itemType: 'event' | 'product' = 'event'): Observable<CartResponse> {
+    return this.http.delete<CartResponse>(`${this.apiUrl}/item/${itemId}?itemType=${itemType}`).pipe(
       tap(response => {
         this.cartCount.set(response.cart.itemCount);
         this.cartTotal.set(response.cart.total);

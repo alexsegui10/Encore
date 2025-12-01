@@ -163,8 +163,12 @@ model OrderItem {
   unitPrice   Float
   itemType    String      // "event" or "product"
   
-  productId   String?     @db.ObjectId
-  product     Product?    @relation(fields: [productId], references: [id])
+  // For local products (optional)
+  localProductId   String?     @db.ObjectId
+  localProduct     Product?    @relation(fields: [localProductId], references: [id])
+  
+  // For external enterprise products - store just the ID as string
+  productId   String?     // Enterprise product ID (external reference)
   productData Json?       // Store product info from external service (enterprise)
   
   eventId     String?     @db.ObjectId

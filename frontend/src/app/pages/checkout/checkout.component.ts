@@ -189,6 +189,8 @@ export class CheckoutComponent implements OnInit {
             id: item.product!.id,
             name: item.product!.name,
             price: item.product!.price,
+            image: item.product!.image || null,
+            description: item.product!.description || null,
             quantity: item.quantity
           })),
         billingDetails: {

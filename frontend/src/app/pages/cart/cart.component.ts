@@ -56,19 +56,19 @@ export class CartComponent implements OnInit {
     });
   }
 
-  updateQuantity(eventId: string, quantity: number): void {
+  updateQuantity(itemId: string, quantity: number, itemType: 'event' | 'product' = 'event'): void {
     if (quantity < 1) {
-      this.removeItem(eventId);
+      this.removeItem(itemId, itemType);
       return;
     }
-    this.cartService.updateQuantity(eventId, quantity).subscribe({
+    this.cartService.updateQuantity(itemId, quantity, itemType).subscribe({
       next: (response) => {
         this.cart.set(response.cart);
       }
     });
   }
 
-  removeItem(eventId: string): void {
+  removeItem(itemId: string, itemType: 'event' | 'product' = 'event'): void {
     Swal.fire({
       title: '¿Eliminar producto?',
       text: '¿Estás seguro de eliminar este producto del carrito?',
@@ -80,13 +80,13 @@ export class CartComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.cartService.removeItem(eventId).subscribe({
+        this.cartService.removeItem(itemId, itemType).subscribe({
           next: (response) => {
             this.cart.set(response.cart);
             Swal.fire({
               icon: 'success',
               title: 'Eliminado',
-              text: 'Evento eliminado del carrito',
+              text: 'Artículo eliminado del carrito',
               timer: 1500,
               showConfirmButton: false
             });

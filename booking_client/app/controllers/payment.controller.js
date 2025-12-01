@@ -10,15 +10,16 @@ import asyncHandler from 'express-async-handler';
  * Creates a payment intent by forwarding the request to admin server
  */
 export const createPaymentIntent = asyncHandler(async (req, res) => {
-    const { userUid, events, billingDetails } = req.body;
+    const { userUid, events = [], products = [], billingDetails } = req.body;
 
     // Validate request body
     if (!userUid) {
         return res.status(400).json({ error: 'User UID is required' });
     }
 
-    if (!events || events.length === 0) {
-        return res.status(400).json({ error: 'At least one event is required' });
+    // Allow purchases with events only, products only, or both
+    if (events.length === 0 && products.length === 0) {
+        return res.status(400).json({ error: 'At least one event or product is required' });
     }
 
     // Validate event structure
@@ -30,11 +31,20 @@ export const createPaymentIntent = asyncHandler(async (req, res) => {
         }
     }
 
+    // Validate product structure
+    for (const product of products) {
+        if (!product.id || !product.name || product.price === undefined || !product.quantity || product.quantity < 1) {
+            return res.status(400).json({ 
+                error: 'Each product must have id, name, price and quantity >= 1' 
+            });
+        }
+    }
+
     try {
         // Forward request to admin server (SAGA Orchestrator)
         const adminServerUrl = process.env.ADMIN_SERVER_URL || 'http://localhost:3000';
         
-        console.log(`[SAGA] Initiating payment for user ${userUid} with ${events.length} events`);
+        console.log(`[SAGA] Initiating payment for user ${userUid} with ${events.length} events and ${products.length} products`);
         
         const response = await fetch(`${adminServerUrl}/api/create-payment-intent`, {
             method: 'POST',
@@ -44,6 +54,7 @@ export const createPaymentIntent = asyncHandler(async (req, res) => {
             body: JSON.stringify({
                 userUid,
                 events,
+                products,
                 billingDetails,
             }),
         });
