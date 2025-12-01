@@ -52,10 +52,25 @@ CartSchema.index({ userId: 1, status: 1 }, {
   partialFilterExpression: { status: 'active' }
 });
 
+
 CartSchema.methods.calculateTotal = function () {
+  console.log('=== CALCULATING CART TOTAL ===');
+  console.log('Total items:', this.items.length);
+  this.items.forEach((item, index) => {
+    console.log(`Item ${index}:`, {
+      itemType: item.itemType,
+      price: item.price,
+      quantity: item.quantity,
+      subtotal: item.price * item.quantity,
+      hasEvent: !!item.event,
+      hasProduct: !!item.product
+    });
+  });
   this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  console.log('Calculated total:', this.total);
   return this.total;
 };
+
 
 CartSchema.methods.toCartResponse = function () {
   return {

@@ -1,4 +1,3 @@
-// Fetch product from enterprise server (same pattern as fetchRandomMerchandising in events)
 async function fetchProductFromEnterprise(productId) {
     try {
         const response = await fetch(`http://localhost:5000/product/${productId}`);
@@ -16,23 +15,14 @@ async function fetchProductFromEnterprise(productId) {
     }
 }
 
-/**
- * Public order routes for authenticated clients (not admin-only)
- * @param {import('fastify').FastifyInstance} fastify 
- * @param {Object} opts 
- */
+
 export default async function publicOrderRoutes(fastify, opts) {
     const { prisma } = fastify;
 
-    /**
-     * GET /api/orders/by-uid/:userUid
-     * Get all orders for a user by UID (for authenticated clients via booking_client)
-     */
     fastify.get('/api/orders/by-uid/:userUid', async (request, reply) => {
         const { userUid } = request.params;
 
         try {
-            // First find the user by uid
             const user = await prisma.users.findUnique({
                 where: { uid: userUid },
                 select: { id: true }
@@ -66,12 +56,10 @@ export default async function publicOrderRoutes(fastify, opts) {
                 }
             });
 
-            // Enrich product items with data from enterprise server
             const enrichedOrders = await Promise.all(
                 orders.map(async (order) => {
                     const enrichedItems = await Promise.all(
                         order.items.map(async (item) => {
-                            // If it's a product item with productId (enterprise product), fetch data
                             if (item.itemType === 'product' && item.productId) {
                                 const productData = await fetchProductFromEnterprise(item.productId);
                                 return { ...item, productData };

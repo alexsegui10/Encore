@@ -120,8 +120,8 @@ export const addProductToCart = async (req, res) => {
 export const updateCartItem = async (req, res) => {
   try {
     const userId = req.userId;
-    const { eventId } = req.params;
-    const { quantity } = req.body;
+    const { itemId } = req.params;
+    const { quantity, itemType } = req.body;
 
     if (quantity < 1) {
       return res.status(400).json({ message: 'La cantidad debe ser al menos 1' });
@@ -132,7 +132,13 @@ export const updateCartItem = async (req, res) => {
       return res.status(404).json({ message: 'Carrito no encontrado' });
     }
 
-    const item = cart.items.find(item => item.event.toString() === eventId);
+    let item;
+    if (itemType === 'event') {
+      item = cart.items.find(item => item.itemType === 'event' && item.event && item.event.toString() === itemId);
+    } else if (itemType === 'product') {
+      item = cart.items.find(item => item.itemType === 'product' && item.product && item.product.id === itemId);
+    }
+
     if (!item) {
       return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
     }
@@ -151,14 +157,24 @@ export const updateCartItem = async (req, res) => {
 export const removeFromCart = async (req, res) => {
   try {
     const userId = req.userId;
-    const { eventId } = req.params;
+    const { itemId } = req.params;
+    const { itemType } = req.query;
 
     const cart = await Cart.findOne({ userId, status: 'active' });
     if (!cart) {
       return res.status(404).json({ message: 'Carrito no encontrado' });
     }
 
-    cart.items = cart.items.filter(item => item.event.toString() !== eventId);
+    if (itemType === 'event') {
+      cart.items = cart.items.filter(item =>
+        !(item.itemType === 'event' && item.event && item.event.toString() === itemId)
+      );
+    } else if (itemType === 'product') {
+      cart.items = cart.items.filter(item =>
+        !(item.itemType === 'product' && item.product && item.product.id === itemId)
+      );
+    }
+
     cart.calculateTotal();
     await cart.save();
     await cart.populate('items.event');

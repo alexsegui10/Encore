@@ -18,6 +18,7 @@ import paymentRoutes from './routes/payments/index.js'
 import webhookRoute from './routes/payments/webhook.js'
 import publicOrderRoutes from './routes/payments/orders.js'
 import adminOrderRoutes from './routes/orders/index.js'
+import publicOrderRoutes from './routes/payments/orders.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -84,6 +85,7 @@ await app.register(paymentRoutes)
 await app.register(webhookRoute)
 await app.register(publicOrderRoutes)
 await app.register(adminOrderRoutes)
+await app.register(publicOrderRoutes)
 
 app.setErrorHandler((error, req, reply) => {
   req.log.error(error)
