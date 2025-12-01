@@ -1,109 +1,112 @@
 <div class="orders-container">
     @if (userOrders().length === 0) {
-        <div class="empty-state">
-            <div class="empty-icon">🛒</div>
-            <h3>No tienes pedidos</h3>
-            <p>Cuando realices un pedido, aparecerá aquí</p>
-        </div>
+    <div class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <h3>No tienes pedidos</h3>
+        <p>Cuando realices un pedido, aparecerá aquí</p>
+    </div>
     } @else {
-        <div class="orders-list">
-            @for (order of userOrders(); track order._id) {
-                <div class="order-card">
-                    <div class="order-header">
-                        <div class="order-info">
-                            <h3 class="order-id">Pedido #{{ order.uid.slice(-8) }}</h3>
-                            <span class="order-date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
-                        </div>
-                        <div class="order-status">
-                            <span class="status-badge" [ngClass]="'status-' + order.status">
-                                {{ getStatusText(order.status) }}
-                            </span>
-                        </div>
-                    </div>
+    <div class="orders-list">
+        @for (order of userOrders(); track order._id) {
+        <div class="order-card">
+            <div class="order-header">
+                <div class="order-info">
+                    <h3 class="order-id">Pedido #{{ order.uid.slice(-8) }}</h3>
+                    <span class="order-date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <div class="order-status">
+                    <span class="status-badge" [ngClass]="'status-' + order.status">
+                        {{ getStatusText(order.status) }}
+                    </span>
+                </div>
+            </div>
 
-                    <div class="order-items">
-                        @for (item of order.items; track item._id) {
-                            @if (item.itemType === 'event' && item.eventId) {
-                            <div class="item-card">
-                                <div class="item-image">
-                                    <img [src]="item.eventId.mainImage || '/assets/default-event.jpg'" [alt]="item.eventId.title || 'Evento'" />
-                                </div>
-                                <div class="item-details">
-                                    <h4 class="item-title">{{ item.eventId.title || 'Evento' }}</h4>
-                                    <p class="item-type-badge event-badge">Evento</p>
-                                    @if (item.eventId.location) {
-                                    <p class="item-location">
-                                        <span class="icon">📍</span>
-                                        {{ item.eventId.location }}
-                                    </p>
-                                    }
-                                    @if (item.eventId.date) {
-                                    <p class="item-date">
-                                        <span class="icon">📅</span>
-                                        {{ item.eventId.date | date: 'dd/MM/yyyy HH:mm' }}
-                                    </p>
-                                    }
-                                    <div class="item-quantity">
-                                        <span>Cantidad: {{ item.quantity }}</span>
-                                    </div>
-                                </div>
-                                <div class="item-price">
-                                    <span class="price-label">Precio</span>
-                                    <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
-                                </div>
-                            </div>
-                            } @else if (item.itemType === 'product' && item.productData) {
-                            <div class="item-card product-item">
-                                <div class="item-image">
-                                    <img [src]="item.productData.image || '/assets/default-product.jpg'" [alt]="item.productData.name || 'Producto'" />
-                                </div>
-                                <div class="item-details">
-                                    <h4 class="item-title">{{ item.productData.name || 'Producto' }}</h4>
-                                    <p class="item-type-badge product-badge">Merchandising</p>
-                                    @if (item.productData.description) {
-                                    <p class="item-description">{{ item.productData.description }}</p>
-                                    }
-                                    <div class="item-quantity">
-                                        <span>Cantidad: {{ item.quantity }}</span>
-                                    </div>
-                                </div>
-                                <div class="item-price">
-                                    <span class="price-label">Precio</span>
-                                    <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
-                                </div>
-                            </div>
-                            } @else {
-                            <!-- Fallback para items sin datos completos -->
-                            <div class="item-card unknown-item">
-                                <div class="item-image">
-                                    <img src="/assets/default-product.jpg" alt="Item" />
-                                </div>
-                                <div class="item-details">
-                                    <h4 class="item-title">{{ item.itemType === 'product' ? 'Producto' : 'Evento' }}</h4>
-                                    <p class="item-type-badge" [ngClass]="item.itemType === 'product' ? 'product-badge' : 'event-badge'">
-                                        {{ item.itemType === 'product' ? 'Merchandising' : 'Evento' }}
-                                    </p>
-                                    <div class="item-quantity">
-                                        <span>Cantidad: {{ item.quantity }}</span>
-                                    </div>
-                                </div>
-                                <div class="item-price">
-                                    <span class="price-label">Precio</span>
-                                    <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
-                                </div>
-                            </div>
-                            }
+            <div class="order-items">
+                @for (item of order.items; track item._id) {
+                @if (item.itemType === 'event' && item.event) {
+                <div class="item-card">
+                    <div class="item-image">
+                        <img [src]="item.event.mainImage || '/assets/default-event.jpg'"
+                            [alt]="item.event.title || 'Evento'" />
+                    </div>
+                    <div class="item-details">
+                        <h4 class="item-title">{{ item.event.title || 'Evento' }}</h4>
+                        <p class="item-type-badge event-badge">Evento</p>
+                        @if (item.event.location) {
+                        <p class="item-location">
+                            <span class="icon">📍</span>
+                            {{ item.event.location }}
+                        </p>
                         }
-                    </div>
-
-                    <div class="order-footer">
-                        <div class="order-total">
-                            <span class="total-label">Total:</span>
-                            <span class="total-amount">{{ order.totalAmount }} {{ order.currency }}</span>
+                        @if (item.event.date) {
+                        <p class="item-date">
+                            <span class="icon">📅</span>
+                            {{ item.event.date | date: 'dd/MM/yyyy HH:mm' }}
+                        </p>
+                        }
+                        <div class="item-quantity">
+                            <span>Cantidad: {{ item.quantity }}</span>
                         </div>
+                    </div>
+                    <div class="item-price">
+                        <span class="price-label">Precio</span>
+                        <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
                     </div>
                 </div>
-            }
+                } @else if (item.itemType === 'product' && item.productData) {
+                <div class="item-card product-item">
+                    <div class="item-image">
+                        <img [src]="item.productData.image || '/assets/default-product.jpg'"
+                            [alt]="item.productData.name || 'Producto'" />
+                    </div>
+                    <div class="item-details">
+                        <h4 class="item-title">{{ item.productData.name || 'Producto' }}</h4>
+                        <p class="item-type-badge product-badge">Merchandising</p>
+                        @if (item.productData.description) {
+                        <p class="item-description">{{ item.productData.description }}</p>
+                        }
+                        <div class="item-quantity">
+                            <span>Cantidad: {{ item.quantity }}</span>
+                        </div>
+                    </div>
+                    <div class="item-price">
+                        <span class="price-label">Precio</span>
+                        <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
+                    </div>
+                </div>
+                } @else {
+                <!-- Fallback para items sin datos completos -->
+                <div class="item-card unknown-item">
+                    <div class="item-image">
+                        <img src="/assets/default-product.jpg" alt="Item" />
+                    </div>
+                    <div class="item-details">
+                        <h4 class="item-title">{{ item.itemType === 'product' ? 'Producto' : 'Evento' }}</h4>
+                        <p class="item-type-badge"
+                            [ngClass]="item.itemType === 'product' ? 'product-badge' : 'event-badge'">
+                            {{ item.itemType === 'product' ? 'Merchandising' : 'Evento' }}
+                        </p>
+                        <div class="item-quantity">
+                            <span>Cantidad: {{ item.quantity }}</span>
+                        </div>
+                    </div>
+                    <div class="item-price">
+                        <span class="price-label">Precio</span>
+                        <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
+                    </div>
+                </div>
+                }
+                }
+            </div>
+
+            <div class="order-footer">
+                <div class="order-total">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount">{{ order.totalAmount }} {{ order.currency }}</span>
+                </div>
+            </div>
         </div>
+        }
+    </div>
     }
 </div>
