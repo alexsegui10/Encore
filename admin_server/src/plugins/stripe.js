@@ -1,11 +1,6 @@
 import Stripe from 'stripe';
 import fp from 'fastify-plugin';
 
-/**
- * Stripe plugin to initialize and make Stripe available throughout the application
- * @param {import('fastify').FastifyInstance} fastify 
- * @param {Object} opts 
- */
 async function stripePlugin(fastify, opts) {
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 

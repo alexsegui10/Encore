@@ -16,9 +16,7 @@
       <!-- Navegación para Cliente o No autenticado -->
       <ul *ngIf="!isAdmin">
         <li><a routerLink="/" routerLinkActive="active">Inicio</a></li>
-        <li><a routerLink="/shop" routerLinkActive="active">Artista</a></li>
-        <li><a routerLink="/eventos" routerLinkActive="active">Eventos</a></li>
-        <li><a routerLink="/contacto" routerLinkActive="active">Contacto</a></li>
+        <li><a routerLink="/shop" routerLinkActive="active">Eventos</a></li>
       </ul>
 
       <div class="actions">
@@ -37,7 +35,6 @@
               <img [src]="currentUser()?.image || 'assets/default-avatar.png'" alt="Avatar" class="avatar" />
             </a>
 
-            <!-- Mostrar username para cliente, email para admin -->
             <span class="username" *ngIf="currentUser()"
               [title]="isAdmin ? currentUser()?.email : currentUser()?.username">
               {{ isAdmin ? (currentUser()?.username || currentUser()?.email) : currentUser()?.username }}

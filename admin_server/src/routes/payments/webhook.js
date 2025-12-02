@@ -1,22 +1,12 @@
 import crypto from 'crypto';
 import { webhookSchema } from './schema.js';
 
-/**
- * Webhook route for handling Stripe events
- * @param {import('fastify').FastifyInstance} fastify 
- * @param {Object} opts 
- */
 export default async function webhookRoute(fastify, opts) {
     const { prisma, stripe } = fastify;
 
-    /**
-     * POST /webhook
-     * Handles Stripe webhook events, particularly payment_intent.succeeded
-     */
     fastify.post('/webhook', {
         schema: webhookSchema,
         config: {
-            // Disable default JSON body parser to access raw body
             rawBody: true
         }
     }, async (request, reply) => {
@@ -31,7 +21,6 @@ export default async function webhookRoute(fastify, opts) {
         let event;
 
         try {
-            // Verify webhook signature
             const rawBody = request.rawBody || Buffer.from(JSON.stringify(request.body));
             event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
         } catch (err) {
@@ -41,7 +30,6 @@ export default async function webhookRoute(fastify, opts) {
 
         fastify.log.info(`Received webhook event: ${event.type}`);
 
-        // Handle the event
         try {
             switch (event.type) {
                 case 'payment_intent.succeeded':
@@ -64,9 +52,6 @@ export default async function webhookRoute(fastify, opts) {
     });
 }
 
-/**
- * Handle successful payment intent
- */
 async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
     const { prisma } = fastify;
     const transactionRef = paymentIntent.id;
@@ -74,7 +59,6 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
     fastify.log.info(`Processing payment_intent.succeeded for ${transactionRef}`);
 
     try {
-        // Check if payment was already processed (idempotency)
         const existingPayment = await prisma.payment.findUnique({
             where: { transactionRef },
             include: { order: true }
@@ -87,10 +71,9 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
 
         if (existingPayment.status === 'completed') {
             fastify.log.info(`Payment ${transactionRef} already processed, skipping`);
-            return; // Already processed, idempotent
+            return; 
         }
 
-        // Update payment status to COMPLETED
         await prisma.payment.update({
             where: { id: existingPayment.id },
             data: {
@@ -99,7 +82,6 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
             }
         });
 
-        // Get order with items
         const order = await prisma.order.findUnique({
             where: { id: existingPayment.orderId },
             include: {
@@ -117,9 +99,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
             throw new Error(`Order not found for payment ${transactionRef}`);
         }
 
-        // Process each order item
         for (const item of order.items) {
-            // Deduct stock for products
             if (item.itemType === 'product' && item.productId) {
                 const product = await prisma.product.findUnique({
                     where: { id: item.productId }
@@ -129,9 +109,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
                     throw new Error(`Product ${item.productId} not found`);
                 }
 
-                // Check stock availability
                 if (product.stockAvailable < item.quantity) {
-                    // Mark order as FAILED due to insufficient stock
                     await prisma.order.update({
                         where: { id: order.id },
                         data: { status: 'failed' }
@@ -147,7 +125,6 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
                     );
                 }
 
-                // Deduct stock
                 await prisma.product.update({
                     where: { id: item.productId },
                     data: {
@@ -160,13 +137,10 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
                 fastify.log.info(`Deducted ${item.quantity} stock from product ${product.name}`);
             }
 
-            // Stock for events was already reserved during order creation (SAGA pattern)
-            // No need to deduct here, but we log it for tracking
             if (item.itemType === 'event' && item.eventId) {
                 fastify.log.info(`Event ${item.eventId} stock was reserved during order creation`);
             }
 
-            // Generate tickets for this order item
             const tickets = [];
             for (let i = 0; i < item.quantity; i++) {
                 const uniqueCode = `TICKET-${crypto.randomUUID().toUpperCase()}`;
@@ -178,7 +152,6 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
                 });
             }
 
-            // Create all tickets
             await prisma.ticket.createMany({
                 data: tickets
             });
@@ -186,7 +159,6 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
             fastify.log.info(`Generated ${tickets.length} tickets for order item ${item.id}`);
         }
 
-        // Update order status to PAID
         await prisma.order.update({
             where: { id: order.id },
             data: { status: 'paid' }
@@ -200,9 +172,6 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
     }
 }
 
-/**
- * Handle failed payment intent
- */
 async function handlePaymentIntentFailed(fastify, paymentIntent) {
     const { prisma } = fastify;
     const transactionRef = paymentIntent.id;
@@ -226,26 +195,22 @@ async function handlePaymentIntentFailed(fastify, paymentIntent) {
             return;
         }
 
-        // Update payment status to FAILED
         await prisma.payment.update({
             where: { id: payment.id },
             data: { status: 'failed' }
         });
 
-        // Update order status to FAILED
         await prisma.order.update({
             where: { id: payment.orderId },
             data: { status: 'failed' }
         });
 
-        // SAGA COMPENSATION: Return reserved stock to inventory
         for (const item of payment.order.items) {
             if (item.itemType === 'event' && item.eventId) {
                 const event = await prisma.events.findUnique({
                     where: { id: item.eventId }
                 });
 
-                // Return stock only if event has stock tracking
                 if (event && event.stock !== null) {
                     await prisma.events.update({
                         where: { id: item.eventId },
