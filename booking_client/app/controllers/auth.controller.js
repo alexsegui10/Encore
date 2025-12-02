@@ -5,7 +5,6 @@ import RefreshToken from '../models/refreshToken.model.js';
 import BlacklistedToken from '../models/blacklistedToken.model.js';
 import asyncHandler from 'express-async-handler';
 
-// Configuración de expiración del refresh token (debe coincidir con authService.js)
 const REFRESH_TOKEN_EXPIRY_MS = 2 * 60 * 1000; 
 
 export const refreshToken = asyncHandler(async (req, res) => {
@@ -29,9 +28,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
         return res.status(401).json({ message: 'Refresh token not found' });
     }
 
-    // Check if the refresh token has expired
     if (refreshTokenRecord.expiryDate < new Date()) {
-        // Mover a blacklist antes de eliminar
         await BlacklistedToken.create({
             token: refreshTokenRecord.token,
             userId: refreshTokenRecord.userId,
@@ -39,13 +36,11 @@ export const refreshToken = asyncHandler(async (req, res) => {
             originalExpiryDate: refreshTokenRecord.expiryDate
         });
         
-        // Eliminar de la tabla de refresh tokens
         await RefreshToken.findByIdAndDelete(refreshTokenRecord._id);
         res.clearCookie('jid', { path: '/' });
         return res.status(401).json({ message: 'Refresh token expired' });
     }
 
-    // Verify the refresh token
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
             return res.status(401).json({ message: 'Invalid refresh token' });
@@ -63,7 +58,6 @@ export const refreshToken = asyncHandler(async (req, res) => {
 
         // Verificar el estado del usuario
         if (user.status === 'blocked') {
-            // Mover a blacklist y eliminar refresh token
             await BlacklistedToken.create({
                 token: refreshTokenRecord.token,
                 userId: refreshTokenRecord.userId,
@@ -122,9 +116,6 @@ export const refreshToken = asyncHandler(async (req, res) => {
     });
 });
 
-// @desc Logout user
-// @route POST /api/users/logout
-// @access Private
 export const logout = asyncHandler(async (req, res) => {
     const token = req.cookies.jid;
     
@@ -133,7 +124,6 @@ export const logout = asyncHandler(async (req, res) => {
         const refreshTokenRecord = await RefreshToken.findOne({ token }).exec();
         
         if (refreshTokenRecord) {
-            // Agregar a blacklist
             await BlacklistedToken.create({
                 token: refreshTokenRecord.token,
                 userId: refreshTokenRecord.userId,
@@ -141,12 +131,11 @@ export const logout = asyncHandler(async (req, res) => {
                 originalExpiryDate: refreshTokenRecord.expiryDate
             });
             
-            // Eliminar de la tabla de refresh tokens
             await RefreshToken.deleteOne({ token });
         }
     }
     
-    // Clear the cookie
+    // Limpiar cookies
     res.clearCookie('jid', { path: '/' });
     
     res.status(200).json({ message: 'Logged out successfully' });

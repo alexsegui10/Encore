@@ -1,11 +1,5 @@
 import fp from 'fastify-plugin';
 
-/**
- * Raw body plugin to capture the raw request body for Stripe webhook signature verification
- * This is required because Stripe needs the raw body to verify webhook signatures
- * @param {import('fastify').FastifyInstance} fastify 
- * @param {Object} opts 
- */
 async function rawBodyPlugin(fastify, opts) {
     fastify.addContentTypeParser(
         'application/json',
