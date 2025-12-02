@@ -6,10 +6,9 @@ import argon2 from 'argon2';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Iniciando seed del Admin Server...\n');
+  console.log(' Iniciando seed del Admin Server...\n');
 
-  // Limpiar datos existentes
-  console.log('🗑️  Limpiando datos existentes...');
+  console.log('  Limpiando datos existentes...');
   await prisma.ticket.deleteMany();
   await prisma.payment.deleteMany();
   await prisma.orderItem.deleteMany();
@@ -19,10 +18,9 @@ async function main() {
   await prisma.categories.deleteMany();
   await prisma.users.deleteMany();
   await prisma.admin.deleteMany();
-  console.log('✅ Datos limpiados\n');
+  console.log(' Datos limpiados\n');
 
-  // 1. Crear Admin
-  console.log('👤 Creando usuario admin...');
+  console.log(' Creando usuario admin...');
   const hashedPassword = await argon2.hash('admin123');
   const admin = await prisma.admin.create({
     data: {
@@ -33,12 +31,11 @@ async function main() {
       isActive: true
     }
   });
-  console.log(`✅ Admin creado: ${admin.email}\n`);
+  console.log(` Admin creado: ${admin.email}\n`);
 
-  // 2. Crear usuarios de prueba
-  console.log('👥 Creando usuarios de prueba...');
+  console.log(' Creando usuarios de prueba...');
   const userPassword = await argon2.hash('password123');
-  
+
   const user1 = await prisma.users.create({
     data: {
       uid: 'usr_001',
@@ -69,10 +66,9 @@ async function main() {
     }
   });
 
-  console.log(`✅ Usuarios creados: ${user1.email}, ${user2.email}\n`);
+  console.log(` Usuarios creados: ${user1.email}, ${user2.email}\n`);
 
-  // 3. Crear categorías
-  console.log('🏷️  Creando categorías...');
+  console.log('  Creando categorías...');
   const categories = await Promise.all([
     prisma.categories.create({
       data: {
@@ -115,10 +111,10 @@ async function main() {
       }
     })
   ]);
-  console.log(`✅ ${categories.length} categorías creadas\n`);
+  console.log(` ${categories.length} categorías creadas\n`);
 
   // 4. Crear eventos con STOCK
-  console.log('🎫 Creando eventos con stock...');
+  console.log(' Creando eventos con stock...');
   const events = await Promise.all([
     prisma.events.create({
       data: {
@@ -137,7 +133,7 @@ async function main() {
           'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba',
           'https://images.unsplash.com/photo-1492684223066-81342ee5ff30'
         ],
-        stock: 500, // ⭐ Stock limitado
+        stock: 500,
         favouritesCount: 0
       }
     }),
@@ -158,7 +154,7 @@ async function main() {
           'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc',
           'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4'
         ],
-        stock: 300, // ⭐ Stock limitado
+        stock: 300,
         favouritesCount: 0
       }
     }),
@@ -179,7 +175,7 @@ async function main() {
           'https://images.unsplash.com/photo-1511379938547-c1f69419868d',
           'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba'
         ],
-        stock: 100, // ⭐ Stock limitado (se agotará pronto!)
+        stock: 100,
         favouritesCount: 0
       }
     }),
@@ -200,7 +196,7 @@ async function main() {
           'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
           'https://images.unsplash.com/photo-1506157786151-b8491531f063'
         ],
-        stock: 1000, // ⭐ Stock alto
+        stock: 1000,
         favouritesCount: 0
       }
     }),
@@ -218,7 +214,7 @@ async function main() {
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
         images: [],
-        stock: null, // ⭐ Stock ILIMITADO (null)
+        stock: null,
         favouritesCount: 0
       }
     }),
@@ -236,12 +232,12 @@ async function main() {
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211',
         images: [],
-        stock: 50, // ⭐ Stock MUY limitado
+        stock: 50,
         favouritesCount: 0
       }
     })
   ]);
-  console.log(`✅ ${events.length} eventos creados con stock\n`);
+  console.log(` ${events.length} eventos creados con stock\n`);
 
   // 5. Crear productos de merchandising (opcional)
   console.log('🛍️  Creando productos...');
