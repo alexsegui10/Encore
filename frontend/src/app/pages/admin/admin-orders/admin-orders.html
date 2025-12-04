@@ -4,16 +4,11 @@
     </div>
 
     <!-- Componente de búsqueda compartido -->
-    <app-admin-search
-        placeholder="Buscar por ID, usuario o email..."
-        (searchChange)="onSearchChange($event)">
+    <app-admin-search placeholder="Buscar por ID, usuario o email..." (searchChange)="onSearchChange($event)">
     </app-admin-search>
 
     <!-- Componente de filtros compartido -->
-    <app-admin-filters
-        title="Filtros"
-        filterLabel="Estado"
-        [filterOptions]="statusFilterOptions"
+    <app-admin-filters title="Filtros" filterLabel="Estado" [filterOptions]="statusFilterOptions"
         (filterChange)="onFilterChange($event)">
     </app-admin-filters>
 
@@ -67,7 +62,7 @@
                     <td>
                         <div class="actions-cell">
                             <button class="btn-icon btn-view" (click)="viewDetails(order)" title="Ver detalles">
-                                👁️
+                                Ver
                             </button>
                         </div>
                     </td>
@@ -78,10 +73,7 @@
     </div>
 
     <!-- Componente de paginación compartido -->
-    <app-pagination
-        [currentPage]="currentPage"
-        [totalPages]="totalPages"
-        (pageChange)="setPageTo($event)">
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="setPageTo($event)">
     </app-pagination>
     } @else {
     <div class="empty-state">
@@ -119,7 +111,8 @@
                         </div>
                         <div class="detail-item">
                             <span class="label">Total:</span>
-                            <span class="value amount">{{ formatCurrency(selectedOrder()!.totalAmount, selectedOrder()!.currency) }}</span>
+                            <span class="value amount">{{ formatCurrency(selectedOrder()!.totalAmount,
+                                selectedOrder()!.currency) }}</span>
                         </div>
                     </div>
                 </div>
@@ -187,14 +180,15 @@
                                 <img [src]="item.product.image" [alt]="item.product.name" />
                                 } @else {
                                 <div class="image-placeholder">
-                                    <span>{{ item.itemType === 'event' ? '🎫' : '📦' }}</span>
+                                    <span>{{ item.itemType === 'event' ? 'Evento' : 'Producto' }}</span>
                                 </div>
                                 }
                             </div>
                             <div class="item-info">
                                 <h4>{{ item.event?.title || item.product?.name || 'Item' }}</h4>
                                 <div class="item-meta">
-                                    <span class="item-type">{{ item.itemType === 'event' ? 'Evento' : 'Producto' }}</span>
+                                    <span class="item-type">{{ item.itemType === 'event' ? 'Evento' : 'Producto'
+                                        }}</span>
                                     @if (item.event) {
                                     <span class="item-date">{{ formatDate(item.event.date) }}</span>
                                     }
@@ -202,7 +196,8 @@
                                 <div class="item-pricing">
                                     <span>Cantidad: {{ item.quantity }}</span>
                                     <span>Precio unitario: {{ formatCurrency(item.unitPrice) }}</span>
-                                    <span class="item-total">Subtotal: {{ formatCurrency(item.unitPrice * item.quantity) }}</span>
+                                    <span class="item-total">Subtotal: {{ formatCurrency(item.unitPrice * item.quantity)
+                                        }}</span>
                                 </div>
                             </div>
                         </div>

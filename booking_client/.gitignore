@@ -1,17 +1,7 @@
 node_modules/
 
-.angular/
-frontend/.angular/
-*.tsbuildinfo
-
-.vite/
-vite.config.js.timestamp-*
-
 *.env
 !*.env.example
-
-dist/
-build/
 
 *.log
 npm-debug.log*
@@ -23,4 +13,4 @@ Thumbs.db
 .idea/
 .vscode/
 
-prisma/generated/
+coverage/

@@ -241,7 +241,7 @@ export default async function paymentRoutes(fastify, opts) {
                 data: { transactionRef: paymentIntent.id }
             });
 
-            fastify.log.info(`✅ SAGA completed: PaymentIntent ${paymentIntent.id} for order ${order.uid}`);
+            fastify.log.info(`SAGA completed: PaymentIntent ${paymentIntent.id} for order ${order.uid}`);
 
             return reply.send({
                 clientSecret: paymentIntent.client_secret,
@@ -251,7 +251,7 @@ export default async function paymentRoutes(fastify, opts) {
 
         } catch (error) {
             // SAGA COMPENSATION: Rollback all operations
-            fastify.log.error('❌ SAGA failed, rolling back:', error);
+            fastify.log.error('SAGA failed, rolling back:', error);
             await rollbackTransaction(prisma, compensationLog, fastify);
             return reply.code(500).send({ error: error.message || 'Failed to create payment intent' });
         }

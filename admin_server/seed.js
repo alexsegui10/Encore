@@ -240,7 +240,7 @@ async function main() {
   console.log(` ${events.length} eventos creados con stock\n`);
 
   // 5. Crear productos de merchandising (opcional)
-  console.log('🛍️  Creando productos...');
+  console.log('Creando productos...');
   const products = await Promise.all([
     prisma.product.create({
       data: {
@@ -267,16 +267,16 @@ async function main() {
       }
     })
   ]);
-  console.log(`✅ ${products.length} productos creados\n`);
+  console.log(`${products.length} productos creados\n`);
 
-  console.log('🎉 ¡Seed completado exitosamente!');
-  console.log('\n📋 Resumen:');
+  console.log('Seed completado exitosamente!');
+  console.log('\nResumen:');
   console.log(`   - ${1} Admin creado`);
   console.log(`   - ${2} Usuarios creados`);
   console.log(`   - ${categories.length} Categorías creadas`);
   console.log(`   - ${events.length} Eventos creados`);
   console.log(`   - ${products.length} Productos creados`);
-  console.log('\n🔑 Credenciales de prueba:');
+  console.log('\nCredenciales de prueba:');
   console.log('   Admin: admin@encore.com / admin123');
   console.log('   Usuario: john@example.com / password123');
   console.log('   Usuario: jane@example.com / password123');
@@ -284,7 +284,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Error durante el seed:', e);
+    console.error('Error durante el seed:', e);
     process.exit(1);
   })
   .finally(async () => {

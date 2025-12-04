@@ -71,7 +71,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
 
         if (existingPayment.status === 'completed') {
             fastify.log.info(`Payment ${transactionRef} already processed, skipping`);
-            return; 
+            return;
         }
 
         await prisma.payment.update({
@@ -164,7 +164,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
             data: { status: 'paid' }
         });
 
-        fastify.log.info(`✅ Order ${order.uid} completed successfully`);
+        fastify.log.info(`Order ${order.uid} completed successfully`);
 
     } catch (error) {
         fastify.log.error(`Error processing payment_intent.succeeded: ${error.message}`);
@@ -225,7 +225,7 @@ async function handlePaymentIntentFailed(fastify, paymentIntent) {
             }
         }
 
-        fastify.log.info(`✅ Order marked as failed and stock returned for payment ${transactionRef}`);
+        fastify.log.info(`Order marked as failed and stock returned for payment ${transactionRef}`);
 
     } catch (error) {
         fastify.log.error(`Error processing payment_intent.payment_failed: ${error.message}`);
