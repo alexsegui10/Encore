@@ -258,9 +258,7 @@ export default async function paymentRoutes(fastify, opts) {
     });
 }
 
-/**
- * Rollback stock reservations (SAGA compensation)
- */
+
 async function rollbackStockReservation(prisma, stockReserved, fastify) {
     for (const reservation of stockReserved) {
         try {
@@ -275,9 +273,6 @@ async function rollbackStockReservation(prisma, stockReserved, fastify) {
     }
 }
 
-/**
- * Complete SAGA rollback (compensation)
- */
 async function rollbackTransaction(prisma, compensationLog, fastify) {
     // Rollback stock
     await rollbackStockReservation(prisma, compensationLog.stockReserved, fastify);
