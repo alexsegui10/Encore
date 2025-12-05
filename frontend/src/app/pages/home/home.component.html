@@ -1,2 +1,89 @@
-<app-carousel></app-carousel>
-<list-category></list-category>
+<div class="home-container">
+  <!-- Featured Carousel -->
+  <section class="featured-carousel">
+    <app-carousel></app-carousel>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">🎭</div>
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Eventos activos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎶</div>
+        <div class="stat-number">50K+</div>
+        <div class="stat-label">Entradas vendidas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-number">4.8</div>
+        <div class="stat-label">Valoración media</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎉</div>
+        <div class="stat-number">10K+</div>
+        <div class="stat-label">Usuarios felices</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories-section">
+    <div class="section-header">
+      <h2 class="section-title">Explora por categoría</h2>
+      <p class="section-subtitle">Encuentra el evento perfecto para ti</p>
+    </div>
+    <list-category></list-category>
+  </section>
+
+  <!-- Premium CTA Section -->
+  <section class="premium-cta">
+    <div class="cta-background">
+      <div class="cta-overlay"></div>
+      <div class="cta-particles">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div class="cta-content">
+      <div class="cta-badge">🌟 Premium</div>
+      <h2 class="cta-title">
+        Vive experiencias <span class="highlight">inolvidables</span>
+      </h2>
+      <p class="cta-description">
+        Accede a los mejores eventos, preventa exclusiva y descuentos VIP.
+        Únete a miles de usuarios que ya disfrutan de Encore.
+      </p>
+      <div class="cta-buttons">
+        <a routerLink="/shop" class="btn-primary">
+          <span class="btn-icon">🎫</span>
+          Explorar todos los eventos
+        </a>
+        <a routerLink="/register" class="btn-secondary">
+          <span class="btn-icon">⭐</span>
+          Crear cuenta gratis
+        </a>
+      </div>
+      <div class="cta-features">
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-text">Compra instantánea</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-text">Pago 100% seguro</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎁</div>
+          <div class="feature-text">Ofertas exclusivas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

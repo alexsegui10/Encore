@@ -3,6 +3,7 @@
      [class.category-archived]="category.status === 'archived'">
   
   <div class="card__background" [style.background-image]="'url(' + backgroundUrl + ')'">
+    <div class="card__overlay"></div>
     <!-- Badge de estado -->
     <span class="status-badge" *ngIf="category.status && category.status !== 'active'">
       <span *ngIf="category.status === 'hidden'" class="badge-hidden">Oculta</span>
@@ -11,9 +12,10 @@
   </div>
 
   <div class="card__content">
-    <p class="card__category">{{ category.slug || 'CATEGORY' }}</p>
-    <h3 class="card__heading" >{{ category.name }}</h3>
-
-    <h3 *ngIf="category.description" class="card__heading">{{ category.description }}</h3>
+    <div class="card__content-inner">
+      <p class="card__category">{{ category.slug || 'CATEGORÍA' }}</p>
+      <h3 class="card__heading">{{ category.name }}</h3>
+      <p *ngIf="category.description" class="card__description">{{ category.description }}</p>
+    </div>
   </div>
 </div>

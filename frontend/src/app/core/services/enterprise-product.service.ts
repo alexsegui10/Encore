@@ -59,4 +59,17 @@ export class EnterpriseProductService {
     return this.apiService.get(`/product/random?count=${count}`, undefined, 5000, true)
       .pipe(map(data => data.products || []));
   }
+
+  getProductsByIds(ids: string[]): Observable<EnterpriseProduct[]> {
+    if (!ids || ids.length === 0) {
+      return new Observable(observer => {
+        observer.next([]);
+        observer.complete();
+      });
+    }
+    
+    const idsParam = ids.join(',');
+    return this.apiService.get(`/product/by-ids?ids=${idsParam}`, undefined, 5000, true)
+      .pipe(map(data => data.products || []));
+  }
 }

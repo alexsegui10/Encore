@@ -51,10 +51,6 @@ export class CardEventComponent {
         }
       },
       error: (err) => {
-        console.error('Error al dar like:', err);
-        console.log('Error status:', err.status);
-        console.log('Error details:', err);
-
         // Verificar si es error de autenticación (401 o 403)
         if (err.status === 401 || err.status === 403) {
           Swal.fire({
@@ -96,36 +92,22 @@ export class CardEventComponent {
 
     this.cartService.addToCart(this.event._id).subscribe({
       next: () => {
-        // Check if event has merchandising
         if (this.event.merchandising && this.event.merchandising.length > 0) {
-          this.merchandiseProducts = this.event.merchandising;
+          this.merchandiseProducts = this.event.merchandising.map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            description: p.description,
+            image: p.image
+          }));
           this.showMerchandisePopup = true;
         } else {
-          // Fetch random products as fallback
-          this.enterpriseProductService.getRandomProducts(3).subscribe({
-            next: (products) => {
-              if (products && products.length > 0) {
-                this.merchandiseProducts = products;
-                this.showMerchandisePopup = true;
-              } else {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Añadido al carrito',
-                  text: `${this.event.title} se añadió correctamente`,
-                  timer: 2000,
-                  showConfirmButton: false
-                });
-              }
-            },
-            error: () => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Añadido al carrito',
-                text: `${this.event.title} se añadió correctamente`,
-                timer: 2000,
-                showConfirmButton: false
-              });
-            }
+          Swal.fire({
+            icon: 'success',
+            title: 'Añadido al carrito',
+            text: `${this.event.title} se añadió correctamente`,
+            timer: 2000,
+            showConfirmButton: false
           });
         }
       },

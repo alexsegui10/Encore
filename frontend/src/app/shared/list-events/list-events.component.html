@@ -1,5 +1,9 @@
-<app-search (searchEvent)="get_list_filtered($event)"></app-search>
-<app-filters (eventofiltros)="get_list_filtered($event)" [listCategories]="listCategories"></app-filters>
+<!-- Búsqueda y Filtros en línea horizontal -->
+<div class="search-filters-horizontal">
+  <app-search (searchEvent)="get_list_filtered($event)"></app-search>
+  <app-filters (eventofiltros)="get_list_filtered($event)" (itemsPerPageChange)="changeItemsPerPage($event)" [listCategories]="listCategories" [currentLimit]="limit"></app-filters>
+</div>
+
 <div class="list-events-container">
   <h2>Lista de Eventos</h2>
   @if (events && events.length) {

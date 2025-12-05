@@ -153,39 +153,23 @@ export class DetailsComponent implements OnInit {
 
         this.cartService.addToCart(currentEvent._id).subscribe({
             next: () => {
-                // Check if event has merchandising from backend
-                const hasMerchandising = currentEvent.merchandising && currentEvent.merchandising.length > 0;
-                
-                if (hasMerchandising) {
-                    this.loadedMerchandising = currentEvent.merchandising!;
+                if (currentEvent.merchandising && currentEvent.merchandising.length > 0) {
+                    this.loadedMerchandising = currentEvent.merchandising.map((p: any) => ({
+                        id: p.id,
+                        name: p.name,
+                        price: p.price,
+                        description: p.description,
+                        image: p.image
+                    }));
                     this.showMerchandisePopup = true;
                 } else {
-                    // Try to load random merchandising from enterprise server
-                    this.enterpriseProductService.getRandomProducts(3).pipe(
-                        catchError(() => of([]))
-                    ).subscribe({
-                        next: (products) => {
-                            if (products && products.length > 0) {
-                                // Transform enterprise products to merchandising format
-                                this.loadedMerchandising = products.map(p => ({
-                                    id: p.id,
-                                    name: p.name,
-                                    price: p.price,
-                                    description: p.description,
-                                    image: p.image
-                                }));
-                                this.showMerchandisePopup = true;
-                            } else {
-                                // No merchandising available
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Añadido al carrito',
-                                    text: `${currentEvent.title} se añadió correctamente`,
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
-                            }
-                        }
+                    // No merchandising for this event
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Añadido al carrito',
+                        text: `${currentEvent.title} se añadió correctamente`,
+                        timer: 2000,
+                        showConfirmButton: false
                     });
                 }
             },

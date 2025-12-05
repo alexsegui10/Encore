@@ -1,0 +1,2716 @@
+{
+  "users": [
+    {
+      "_id": "66fca0000000000000000001",
+      "__v": 0,
+      "bio": "Administrador del sistema",
+      "createdAt": "2025-10-24T16:20:29.553Z",
+      "email": "admin@encore.local",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "image": "https://images.unsplash.com/photo-1531123414780-f742a9dce067",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$w3MEKlR4iKVKNlOgIHbWqw$9Ist4XnjzaVNkCk/cemxUexirYgzZnIXA1ph0zxX+tc",
+      "role": "admin",
+      "updatedAt": "2025-11-06T19:13:06.168Z",
+      "username": "admin",
+      "uid": "client_66fca0000000000000000001",
+      "isActive": true,
+      "status": "active",
+      "slug": "admin"
+    },
+    {
+      "_id": "66fca0000000000000000002",
+      "__v": 0,
+      "bio": "Amante de los conciertos y festivales",
+      "createdAt": "2025-10-24T16:20:29.559Z",
+      "email": "cliente1@encore.local",
+      "favouriteEvents": [
+        "66fca0020000000000000006",
+        "66fca0020000000000000001"
+      ],
+      "followingUsers": [],
+      "image": "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$owRxrSkKgGp5v2ZEGg3+dg$5rIKZqSWLFxM3ifrfI3vUjQdbG1uWEbqI6A0Rj+HuBw",
+      "role": "user",
+      "updatedAt": "2025-11-06T19:13:06.168Z",
+      "username": "cliente1",
+      "uid": "client_66fca0000000000000000002",
+      "isActive": true,
+      "status": "active",
+      "slug": "cliente1"
+    },
+    {
+      "_id": "66fca0000000000000000003",
+      "__v": 0,
+      "bio": "Teatro y comedia son mi plan perfecto",
+      "createdAt": "2025-10-24T16:20:29.563Z",
+      "email": "cliente2@encore.local",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$PCtXaPpENI4dTMk42ePDqw$OwVBe79oexvvPLkZ+yTywB+R7pgvRDFMM4usDqlH3X8",
+      "role": "user",
+      "updatedAt": "2025-11-06T19:13:06.168Z",
+      "username": "cliente2",
+      "uid": "client_66fca0000000000000000003",
+      "isActive": true,
+      "status": "active",
+      "slug": "cliente2"
+    },
+    {
+      "_id": "66fca0000000000000000004",
+      "__v": 0,
+      "bio": "Tech y conferencias",
+      "createdAt": "2025-10-24T16:20:29.565Z",
+      "email": "cliente3@encore.local",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$jopqmIUgA7a5F7DsfbiBPg$SJD5Mp6F3Z84zcyN2UUX8y7LpJ3DvgZY2rJ6ULpAUKo",
+      "role": "user",
+      "updatedAt": "2025-11-06T19:13:06.168Z",
+      "username": "cliente3",
+      "uid": "client_66fca0000000000000000004",
+      "isActive": true,
+      "status": "active",
+      "slug": "cliente3"
+    },
+    {
+      "_id": "66fca0000000000000000005",
+      "__v": 0,
+      "bio": "Me flipan los macroconciertos",
+      "createdAt": "2025-10-24T16:20:29.568Z",
+      "email": "alex@encore.local",
+      "favouriteEvents": [
+        "66fca0020000000000000002",
+        "66fca002000000000000000c"
+      ],
+      "followingUsers": [
+        "66fca0000000000000000006"
+      ],
+      "image": "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$V28zS9jN3qqNRFPDAbYOMQ$bDk9z4ZfEr6QOAf2y91kXYoZ5gkBwarmbMv72qEYVr8",
+      "role": "user",
+      "updatedAt": "2025-11-06T19:13:06.168Z",
+      "username": "alex",
+      "uid": "client_66fca0000000000000000005",
+      "isActive": true,
+      "status": "active",
+      "slug": "alex"
+    },
+    {
+      "_id": "66fca0000000000000000006",
+      "__v": 0,
+      "bio": "Cine, teatro y algo de electrónica",
+      "createdAt": "2025-10-24T16:20:29.570Z",
+      "email": "dani@encore.local",
+      "favouriteEvents": [
+        "66fca002000000000000000a",
+        "66fca002000000000000000e"
+      ],
+      "followingUsers": [
+        "66fca0000000000000000005"
+      ],
+      "image": "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$mNnMWrLx1jOpNzk9rBNdgw$rIL/ojUn1Iswjd/EucJlnONCid0cHWVsLSu39PoBBbc",
+      "role": "user",
+      "updatedAt": "2025-11-06T19:13:06.168Z",
+      "username": "dani",
+      "uid": "client_66fca0000000000000000006",
+      "isActive": true,
+      "status": "active",
+      "slug": "dani"
+    },
+    {
+      "_id": "690a5294295b5bda29ae6303",
+      "username": "esere",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$YDDY8/8mjtlW1bC4s1xonQ$uhJQXK4YB20mlsEB0OlQqFk9UUJgZSkCwD2KRx+UEPg",
+      "email": "esere@gmail.com",
+      "favouriteEvents": [
+        "66fca002000000000000000d"
+      ],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=esere%40gmail.com",
+      "typeUser": "cliente",
+      "role": "user",
+      "createdAt": "2025-11-04T19:23:00.578Z",
+      "updatedAt": "2025-11-06T19:33:09.850Z",
+      "__v": 1,
+      "isActive": true,
+      "status": "active",
+      "slug": "esere",
+      "uid": "usr_mhntdorqvxf0l"
+    },
+    {
+      "_id": "690cf6f0f635fef32b16c2fa",
+      "uid": "usr_mhntl5xvbabgo",
+      "slug": "erese",
+      "username": "erese",
+      "email": "erese@gmail.com",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$Mx+AjAPb3lImEJ3gEmDJvw$HYY6zoBM1DwCg9FkmM5jZjALyfR4Kok+rV1utCIxbaE",
+      "bio": "erese",
+      "image": "",
+      "isActive": true,
+      "status": "active",
+      "role": "client",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-06T19:28:48.589Z",
+      "updatedAt": "2025-11-06T19:35:01.751Z"
+    },
+    {
+      "_id": "690e06f5507c15a886ded4bb",
+      "uid": "usr_mhoz1q477x8oa",
+      "slug": "aima",
+      "username": "aima",
+      "email": "aima@gmail.com",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$2u24+vaUc15Dje2S5AbO1w$Aj+CYYfjionF2naVNIuTXUx7ktWMY5WsRVTCPR6s0DY",
+      "bio": "a",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=aima%40gmail.com",
+      "isActive": true,
+      "status": "active",
+      "role": "client",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-07T14:49:25.448Z",
+      "updatedAt": "2025-11-07T14:49:25.448Z"
+    },
+    {
+      "_id": "690e0713b2136c2afc2ac3eb",
+      "username": "aima10",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$AX59+eGcrU8tTRUahQOH+g$+9Bl/wfWP/39AsGRcUih1LmFElJZEaZmUdPO/d47MHo",
+      "email": "aima10@gmail.com",
+      "uid": "usr_mhoz2du30y403",
+      "slug": "aima10",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=aima10%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-07T14:49:56.121Z",
+      "updatedAt": "2025-11-07T14:49:56.121Z",
+      "__v": 0
+    },
+    {
+      "_id": "690e0744b2136c2afc2ac3ff",
+      "username": "aima32e2",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$VUgo6RYvfjQz+pL8hMFCXw$U31W/WS7Fm/CXuphfN8imWl7HJTDSuxwVCTAOgmVp6k",
+      "email": "aima3232@gmail.com",
+      "uid": "usr_mhoz3fmcpy4xe",
+      "slug": "aima32e2",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "asfasfasf",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=aima32%40gmfghgfjfgjail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-07T14:50:44.824Z",
+      "updatedAt": "2025-11-07T14:52:02.673Z",
+      "__v": 0
+    },
+    {
+      "_id": "690e07dd5c16eebc5d976630",
+      "username": "esere123",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$LV+c8eAWDUzWe4bWTVgd8g$9dwAsm+gbnSZdCyJyUh1FrCJVZ9CRBmLr82mseESw04",
+      "email": "esere12312311@gmail.com",
+      "uid": "usr_mhoz6pi2sg8rk",
+      "slug": "esere123",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=esere12312311%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-07T14:53:17.867Z",
+      "updatedAt": "2025-11-07T14:53:17.867Z",
+      "__v": 0
+    },
+    {
+      "_id": "690e0967c0ce6b00e62fef79",
+      "username": "esere1234",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$jTdoQDxBJ9Sf430etCUaFg$nCGGVBYYtvTwYPErS6/xEDoy9T+YVOg55DvB1ZeksM8",
+      "email": "esere123@gmail.com",
+      "uid": "usr_mhozf5ayxnfl3",
+      "slug": "esere1234",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=esere123%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-07T14:59:51.607Z",
+      "updatedAt": "2025-11-07T14:59:51.607Z",
+      "__v": 0
+    },
+    {
+      "_id": "690e0a27c0ce6b00e62fef91",
+      "username": "esere21",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$T9l24ea3g7m06eeePi1R9Q$CnIWUR02SVeryGb/yYKdTv8LHexSF2hTMthzqIdqNkY",
+      "email": "esere1236@gmail.com",
+      "uid": "usr_mhozj9f1wnfet",
+      "slug": "esere21",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=esere1236%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "blocked",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-07T15:03:03.286Z",
+      "updatedAt": "2025-11-07T16:14:17.348Z",
+      "__v": 0
+    },
+    {
+      "_id": "690e0cada0f3e8391be3d722",
+      "username": "esere1",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$H0jLK6RKjyWx+Ac8rlf6Ag$y3lOaDVI0nItn1jMvzkN0KveE7UzDaV8py1QiJuYeq8",
+      "email": "esere1@gmail.com",
+      "uid": "usr_mhozx4bnb8pgh",
+      "slug": "esere1",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=esere1%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-07T15:13:50.138Z",
+      "updatedAt": "2025-11-14T15:54:17.872Z",
+      "__v": 0
+    },
+    {
+      "_id": "691cc02b79ce6cc957569f20",
+      "username": "alex123",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$lkCtihB3c8hZ5eiBDimFXQ$K/Xi8rgg/GqYB7rkARHcJj9sf0YZtVZ3Nt41bXCeqpg",
+      "email": "alexsegui10@gmail.com",
+      "uid": "usr_mi4xja6jajrn7",
+      "slug": "alex123",
+      "favouriteEvents": [
+        "66fca0020000000000000015",
+        "66fca0020000000000000008",
+        "66fca0020000000000000007"
+      ],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-18T18:51:24.147Z",
+      "updatedAt": "2025-11-18T18:56:02.744Z",
+      "__v": 13
+    },
+    {
+      "_id": "692085af1eb497c0d6eff0cd",
+      "username": "aaa",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$AO0LhLK0klSGmYGrUfgFKA$Yfoa0pG4dW86QcunUauIesJKfjnuEgvJYq1t7zL1H/s",
+      "email": "a@gmail.com",
+      "uid": "usr_mi90p0np8hwiw",
+      "slug": "aaa",
+      "favouriteEvents": [
+        "66fca0020000000000000008"
+      ],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=a%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-21T15:30:55.283Z",
+      "updatedAt": "2025-11-21T16:04:23.281Z",
+      "__v": 1
+    },
+    {
+      "_id": "6925d531890cc404932eaa31",
+      "username": "esere2",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$BL1p/PJuO1qgYmdvVHsuBQ$Obuc4mPQCAVy3IM/jWKN3X5jDnRcZEmA5V/yQDZIlEA",
+      "email": "esere2@gmail.com",
+      "uid": "usr_mierwlsc4vawa",
+      "slug": "esere2",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=esere2%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-25T16:11:29.796Z",
+      "updatedAt": "2025-11-25T16:11:29.796Z",
+      "__v": 0
+    },
+    {
+      "_id": "6925d92cd009618c261701e5",
+      "username": "aima13º123",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$dlc1Xi3PX44d1X8OmJ16qg$8mGKIVaLUsYGqCi0wfmsyc6pg13G2gEVDVa9o8uF/S0",
+      "email": "aima12312@gmail.com",
+      "uid": "usr_miesifvtn20to",
+      "slug": "aima13o123",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=aima12312%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-25T16:28:28.545Z",
+      "updatedAt": "2025-11-25T16:28:28.545Z",
+      "__v": 0
+    },
+    {
+      "_id": "6925dcb01e9bcc6ac0972b6f",
+      "username": "asere",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$X3iy6IL9t75LXIuAIG2woA$yU3wTLXtu/EWS0IDOw/GuPQghi0ZYqZX9KppwYfCsLU",
+      "email": "asere@gmail.com",
+      "uid": "usr_miet1qr72rqx2",
+      "slug": "asere",
+      "favouriteEvents": [
+        "66fca0020000000000000008"
+      ],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=asere%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-25T16:43:29.118Z",
+      "updatedAt": "2025-11-25T16:43:35.781Z",
+      "__v": 1
+    },
+    {
+      "_id": "6925fa4ce931a930c959af1a",
+      "username": "asfasgadsgdsag",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$bapW+Ejup/00Di/rGRrVLA$33lO8DSVQivaC9raPZx+RsiTWbs19PufwSWJGRle5yU",
+      "email": "asfasfasfas@gmail.com",
+      "uid": "usr_miexk715a8ka8",
+      "slug": "asfasgadsgdsag",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=asfasfasfas%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-25T18:49:48.461Z",
+      "updatedAt": "2025-11-25T18:49:48.461Z",
+      "__v": 0
+    },
+    {
+      "_id": "6926007ae931a930c959afdd",
+      "username": "esereaima",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$onPkfv4ZnB6Nx8o5sDUezg$pQl4WkoFZKojSjpskkK2jeXLc2VbEpZGQIshi93VbMQ",
+      "email": "esereaima@gmail.com",
+      "uid": "usr_mieyi45xve26u",
+      "slug": "esereaima",
+      "favouriteEvents": [
+        "66fca0020000000000000011",
+        "66fca0020000000000000015",
+        "66fca0020000000000000003",
+        "66fca0020000000000000008"
+      ],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=esereaima%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-25T19:16:10.786Z",
+      "updatedAt": "2025-12-01T18:06:49.904Z",
+      "__v": 28
+    },
+    {
+      "_id": "6929b3b17b97ce8456e8fc57",
+      "username": "esereeee",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$BNwAhOOYkpJiEF+GHmt+Ew$tCANKiXVaKheCzDRokzhNzoNZxVrxOgFu5OSRd5ELZg",
+      "email": "alexse23123gui10@gmail.com",
+      "uid": "usr_miiyvgcv1pqdu",
+      "slug": "esereeee",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexse23123gui10%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-28T14:37:38.097Z",
+      "updatedAt": "2025-11-28T14:37:38.097Z",
+      "__v": 0
+    },
+    {
+      "_id": "6929b658d0a93cdb1d17f042",
+      "username": "qwrfqwrtaqwgtaqw",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$ryQIEZyeIq4ULzqOkSLvVg$kB0NOtk1rnS21Vtok9Kx+9Eshu0aoLdz1tQGnZRlWfs",
+      "email": "alexsegui11231240@gmail.com",
+      "uid": "usr_miiza06lieqk4",
+      "slug": "qwrfqwrtaqwgtaqw",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui11231240%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-11-28T14:48:56.949Z",
+      "updatedAt": "2025-11-28T14:48:56.949Z",
+      "__v": 0
+    },
+    {
+      "_id": "692dd4a2d1b58213fa1c0239",
+      "username": "safijasfuiashfa",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$HqRW1cELQ8wPX0xEIGkt5Q$JudeGYdQ6bNrJ8f3RCIVi6pNsRXRml9zksdn/ACUWwY",
+      "email": "asfasf@gmail.com",
+      "uid": "usr_minfyuy405nnm",
+      "slug": "safijasfuiashfa",
+      "favouriteEvents": [],
+      "followingUsers": [],
+      "bio": "",
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=asfasf%40gmail.com",
+      "role": "user",
+      "isActive": true,
+      "status": "active",
+      "comentarios": [],
+      "reservas": [],
+      "createdAt": "2025-12-01T17:47:15.142Z",
+      "updatedAt": "2025-12-01T17:47:15.142Z",
+      "__v": 0
+    }
+  ],
+  "Admin": [
+    {
+      "_id": "6904d41d8144fcac0973518b",
+      "uid": "adm_admin001",
+      "username": "admin1",
+      "email": "admin@encore.com",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$lrx37dVF/1ZYjDEbbxbLUQ$TAeSQOveKjRSTpkXHY/LJ2GtFU9jP++yVFV1sZe+/to",
+      "isActive": true,
+      "createdAt": "2025-10-31T15:22:05.855Z",
+      "updatedAt": "2025-11-07T15:22:51.674Z"
+    }
+  ],
+  "events": [
+    {
+      "_id": "66fca0020000000000000001",
+      "__v": 0,
+      "category": "66fca0010000000000000001",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-03-26T20:30:00.000Z",
+      "description": "El compositor Hans Zimmer presenta su tour “The Next Level” con banda completa en Valencia:contentReference[oaicite:0]{index=0}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba",
+        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30"
+      ],
+      "location": "Roig Arena, Valencia",
+      "mainImage": "https://images.unsplash.com/photo-1506157786151-b8491531f063",
+      "price": 85,
+      "slug": "hans-zimmer-valencia-2026-03-26",
+      "status": "published",
+      "title": "Hans Zimmer — Valencia",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000002",
+      "__v": 0,
+      "category": "66fca0010000000000000001",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-05-07T21:00:00.000Z",
+      "description": "El legendario guitarrista Eric Clapton regresa a Madrid dentro de su gira europea de 2026:contentReference[oaicite:1]{index=1}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc",
+        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4"
+      ],
+      "location": "Movistar Arena, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1483412033650-1015ddeb83d1",
+      "price": 110,
+      "slug": "eric-clapton-madrid-2026-05-07",
+      "status": "published",
+      "title": "Eric Clapton — Madrid",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000003",
+      "__v": 1,
+      "category": "66fca0010000000000000001",
+      "comments": [
+        "6926125f134fa34431536262"
+      ],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-04-08T21:00:00.000Z",
+      "description": "La banda australiana Tame Impala recala en Barcelona con su inconfundible sonido psicodélico:contentReference[oaicite:2]{index=2}.",
+      "favouritesCount": 1,
+      "images": [
+        "https://images.unsplash.com/photo-1511379938547-c1f69419868d",
+        "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba"
+      ],
+      "location": "Palau Sant Jordi, Barcelona",
+      "mainImage": "https://images.unsplash.com/photo-1517263904808-5dc91e3e7044",
+      "price": 65,
+      "slug": "tame-impala-barcelona-2026-04-08",
+      "status": "published",
+      "title": "Tame Impala — Barcelona",
+      "updatedAt": "2025-11-25T20:32:31.468Z"
+    },
+    {
+      "_id": "66fca0020000000000000004",
+      "__v": 0,
+      "category": "66fca0010000000000000001",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-05-10T20:00:00.000Z",
+      "description": "El grupo de K‑pop TWICE actuará en Barcelona para celebrar su nueva gira mundial:contentReference[oaicite:3]{index=3}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+        "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc"
+      ],
+      "location": "Palau Sant Jordi, Barcelona",
+      "mainImage": "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53",
+      "price": 70,
+      "slug": "twice-barcelona-2026-05-10",
+      "status": "published",
+      "title": "TWICE — Barcelona",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000005",
+      "__v": 0,
+      "category": "66fca0010000000000000001",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-03-29T20:30:00.000Z",
+      "description": "Hans Zimmer despide su gira en Madrid con un espectacular show en directo:contentReference[oaicite:4]{index=4}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1499364615650-ec38552f4f34",
+        "https://images.unsplash.com/photo-1483412033650-1015ddeb83d1"
+      ],
+      "location": "WiZink Center, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
+      "price": 90,
+      "slug": "hans-zimmer-madrid-2026-03-29",
+      "status": "published",
+      "title": "Hans Zimmer — Madrid",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000006",
+      "__v": 0,
+      "category": "66fca0010000000000000002",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-06-04T17:00:00.000Z",
+      "description": "El festival abarcará del 3 al 7 de junio de 2026, con las jornadas principales del 4 al 6:contentReference[oaicite:5]{index=5}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf",
+        "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53"
+      ],
+      "location": "Parc del Fòrum, Barcelona",
+      "mainImage": "https://images.unsplash.com/photo-1464375117522-1311d6a5b81c",
+      "price": 195,
+      "slug": "primavera-sound-barcelona-2026-06-04",
+      "status": "published",
+      "title": "Primavera Sound — Barcelona",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000007",
+      "__v": 1,
+      "category": "66fca0010000000000000002",
+      "comments": [
+        "69260e9be931a930c959b57b"
+      ],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-07-08T17:00:00.000Z",
+      "description": "Mad Cool 2026 se celebrará del 8 al 11 de julio con un cartel repleto de artistas estelares:contentReference[oaicite:6]{index=6}.",
+      "favouritesCount": 1,
+      "images": [
+        "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53",
+        "https://images.unsplash.com/photo-1464375117522-1311d6a5b81c"
+      ],
+      "location": "Iberdrola Music, Villaverde, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf",
+      "price": 180,
+      "slug": "mad-cool-madrid-2026-07-08",
+      "status": "published",
+      "title": "Mad Cool — Madrid",
+      "updatedAt": "2025-11-25T20:29:52.144Z"
+    },
+    {
+      "_id": "66fca0020000000000000008",
+      "__v": 4,
+      "category": "66fca0010000000000000008",
+      "comments": [
+        "69260e3fe931a930c959b4fa",
+        "69260e42e931a930c959b501",
+        "69260e45e931a930c959b508"
+      ],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-07-30T18:00:00.000Z",
+      "description": "Festival a orillas de la playa con un cartel variado que durará hasta el 2 de agosto:contentReference[oaicite:7]{index=7}.",
+      "favouritesCount": 4,
+      "images": [
+        "https://images.unsplash.com/photo-1487180144351-b8472da7d491",
+        "https://images.unsplash.com/photo-1464375117522-1311d6a5b81c"
+      ],
+      "location": "Playa El Arenal, Burriana",
+      "mainImage": "https://images.unsplash.com/photo-1518972559570-7cc1309f3229",
+      "price": 65,
+      "slug": "arenal-sound-burriana-2026-07-30",
+      "status": "published",
+      "title": "Arenal Sound — Burriana",
+      "updatedAt": "2025-12-01T18:06:49.912Z",
+      "merchandising": []
+    },
+    {
+      "_id": "66fca0020000000000000009",
+      "__v": 0,
+      "category": "66fca0010000000000000008",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-06-27T18:00:00.000Z",
+      "description": "El RBF tendrá dos días de fiesta urbana frente al mar los días 27 y 28 de junio:contentReference[oaicite:8]{index=8}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1464375117522-1311d6a5b81c",
+        "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf"
+      ],
+      "location": "Platja del Fòrum, Barcelona",
+      "mainImage": "https://images.unsplash.com/photo-1518972559570-7cc1309f3229",
+      "price": 55,
+      "slug": "rbf-barcelona-2026-06-27",
+      "status": "published",
+      "title": "Reggaeton Beach Festival — Barcelona",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca002000000000000000a",
+      "__v": 0,
+      "category": "66fca0010000000000000003",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-01-15T19:30:00.000Z",
+      "description": "Musical familiar de gran éxito que sigue en cartel hasta febrero de 2026:contentReference[oaicite:9]{index=9}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1478720568477-152d9b164e26",
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+      ],
+      "location": "Teatro Lope de Vega, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+      "price": 65,
+      "slug": "el-rey-leon-madrid-2026-01-15",
+      "status": "published",
+      "title": "El Rey León — Madrid",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca002000000000000000b",
+      "__v": 0,
+      "category": "66fca0010000000000000003",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-01-22T19:30:00.000Z",
+      "description": "El musical con canciones de ABBA se representa en Alicante del 22 de enero al 8 de febrero:contentReference[oaicite:10]{index=10}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1515165562835-c3b8c8d966cc",
+        "https://images.unsplash.com/photo-1478720568477-152d9b164e26"
+      ],
+      "location": "Teatro Principal, Alicante",
+      "mainImage": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+      "price": 28,
+      "slug": "mamma-mia-alicante-2026-01-22",
+      "status": "published",
+      "title": "Mamma Mia! — Alicante",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca002000000000000000c",
+      "__v": 0,
+      "category": "66fca0010000000000000004",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-01-24T19:00:00.000Z",
+      "description": "El evento de artes marciales mixtas UFC 324 tendrá como atractivo principal al español Ilia Topuria:contentReference[oaicite:11]{index=11}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1518611012118-f0c5d859f8d8",
+        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3"
+      ],
+      "location": "T‑Mobile Arena, Las Vegas",
+      "mainImage": "https://images.unsplash.com/photo-1517649763962-0c623066013b",
+      "price": 210,
+      "slug": "topuria-gaethje-ufc-324-2026-01-24",
+      "status": "published",
+      "title": "UFC 324: Ilia Topuria vs Justin Gaethje",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca002000000000000000d",
+      "__v": 0,
+      "category": "66fca0010000000000000004",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-05-09T18:00:00.000Z",
+      "description": "El Clásico de LaLiga se disputará en el Estadi Olímpic el 9 de mayo de 2026:contentReference[oaicite:12]{index=12}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1502877338535-766e1452684a",
+        "https://images.unsplash.com/photo-1517649763962-0c623066013b"
+      ],
+      "location": "Estadi Olímpic Lluís Companys, Barcelona",
+      "mainImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+      "price": 140,
+      "slug": "clasico-barcelona-real-madrid-2026-05-09",
+      "status": "published",
+      "title": "FC Barcelona vs Real Madrid",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca002000000000000000e",
+      "__v": 0,
+      "category": "66fca0010000000000000004",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-04-11T13:00:00.000Z",
+      "description": "El torneo de tenis ATP 500 se celebra del 11 al 19 de abril con la participación de estrellas como Carlos Alcaraz:contentReference[oaicite:13]{index=13}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+        "https://images.unsplash.com/photo-1502877338535-766e1452684a"
+      ],
+      "location": "Real Club de Tenis Barcelona‑1899",
+      "mainImage": "https://images.unsplash.com/photo-1518611012118-f0c5d859f8d8",
+      "price": 70,
+      "slug": "barcelona-open-2026-04-11",
+      "status": "published",
+      "title": "Barcelona Open Banc Sabadell",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca002000000000000000f",
+      "__v": 0,
+      "category": "66fca0010000000000000005",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-03-02T09:00:00.000Z",
+      "description": "MWC Barcelona 2026, el mayor evento del sector móvil, tendrá lugar del 2 al 5 de marzo:contentReference[oaicite:14]{index=14}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a",
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+      ],
+      "location": "Fira Gran Via, Barcelona",
+      "mainImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "price": 799,
+      "slug": "mwc-barcelona-2026-03-02",
+      "status": "published",
+      "title": "Mobile World Congress — Barcelona",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000010",
+      "__v": 0,
+      "category": "66fca0010000000000000005",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-03-25T09:30:00.000Z",
+      "description": "La feria OpenExpo Europe 2026 se enfocará en open source y transformación digital del 25 al 27 de marzo:contentReference[oaicite:15]{index=15}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1551836022-4c4c79ecde51",
+        "https://images.unsplash.com/photo-1519389950473-47ba0277781c"
+      ],
+      "location": "IFEMA, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "price": 45,
+      "slug": "openexpo-europe-madrid-2026-03-25",
+      "status": "published",
+      "title": "OpenExpo Europe — Madrid",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000011",
+      "__v": 2,
+      "category": "66fca0010000000000000005",
+      "comments": [
+        "69260d7de931a930c959b4b7",
+        "69260fa1e931a930c959b654"
+      ],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-09-07T09:00:00.000Z",
+      "description": "Conferencia dedicada al marketing digital, medios y publicidad los días 7 y 8 de septiembre:contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}.",
+      "favouritesCount": 1,
+      "images": [
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+        "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a"
+      ],
+      "location": "Hotel W Barcelona, Barcelona",
+      "mainImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "price": 120,
+      "slug": "digimarcon-barcelona-2026-09-07",
+      "status": "published",
+      "title": "DigiMarCon Spain — Barcelona",
+      "updatedAt": "2025-11-25T20:20:49.907Z"
+    },
+    {
+      "_id": "66fca0020000000000000012",
+      "__v": 0,
+      "category": "66fca0010000000000000006",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-02-07T20:00:00.000Z",
+      "description": "Monólogo satírico y desternillante de Goyo Jiménez con funciones hasta el 1 de marzo:contentReference[oaicite:18]{index=18}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1525182008055-f88b95ff7980",
+        "https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57"
+      ],
+      "location": "Teatro Capitol Gran Vía, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57",
+      "price": 28,
+      "slug": "goyo-jimenez-madrid-2026-02-07",
+      "status": "published",
+      "title": "Goyo Jiménez — Misery Class",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000013",
+      "__v": 0,
+      "category": "66fca0010000000000000006",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-03-15T20:30:00.000Z",
+      "description": "Versión en directo del programa de humor Hora Veintipico, recomendada para mayores de 16 años:contentReference[oaicite:19]{index=19}:contentReference[oaicite:20]{index=20}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57",
+        "https://images.unsplash.com/photo-1525182008055-f88b95ff7980"
+      ],
+      "location": "Teatro La Latina, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57",
+      "price": 30,
+      "slug": "hora-treintaypico-madrid-2026-03-15",
+      "status": "published",
+      "title": "Hora Treintaypico — Madrid",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000014",
+      "__v": 0,
+      "category": "66fca0010000000000000007",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-02-05T17:00:00.000Z",
+      "description": "Espectáculo sobre hielo “Into the Magic” que visitará Valencia del 5 al 8 de febrero:contentReference[oaicite:21]{index=21}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1517341721142-35a7d495bd4c",
+        "https://images.unsplash.com/photo-1517341721142-35a7d495bd4c"
+      ],
+      "location": "ROIG Arena, Valencia",
+      "mainImage": "https://images.unsplash.com/photo-1517341721142-35a7d495bd4c",
+      "price": 35,
+      "slug": "disney-on-ice-valencia-2026-02-05",
+      "status": "published",
+      "title": "Disney On Ice — Valencia",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "66fca0020000000000000015",
+      "__v": 9,
+      "category": "66fca0010000000000000009",
+      "comments": [
+        "692f2fdbda275f6ce0ae73d7"
+      ],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-10-08T18:00:00.000Z",
+      "description": "El Festival Internacional de Cinema Fantàstic de Catalunya se desarrollará del 8 al 18 de octubre:contentReference[oaicite:22]{index=22}.",
+      "favouritesCount": 2,
+      "images": [
+        "https://images.unsplash.com/photo-1517602302552-471fe67acf66",
+        "https://images.unsplash.com/photo-1517602302552-471fe67acf66"
+      ],
+      "location": "Auditori Melià Sitges, Sitges",
+      "mainImage": "https://images.unsplash.com/photo-1517602302552-471fe67acf66",
+      "price": 22,
+      "slug": "festival-sitges-2026-10-08",
+      "status": "published",
+      "title": "Festival de Sitges — Sitges",
+      "updatedAt": "2025-12-02T18:28:43.715Z",
+      "merchandising": []
+    },
+    {
+      "_id": "66fca0020000000000000016",
+      "__v": 0,
+      "category": "66fca001000000000000000a",
+      "comments": [],
+      "createdAt": "2025-11-10T17:55:05.240Z",
+      "currency": "EUR",
+      "date": "2026-03-04T10:00:00.000Z",
+      "description": "La feria de arte contemporáneo ARCOmadrid 2026 abrirá sus puertas del 4 al 8 de marzo:contentReference[oaicite:23]{index=23}.",
+      "favouritesCount": 0,
+      "images": [
+        "https://images.unsplash.com/photo-1529101091764-c3526daf38fe",
+        "https://images.unsplash.com/photo-1529101091764-c3526daf38fe"
+      ],
+      "location": "IFEMA Madrid, Madrid",
+      "mainImage": "https://images.unsplash.com/photo-1529101091764-c3526daf38fe",
+      "price": 10,
+      "slug": "arco-madrid-2026-03-04",
+      "status": "published",
+      "title": "ARCOmadrid — Madrid",
+      "updatedAt": "2025-11-10T17:55:05.240Z"
+    },
+    {
+      "_id": "692dda3e6f65929298770702",
+      "slug": "wqfq-2005-03-12",
+      "title": "wqfq",
+      "date": "2005-03-12T20:03:00.000Z",
+      "price": 213123,
+      "currency": "EUR",
+      "location": "Estadi Olímpic Lluís Companys, Barcelona",
+      "description": "124",
+      "category": "conciertos",
+      "status": "published",
+      "isActive": true,
+      "mainImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+      "favouritesCount": {
+        "low": 0,
+        "high": 0,
+        "unsigned": false
+      },
+      "images": [],
+      "merchandising": [],
+      "stock": null,
+      "createdAt": "2025-12-01T18:11:10.439Z",
+      "updatedAt": "2025-12-01T18:11:10.478Z"
+    },
+    {
+      "_id": "692dde124feebdafbda9158a",
+      "slug": "esere-2025-12-11",
+      "title": "esere",
+      "date": "2025-12-11T19:27:00.000Z",
+      "price": 32,
+      "currency": "EUR",
+      "location": "Estadi Olímpic Lluís Companys, Barcelona",
+      "description": null,
+      "category": "conciertos",
+      "status": "published",
+      "isActive": true,
+      "mainImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+      "favouritesCount": {
+        "low": 0,
+        "high": 0,
+        "unsigned": false
+      },
+      "images": [],
+      "merchandising": [
+        {
+          "id": "692dd9c032bf73c8a5adfd9f",
+          "name": "21412",
+          "description": "412412",
+          "price": 12412,
+          "currency": "EUR",
+          "stockTotal": 214124,
+          "stockAvailable": 214124,
+          "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com",
+          "status": "active",
+          "createdAt": "2025-12-01T18:09:04.199Z",
+          "updatedAt": "2025-12-01T18:09:04.199Z",
+          "categoryId": "69173a1cf90c5daf767001bd"
+        }
+      ],
+      "stock": null,
+      "createdAt": "2025-12-01T18:27:30.718Z",
+      "updatedAt": "2025-12-01T18:27:30.784Z"
+    }
+  ],
+  "categories": [
+    {
+      "_id": "66fca0010000000000000001",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Grandes conciertos y giras",
+      "events": [
+        "66fca0020000000000000001",
+        "66fca0020000000000000002",
+        "66fca0020000000000000003",
+        "66fca0020000000000000004",
+        "66fca0020000000000000005"
+      ],
+      "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4",
+      "name": "Conciertos",
+      "slug": "conciertos",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000002",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Festivales de música",
+      "events": [
+        "66fca0020000000000000006",
+        "66fca0020000000000000007"
+      ],
+      "image": "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf",
+      "name": "Festivales",
+      "slug": "festivales",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000003",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Obras, musicales y clásicos",
+      "events": [
+        "66fca002000000000000000a",
+        "66fca002000000000000000b"
+      ],
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+      "name": "Teatro",
+      "slug": "teatro",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000004",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Partidos y grandes eventos deportivos",
+      "events": [
+        "66fca002000000000000000c",
+        "66fca002000000000000000d",
+        "66fca002000000000000000e"
+      ],
+      "image": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+      "name": "Deportes",
+      "slug": "deportes",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000005",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Tecnología, negocios y tendencias",
+      "events": [
+        "66fca002000000000000000f",
+        "66fca0020000000000000010",
+        "66fca0020000000000000011"
+      ],
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "name": "Conferencias",
+      "slug": "conferencias",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000006",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Monólogos y shows de humor",
+      "events": [
+        "66fca0020000000000000012",
+        "66fca0020000000000000013"
+      ],
+      "image": "https://images.unsplash.com/photo-1519844527959-7f3a1a3c6d57",
+      "name": "Comedia",
+      "slug": "comedia",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000007",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Planes familiares y para peques",
+      "events": [
+        "66fca0020000000000000014"
+      ],
+      "image": "https://images.unsplash.com/photo-1517341721142-35a7d495bd4c",
+      "name": "Familia",
+      "slug": "familia",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000008",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Raves y música electrónica",
+      "events": [
+        "66fca0020000000000000008",
+        "66fca0020000000000000009"
+      ],
+      "image": "https://images.unsplash.com/photo-1518972559570-7cc1309f3229",
+      "name": "Electrónica",
+      "slug": "electronica",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca0010000000000000009",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Estrenos, maratones y preestrenos",
+      "events": [
+        "66fca0020000000000000015"
+      ],
+      "image": "https://images.unsplash.com/photo-1517602302552-471fe67acf66",
+      "name": "Cine",
+      "slug": "cine",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    },
+    {
+      "_id": "66fca001000000000000000a",
+      "__v": 0,
+      "createdAt": "2025-11-10T17:55:05.827Z",
+      "description": "Museos y exposiciones",
+      "events": [
+        "66fca0020000000000000016"
+      ],
+      "image": "https://images.unsplash.com/photo-1529101091764-c3526daf38fe",
+      "name": "Arte",
+      "slug": "arte",
+      "status": "active",
+      "updatedAt": "2025-11-10T17:55:05.827Z"
+    }
+  ],
+  "Enterprise": [
+    {
+      "_id": "691ccabba76de3a36bb6b69c",
+      "uid": "enterprise_1763494586944",
+      "email": "admin@enterprise.com",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$j4vQFlGqAqZfXDQPxz9PPw$Y6UBYqBXQMm/TnwLp5Q9/8K5bwk+yjRqjr68d/4l6Q8",
+      "name": "Empresa Demo",
+      "description": "Empresa de demostración para pruebas",
+      "logo": "https://via.placeholder.com/150",
+      "website": "https://enterprise-demo.com",
+      "contactEmail": "contact@enterprise.com",
+      "phone": "+34 600 000 000",
+      "status": "active",
+      "isVerified": true,
+      "createdAt": "2025-11-18T19:36:27.055Z",
+      "updatedAt": "2025-11-18T19:36:27.055Z"
+    }
+  ],
+  "comments": [
+    {
+      "_id": "68f26691a811433f5d734a25",
+      "__v": 0,
+      "author": "68f13b29b817c9be3033ace8",
+      "body": "usauri2",
+      "createdAt": "2025-10-24T15:29:04.221Z",
+      "event": "68e3e64d6c287cf45df0d2d7",
+      "updatedAt": "2025-10-24T15:29:04.221Z"
+    },
+    {
+      "_id": "68f65134d0df7fd30f89eac4",
+      "__v": 0,
+      "author": "68f13b29b817c9be3033ace8",
+      "body": "holaa",
+      "createdAt": "2025-10-24T15:29:04.221Z",
+      "event": "68e3e64d6c287cf45df0d2d7",
+      "updatedAt": "2025-10-24T15:29:04.221Z"
+    },
+    {
+      "_id": "66fca0030000000000000001",
+      "__v": 0,
+      "author": "66fca0000000000000000005",
+      "body": "Vibró todo el estadio, organización de 10.",
+      "createdAt": "2025-10-24T16:20:29.571Z",
+      "event": "66fca0020000000000000002",
+      "updatedAt": "2025-10-24T16:20:29.571Z"
+    },
+    {
+      "_id": "66fca0030000000000000002",
+      "__v": 0,
+      "author": "66fca0000000000000000002",
+      "body": "Lineup internacional brutal, repetiré seguro.",
+      "createdAt": "2025-10-24T16:20:29.571Z",
+      "event": "66fca0020000000000000006",
+      "updatedAt": "2025-10-24T16:20:29.571Z"
+    },
+    {
+      "_id": "66fca0030000000000000003",
+      "__v": 0,
+      "author": "66fca0000000000000000003",
+      "body": "El musical es espectacular, merece cada euro.",
+      "createdAt": "2025-10-24T16:20:29.571Z",
+      "event": "66fca002000000000000000a",
+      "updatedAt": "2025-10-24T16:20:29.571Z"
+    },
+    {
+      "_id": "66fca0030000000000000004",
+      "__v": 0,
+      "author": "66fca0000000000000000006",
+      "body": "Gran ambiente y buenas gradas, repetiría.",
+      "createdAt": "2025-10-24T16:20:29.571Z",
+      "event": "66fca002000000000000000c",
+      "updatedAt": "2025-10-24T16:20:29.571Z"
+    },
+    {
+      "_id": "66fca0030000000000000005",
+      "__v": 0,
+      "author": "66fca0000000000000000004",
+      "body": "Perfecto para ir con peques. Parking amplio.",
+      "createdAt": "2025-10-24T16:20:29.571Z",
+      "event": "66fca0020000000000000014",
+      "updatedAt": "2025-10-24T16:20:29.571Z"
+    },
+    {
+      "_id": "690a5302295b5bda29ae633e",
+      "body": "esere",
+      "author": "690a5294295b5bda29ae6303",
+      "event": "66fca002000000000000000e",
+      "createdAt": "2025-11-04T19:24:50.996Z",
+      "updatedAt": "2025-11-04T19:24:50.996Z",
+      "__v": 0
+    },
+    {
+      "_id": "69260d7de931a930c959b4b7",
+      "body": "sdf",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000011",
+      "createdAt": "2025-11-25T20:11:41.431Z",
+      "updatedAt": "2025-11-25T20:11:41.431Z",
+      "__v": 0
+    },
+    {
+      "_id": "69260e3fe931a930c959b4fa",
+      "body": "aimaaa",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000008",
+      "createdAt": "2025-11-25T20:14:55.229Z",
+      "updatedAt": "2025-11-25T20:14:55.229Z",
+      "__v": 0
+    },
+    {
+      "_id": "69260e42e931a930c959b501",
+      "body": "esere",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000008",
+      "createdAt": "2025-11-25T20:14:58.310Z",
+      "updatedAt": "2025-11-25T20:14:58.310Z",
+      "__v": 0
+    },
+    {
+      "_id": "69260e45e931a930c959b508",
+      "body": "esre aimaaa",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000008",
+      "createdAt": "2025-11-25T20:15:01.388Z",
+      "updatedAt": "2025-11-25T20:15:01.388Z",
+      "__v": 0
+    },
+    {
+      "_id": "69260e9be931a930c959b57b",
+      "body": "asereee",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000007",
+      "createdAt": "2025-11-25T20:16:27.326Z",
+      "updatedAt": "2025-11-25T20:16:27.326Z",
+      "__v": 0
+    },
+    {
+      "_id": "69260fa1e931a930c959b654",
+      "body": "asfasf",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000011",
+      "createdAt": "2025-11-25T20:20:49.901Z",
+      "updatedAt": "2025-11-25T20:20:49.901Z",
+      "__v": 0
+    },
+    {
+      "_id": "6926125f134fa34431536262",
+      "body": "auaaaaa",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000003",
+      "createdAt": "2025-11-25T20:32:31.463Z",
+      "updatedAt": "2025-11-25T20:32:31.463Z",
+      "__v": 0
+    },
+    {
+      "_id": "692f2fdbda275f6ce0ae73d7",
+      "body": "Buen evento recomenado",
+      "author": "6926007ae931a930c959afdd",
+      "event": "66fca0020000000000000015",
+      "createdAt": "2025-12-02T18:28:43.708Z",
+      "updatedAt": "2025-12-02T18:28:43.708Z",
+      "__v": 0
+    }
+  ],
+  "carts": [
+    {
+      "_id": "692dde32e61c9930cb36af43",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692dde3ae61c9930cb36afa2"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692dde3be61c9930cb36afa8"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:28:02.188Z",
+      "updatedAt": "2025-12-01T18:28:27.956Z",
+      "__v": 2
+    },
+    {
+      "_id": "692dde4be61c9930cb36afb9",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692ddec9ffdef7d1411e1e04"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692ddecbffdef7d1411e1e0a"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:28:27.964Z",
+      "updatedAt": "2025-12-01T18:30:47.006Z",
+      "__v": 2
+    },
+    {
+      "_id": "692dded7ffdef7d1411e1e1c",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692ddf770385a2dabd0f430c"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692ddf780385a2dabd0f4312"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:30:47.015Z",
+      "updatedAt": "2025-12-01T18:33:41.415Z",
+      "__v": 2
+    },
+    {
+      "_id": "692ddf850385a2dabd0f4323",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692de17c0385a2dabd0f43d1"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692de17d0385a2dabd0f43d7"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:33:41.421Z",
+      "updatedAt": "2025-12-01T18:42:20.214Z",
+      "__v": 2
+    },
+    {
+      "_id": "692de18c0385a2dabd0f43e8",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 2,
+          "price": 32,
+          "_id": "692de1c10385a2dabd0f449e"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 2,
+          "price": 12412,
+          "_id": "692de1c40385a2dabd0f44a4"
+        }
+      ],
+      "total": 24888,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:42:20.222Z",
+      "updatedAt": "2025-12-01T18:47:35.515Z",
+      "__v": 2
+    },
+    {
+      "_id": "692de2c70385a2dabd0f456f",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692de4df1c1446d6746a41b8"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692de4e11c1446d6746a41be"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:47:35.531Z",
+      "updatedAt": "2025-12-01T18:56:48.732Z",
+      "__v": 2
+    },
+    {
+      "_id": "692de4f01c1446d6746a41d3",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "66fca0020000000000000011",
+          "quantity": 1,
+          "price": 120,
+          "_id": "692de5391c1446d6746a41ee"
+        },
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692de57a1c1446d6746a4269"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692de57b1c1446d6746a4270"
+        }
+      ],
+      "total": 12564,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:56:48.742Z",
+      "updatedAt": "2025-12-01T18:59:20.284Z",
+      "__v": 3
+    },
+    {
+      "_id": "692de5881c1446d6746a4284",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692de66020db1d15553bf7c9"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692de66120db1d15553bf7cf"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-01T18:59:20.291Z",
+      "updatedAt": "2025-12-01T19:03:09.378Z",
+      "__v": 2
+    },
+    {
+      "_id": "692de66d20db1d15553bf7e0",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692debde0080c1f255a2629a"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692debdf0080c1f255a262a0"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-01T19:03:09.387Z",
+      "updatedAt": "2025-12-01T19:26:34.564Z",
+      "__v": 2
+    },
+    {
+      "_id": "692debea0080c1f255a262b1",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 5,
+          "price": 32,
+          "_id": "692deed8c5518c979915526b"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 12,
+          "price": 12412,
+          "_id": "692deed9c5518c9799155271"
+        }
+      ],
+      "total": 149104,
+      "status": "completed",
+      "createdAt": "2025-12-01T19:26:34.618Z",
+      "updatedAt": "2025-12-02T15:16:50.176Z",
+      "__v": 8
+    },
+    {
+      "_id": "692f02e2b4dd916a13adc8d0",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692f02edb4dd916a13adc91c"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 1,
+          "price": 12412,
+          "_id": "692f02eeb4dd916a13adc922"
+        }
+      ],
+      "total": 12444,
+      "status": "completed",
+      "createdAt": "2025-12-02T15:16:50.186Z",
+      "updatedAt": "2025-12-02T15:18:13.872Z",
+      "__v": 2
+    },
+    {
+      "_id": "692f0335b4dd916a13adc958",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 1,
+          "price": 32,
+          "_id": "692f2d17da275f6ce0ae71ad"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 3,
+          "price": 12412,
+          "_id": "692f2d1ada275f6ce0ae71b3"
+        }
+      ],
+      "total": 37268,
+      "status": "completed",
+      "createdAt": "2025-12-02T15:18:13.879Z",
+      "updatedAt": "2025-12-02T18:17:27.720Z",
+      "__v": 2
+    },
+    {
+      "_id": "692f2d37da275f6ce0ae71d1",
+      "userId": "6926007ae931a930c959afdd",
+      "items": [
+        {
+          "itemType": "event",
+          "event": "692dde124feebdafbda9158a",
+          "quantity": 10,
+          "price": 32,
+          "_id": "692f2d61da275f6ce0ae7226"
+        },
+        {
+          "itemType": "product",
+          "product": {
+            "id": "692dd9c032bf73c8a5adfd9f",
+            "name": "21412",
+            "price": 12412,
+            "description": "412412",
+            "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com"
+          },
+          "quantity": 7,
+          "price": 12412,
+          "_id": "692f2d64da275f6ce0ae722c"
+        },
+        {
+          "itemType": "event",
+          "event": "66fca0020000000000000011",
+          "quantity": 1,
+          "price": 120,
+          "_id": "692f2d9eda275f6ce0ae7351"
+        },
+        {
+          "itemType": "event",
+          "event": "66fca0020000000000000008",
+          "quantity": 1,
+          "price": 65,
+          "_id": "692f2da3da275f6ce0ae735a"
+        }
+      ],
+      "total": 87389,
+      "status": "active",
+      "createdAt": "2025-12-02T18:17:27.738Z",
+      "updatedAt": "2025-12-02T18:19:15.105Z",
+      "__v": 4
+    }
+  ],
+  "ProductCategory": [
+    {
+      "_id": "691739cff90c5daf767001bc",
+      "name": "Electrónicaa",
+      "description": "Productos electrónicos y tecnológicosa",
+      "image": "https://example.com/electronics.jpg",
+      "isActive": true,
+      "createdAt": "2025-11-14T14:16:47.240Z",
+      "updatedAt": "2025-11-18T20:04:54.653Z"
+    },
+    {
+      "_id": "69173a1cf90c5daf767001bd",
+      "name": "Ropa y Accesorios",
+      "description": "Moda y complementos",
+      "image": "https://example.com/ropa.jpg",
+      "isActive": true,
+      "createdAt": "2025-11-14T14:18:04.096Z",
+      "updatedAt": "2025-11-14T14:18:04.096Z"
+    },
+    {
+      "_id": "691cc76e256f67839da4273a",
+      "name": "Electrónicas",
+      "description": "Productos electrónicos y tecnológicoss",
+      "image": "https://example.com/electronics.jpg",
+      "isActive": true,
+      "createdAt": "2025-11-18T19:22:22.051Z",
+      "updatedAt": "2025-11-18T20:05:05.072Z"
+    }
+  ],
+  "Order": [
+    {
+      "_id": "6925da2ab610abf9a56e187d",
+      "uid": "order-a830953a98986a6bd58461187cad20ef",
+      "totalAmount": 2040,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:32:42.689Z",
+      "updatedAt": "2025-11-25T16:32:42.689Z",
+      "userId": "6925d92cd009618c261701e5"
+    },
+    {
+      "_id": "6925db098bb9b5bf354b3680",
+      "uid": "order-b13ffb9e160c5eeb6f1a4edc161f5929",
+      "totalAmount": 65,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:36:25.213Z",
+      "updatedAt": "2025-11-25T16:36:25.213Z",
+      "userId": "6925d92cd009618c261701e5"
+    },
+    {
+      "_id": "6925dcc4c6ccdc6953235d1b",
+      "uid": "order-6e3b343107de64c6c77655cfbbfb64ab",
+      "totalAmount": 365,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:43:48.813Z",
+      "updatedAt": "2025-11-25T16:43:48.813Z",
+      "userId": "6925dcb01e9bcc6ac0972b6f"
+    },
+    {
+      "_id": "6925dce6c6ccdc6953235d20",
+      "uid": "order-553728bc64c229aef25d5e0d4ce6fa5a",
+      "totalAmount": 322,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:44:22.628Z",
+      "updatedAt": "2025-11-25T16:44:22.628Z",
+      "userId": "6925dcb01e9bcc6ac0972b6f"
+    },
+    {
+      "_id": "6925dd10c6ccdc6953235d25",
+      "uid": "order-324190f98ed1dff8256f0f0e07b7574b",
+      "totalAmount": 185,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:45:04.795Z",
+      "updatedAt": "2025-11-25T16:45:04.795Z",
+      "userId": "6925dcb01e9bcc6ac0972b6f"
+    },
+    {
+      "_id": "6925dddbc6ccdc6953235d29",
+      "uid": "order-102e0119098ff19e4e0199389d21bdf8",
+      "totalAmount": 370,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:48:27.729Z",
+      "updatedAt": "2025-11-25T16:48:27.729Z",
+      "userId": "6925dcb01e9bcc6ac0972b6f"
+    },
+    {
+      "_id": "69260580c6ccdc6953235d2d",
+      "uid": "order-683b43cf0599872d96620b85abc07819",
+      "totalAmount": 120,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T19:37:36.965Z",
+      "updatedAt": "2025-11-25T19:37:36.965Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "69261133c6ccdc6953235d30",
+      "uid": "order-f1793b6cf46384c9d257e0cd33ebbf62",
+      "totalAmount": 120,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T20:27:31.140Z",
+      "updatedAt": "2025-11-25T20:27:31.140Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692611c2c6ccdc6953235d33",
+      "uid": "order-1b4a5b72f35a1af8cf711b66b8dc3546",
+      "totalAmount": 180,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T20:29:54.812Z",
+      "updatedAt": "2025-11-25T20:29:54.812Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "6929b3b9edf7c3749b42bdca",
+      "uid": "order-e278f16300e25f373480fa6748fc1069",
+      "totalAmount": 142,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:37:45.857Z",
+      "updatedAt": "2025-11-28T14:37:45.857Z",
+      "userId": "6929b3b17b97ce8456e8fc57"
+    },
+    {
+      "_id": "6929b551edf7c3749b42bdce",
+      "uid": "order-8ef6b97a4bc3ca574cb703cf253f0bd6",
+      "totalAmount": 142,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:44:33.645Z",
+      "updatedAt": "2025-11-28T14:44:33.645Z",
+      "userId": "6929b3b17b97ce8456e8fc57"
+    },
+    {
+      "_id": "6929b614edf7c3749b42bdd2",
+      "uid": "order-85adfac9b8bc115f94fa85a402025081",
+      "totalAmount": 365,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:47:48.782Z",
+      "updatedAt": "2025-11-28T14:47:48.782Z",
+      "userId": "6929b3b17b97ce8456e8fc57"
+    },
+    {
+      "_id": "6929b633edf7c3749b42bdd7",
+      "uid": "order-3f16ce692fa7dbd3198de7a98985c03b",
+      "totalAmount": 120,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:48:19.167Z",
+      "updatedAt": "2025-11-28T14:48:19.167Z",
+      "userId": "6929b3b17b97ce8456e8fc57"
+    },
+    {
+      "_id": "6929b66bedf7c3749b42bdda",
+      "uid": "order-1ac5ef1b2dce80dff9a8826407408c8f",
+      "totalAmount": 185,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:49:15.851Z",
+      "updatedAt": "2025-11-28T14:49:15.851Z",
+      "userId": "6929b658d0a93cdb1d17f042"
+    },
+    {
+      "_id": "6929b693edf7c3749b42bdde",
+      "uid": "order-8a7703a3818df1b5ff2d17970ed44fc2",
+      "totalAmount": 600,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:49:55.085Z",
+      "updatedAt": "2025-11-28T14:49:55.085Z",
+      "userId": "6929b658d0a93cdb1d17f042"
+    },
+    {
+      "_id": "6929b6daedf7c3749b42bde1",
+      "uid": "order-82f38a3d6db3bd4aa95565cff81e9279",
+      "totalAmount": 365,
+      "currency": "EUR",
+      "status": "paid",
+      "createdAt": "2025-11-28T14:51:06.060Z",
+      "updatedAt": "2025-12-01T16:25:43.608Z",
+      "userId": "6929b658d0a93cdb1d17f042"
+    },
+    {
+      "_id": "692dde484feebdafbda9158b",
+      "uid": "order-74b6d0a276dcad374f0b1b0853fe1395",
+      "totalAmount": 32,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:28:24.572Z",
+      "updatedAt": "2025-12-01T18:28:24.572Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692dded54feebdafbda9158e",
+      "uid": "order-6d28096960593dfbd9e0d4a7e31d6c5f",
+      "totalAmount": 32,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:30:45.091Z",
+      "updatedAt": "2025-12-01T18:30:45.091Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692ddf834feebdafbda91591",
+      "uid": "order-32daa4c9aa38abe1317f00492e1349f7",
+      "totalAmount": 12444,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:33:39.382Z",
+      "updatedAt": "2025-12-01T18:33:39.382Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692de1894feebdafbda91595",
+      "uid": "order-153505c4e829829bc72147445e4cf953",
+      "totalAmount": 12444,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:42:17.654Z",
+      "updatedAt": "2025-12-01T18:42:17.654Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692de2c44feebdafbda91599",
+      "uid": "order-4a1e63834d7351757adda00565a35b8c",
+      "totalAmount": 24888,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:47:32.975Z",
+      "updatedAt": "2025-12-01T18:47:32.975Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692de4ee4d6a85eb48958a97",
+      "uid": "order-dd2a963511f52daa8340ef389d328d51",
+      "totalAmount": 12444,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:56:46.042Z",
+      "updatedAt": "2025-12-01T18:56:46.042Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692de5864d6a85eb48958a9b",
+      "uid": "order-d2ce1a08b790fb288bee7f007fc45c2f",
+      "totalAmount": 12564,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:59:18.336Z",
+      "updatedAt": "2025-12-01T18:59:18.336Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692de66b4d6a85eb48958aa0",
+      "uid": "order-cae136840da2dd6e22f96087e0e5d5ef",
+      "totalAmount": 12444,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T19:03:07.104Z",
+      "updatedAt": "2025-12-01T19:03:07.104Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692debe8cf4cf6bd81821890",
+      "uid": "order-bd3de193938707c2a963c182df28e650",
+      "totalAmount": 12444,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T19:26:32.124Z",
+      "updatedAt": "2025-12-01T19:26:32.124Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692f02dfa406e6d33031e9e3",
+      "uid": "order-da57f615f0da23d85f1994a78b86dc9d",
+      "totalAmount": 149104,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-02T15:16:47.522Z",
+      "updatedAt": "2025-12-02T15:16:47.522Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692f0331a406e6d33031e9e7",
+      "uid": "order-420f7bcc98cf885238e58b1d2f3817f2",
+      "totalAmount": 12444,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-02T15:18:09.683Z",
+      "updatedAt": "2025-12-02T15:18:09.683Z",
+      "userId": "6926007ae931a930c959afdd"
+    },
+    {
+      "_id": "692f2d2b7b2e33ed9e1cef3d",
+      "uid": "order-747fec7e48acb64ee3a2460087241238",
+      "totalAmount": 37268,
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-02T18:17:15.889Z",
+      "updatedAt": "2025-12-02T18:17:15.889Z",
+      "userId": "6926007ae931a930c959afdd"
+    }
+  ],
+  "blacklistedtokens": [
+    {
+      "_id": "6925fbcfe931a930c959af4e",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkxY2MwMmI3OWNlNmNjOTU3NTY5ZjIwIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzYzNDkyMTQ3LCJleHAiOjE3NjQwOTY5NDd9.HaCxhCTTWgUmjLkgKCxTmnBafl0uiqbQ9AF0e2Ial7A",
+      "userId": "691cc02b79ce6cc957569f20",
+      "reason": "expired",
+      "originalExpiryDate": "2025-11-25T18:55:47.409Z",
+      "blacklistedAt": "2025-11-25T18:56:15.594Z",
+      "createdAt": "2025-11-25T18:56:15.594Z",
+      "updatedAt": "2025-11-25T18:56:15.594Z",
+      "__v": 0
+    },
+    {
+      "_id": "6929ce59f3a7f6687d2212d6",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyMDg1YWYxZWI0OTdjMGQ2ZWZmMGNkIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzYzNzQyNjIzLCJleHAiOjE3NjQzNDc0MjN9.rPlSrozYRQXSN9xUwdHMcKjLp_QMwvYsjoGlFzvktWE",
+      "userId": "692085af1eb497c0d6eff0cd",
+      "reason": "expired",
+      "originalExpiryDate": "2025-11-28T16:30:23.090Z",
+      "blacklistedAt": "2025-11-28T16:31:21.587Z",
+      "createdAt": "2025-11-28T16:31:21.602Z",
+      "updatedAt": "2025-11-28T16:31:21.602Z",
+      "__v": 0
+    },
+    {
+      "_id": "692f2ca4f8879de6bf404044",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNWQ1MzE4OTBjYzQwNDkzMmVhYTMxIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MDg3MDg5LCJleHAiOjE3NjQ2OTE4ODl9.B2dIZ2tgpP-QfsCu_0vjsG0gLTIgpCyv7CqeJ_HYBxo",
+      "userId": "6925d531890cc404932eaa31",
+      "reason": "expired",
+      "originalExpiryDate": "2025-12-02T16:11:29.815Z",
+      "blacklistedAt": "2025-12-02T18:15:00.887Z",
+      "createdAt": "2025-12-02T18:15:00.891Z",
+      "updatedAt": "2025-12-02T18:15:00.891Z",
+      "__v": 0
+    },
+    {
+      "_id": "692f2ca4f8879de6bf40404d",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNWQ5MmNkMDA5NjE4YzI2MTcwMWU1Iiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MDg4MTA4LCJleHAiOjE3NjQ2OTI5MDh9.sgwLN77oRzMqqFSwUdfOPLqiDp6Xu4gubjS8k0oO21E",
+      "userId": "6925d92cd009618c261701e5",
+      "reason": "expired",
+      "originalExpiryDate": "2025-12-02T16:28:28.568Z",
+      "blacklistedAt": "2025-12-02T18:15:00.995Z",
+      "createdAt": "2025-12-02T18:15:00.996Z",
+      "updatedAt": "2025-12-02T18:15:00.996Z",
+      "__v": 0
+    },
+    {
+      "_id": "692f2ca5f8879de6bf404051",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNWRjYjAxZTliY2M2YWMwOTcyYjZmIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MDg5MDA5LCJleHAiOjE3NjQ2OTM4MDl9.w4g8OkJyC68CjcdQr2oAyZvPvgFQMqDqfxSaHX1sHjo",
+      "userId": "6925dcb01e9bcc6ac0972b6f",
+      "reason": "expired",
+      "originalExpiryDate": "2025-12-02T16:43:29.140Z",
+      "blacklistedAt": "2025-12-02T18:15:01.064Z",
+      "createdAt": "2025-12-02T18:15:01.065Z",
+      "updatedAt": "2025-12-02T18:15:01.065Z",
+      "__v": 0
+    }
+  ],
+  "OrderItem": [
+    {
+      "_id": "692de5864d6a85eb48958a9c",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 120,
+      "itemType": "event",
+      "eventId": "66fca0020000000000000011",
+      "orderId": "692de5864d6a85eb48958a9b"
+    },
+    {
+      "_id": "692de5864d6a85eb48958a9d",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 32,
+      "itemType": "event",
+      "eventId": "692dde124feebdafbda9158a",
+      "orderId": "692de5864d6a85eb48958a9b"
+    },
+    {
+      "_id": "692de5864d6a85eb48958a9e",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 12412,
+      "itemType": "product",
+      "productId": "692dd9c032bf73c8a5adfd9f",
+      "orderId": "692de5864d6a85eb48958a9b"
+    },
+    {
+      "_id": "692de66b4d6a85eb48958aa1",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 32,
+      "itemType": "event",
+      "eventId": "692dde124feebdafbda9158a",
+      "orderId": "692de66b4d6a85eb48958aa0"
+    },
+    {
+      "_id": "692de66b4d6a85eb48958aa2",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 12412,
+      "itemType": "product",
+      "productId": "692dd9c032bf73c8a5adfd9f",
+      "orderId": "692de66b4d6a85eb48958aa0"
+    },
+    {
+      "_id": "692debe8cf4cf6bd81821891",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 32,
+      "itemType": "event",
+      "eventId": "692dde124feebdafbda9158a",
+      "orderId": "692debe8cf4cf6bd81821890"
+    },
+    {
+      "_id": "692debe8cf4cf6bd81821892",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 12412,
+      "itemType": "product",
+      "productId": "692dd9c032bf73c8a5adfd9f",
+      "orderId": "692debe8cf4cf6bd81821890"
+    },
+    {
+      "_id": "692f02dfa406e6d33031e9e4",
+      "quantity": {
+        "low": 5,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 32,
+      "itemType": "event",
+      "eventId": "692dde124feebdafbda9158a",
+      "orderId": "692f02dfa406e6d33031e9e3"
+    },
+    {
+      "_id": "692f02dfa406e6d33031e9e5",
+      "quantity": {
+        "low": 12,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 12412,
+      "itemType": "product",
+      "productId": "692dd9c032bf73c8a5adfd9f",
+      "orderId": "692f02dfa406e6d33031e9e3"
+    },
+    {
+      "_id": "692f0331a406e6d33031e9e8",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 32,
+      "itemType": "event",
+      "eventId": "692dde124feebdafbda9158a",
+      "orderId": "692f0331a406e6d33031e9e7"
+    },
+    {
+      "_id": "692f0331a406e6d33031e9e9",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 12412,
+      "itemType": "product",
+      "productId": "692dd9c032bf73c8a5adfd9f",
+      "orderId": "692f0331a406e6d33031e9e7"
+    },
+    {
+      "_id": "692f2d2b7b2e33ed9e1cef3e",
+      "quantity": {
+        "low": 1,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 32,
+      "itemType": "event",
+      "eventId": "692dde124feebdafbda9158a",
+      "orderId": "692f2d2b7b2e33ed9e1cef3d"
+    },
+    {
+      "_id": "692f2d2b7b2e33ed9e1cef3f",
+      "quantity": {
+        "low": 3,
+        "high": 0,
+        "unsigned": false
+      },
+      "unitPrice": 12412,
+      "itemType": "product",
+      "productId": "692dd9c032bf73c8a5adfd9f",
+      "orderId": "692f2d2b7b2e33ed9e1cef3d"
+    }
+  ],
+  "refreshtokens": [
+    {
+      "_id": "6925fa4ce931a930c959af21",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNWZhNGNlOTMxYTkzMGM5NTlhZjFhIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MDk2NTg4LCJleHAiOjE3NjQ3MDEzODh9.x3UTXVR9hPQWvUKHQvl2iwsZeOfB-1sZo2RxgSRzrmk",
+      "userId": "6925fa4ce931a930c959af1a",
+      "expiryDate": "2025-12-02T18:49:48.473Z",
+      "createdAt": "2025-11-25T18:49:48.474Z",
+      "updatedAt": "2025-11-25T18:49:48.474Z",
+      "__v": 0
+    },
+    {
+      "_id": "6929b3b27b97ce8456e8fc5e",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyOWIzYjE3Yjk3Y2U4NDU2ZThmYzU3Iiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MzQwNjU4LCJleHAiOjE3NjQ5NDU0NTh9.Lu1TJ_PhLl3fP6oDCTLv2cUP6LFcAWl5AUg1a_gnsr4",
+      "userId": "6929b3b17b97ce8456e8fc57",
+      "expiryDate": "2025-12-05T14:37:38.109Z",
+      "createdAt": "2025-11-28T14:37:38.111Z",
+      "updatedAt": "2025-11-28T14:37:38.111Z",
+      "__v": 0
+    },
+    {
+      "_id": "6929b658d0a93cdb1d17f049",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyOWI2NThkMGE5M2NkYjFkMTdmMDQyIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MzQxMzM2LCJleHAiOjE3NjQ5NDYxMzZ9.vPo1vnqKitivT9lN0xHPUVX8YeuD3bhhLa5LasNi_hc",
+      "userId": "6929b658d0a93cdb1d17f042",
+      "expiryDate": "2025-12-05T14:48:56.959Z",
+      "createdAt": "2025-11-28T14:48:56.960Z",
+      "updatedAt": "2025-11-28T14:48:56.960Z",
+      "__v": 0
+    },
+    {
+      "_id": "692dd4a3d1b58213fa1c0240",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyZGQ0YTJkMWI1ODIxM2ZhMWMwMjM5Iiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0NjExMjM1LCJleHAiOjE3NjUyMTYwMzV9.DEyS_gdP4TY3WU7EN5iQ_HvcRmO6k48tqVvKZh5UFqE",
+      "userId": "692dd4a2d1b58213fa1c0239",
+      "expiryDate": "2025-12-08T17:47:15.153Z",
+      "createdAt": "2025-12-01T17:47:15.155Z",
+      "updatedAt": "2025-12-01T17:47:15.155Z",
+      "__v": 0
+    },
+    {
+      "_id": "692f3121da275f6ce0ae73fc",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNjAwN2FlOTMxYTkzMGM5NTlhZmRkIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0NzAwNDQ5LCJleHAiOjE3NjUzMDUyNDl9.TXUkRY-d51VQo6Rebg9Wo4BQzoCzlrItcXxNqiH2aHM",
+      "userId": "6926007ae931a930c959afdd",
+      "expiryDate": "2025-12-09T18:34:09.791Z",
+      "createdAt": "2025-12-02T18:34:09.791Z",
+      "updatedAt": "2025-12-02T18:34:09.791Z",
+      "__v": 0
+    }
+  ],
+  "Payment": [
+    {
+      "_id": "6925da2ab610abf9a56e1880",
+      "amount": 2040,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:32:42.789Z",
+      "orderId": "6925da2ab610abf9a56e187d",
+      "transactionRef": "pi_3SXPAa4tOgB3mFky1eL1GkiM"
+    },
+    {
+      "_id": "6925db098bb9b5bf354b3682",
+      "amount": 65,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:36:25.223Z",
+      "orderId": "6925db098bb9b5bf354b3680",
+      "transactionRef": "pi_3SXPEB4tOgB3mFky1ZtjdZ2h"
+    },
+    {
+      "_id": "6925dcc4c6ccdc6953235d1f",
+      "amount": 365,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:43:48.830Z",
+      "orderId": "6925dcc4c6ccdc6953235d1b",
+      "transactionRef": "pi_3SXPLK4tOgB3mFky0ZabU4wc"
+    },
+    {
+      "_id": "6925dce6c6ccdc6953235d24",
+      "amount": 322,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:44:22.640Z",
+      "orderId": "6925dce6c6ccdc6953235d20",
+      "transactionRef": "pi_3SXPLs4tOgB3mFky0NFlhmSN"
+    },
+    {
+      "_id": "6925dd10c6ccdc6953235d28",
+      "amount": 185,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:45:04.804Z",
+      "orderId": "6925dd10c6ccdc6953235d25",
+      "transactionRef": "pi_3SXPMY4tOgB3mFky08iNh9f4"
+    },
+    {
+      "_id": "6925dddbc6ccdc6953235d2c",
+      "amount": 370,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T16:48:27.736Z",
+      "orderId": "6925dddbc6ccdc6953235d29",
+      "transactionRef": "pi_3SXPPp4tOgB3mFky0ClCmCXu"
+    },
+    {
+      "_id": "69260580c6ccdc6953235d2f",
+      "amount": 120,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T19:37:36.984Z",
+      "orderId": "69260580c6ccdc6953235d2d",
+      "transactionRef": "pi_3SXS3R4tOgB3mFky09ORWY55"
+    },
+    {
+      "_id": "69261133c6ccdc6953235d32",
+      "amount": 120,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T20:27:31.157Z",
+      "orderId": "69261133c6ccdc6953235d30",
+      "transactionRef": "pi_3SXSpj4tOgB3mFky0Yw8VM6f"
+    },
+    {
+      "_id": "692611c2c6ccdc6953235d35",
+      "amount": 180,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-25T20:29:54.822Z",
+      "orderId": "692611c2c6ccdc6953235d33",
+      "transactionRef": "pi_3SXSs34tOgB3mFky06RMwMVK"
+    },
+    {
+      "_id": "6929b3b9edf7c3749b42bdcd",
+      "amount": 142,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:37:45.875Z",
+      "orderId": "6929b3b9edf7c3749b42bdca",
+      "transactionRef": "pi_3SYSnx4tOgB3mFky0MgFWfYM"
+    },
+    {
+      "_id": "6929b551edf7c3749b42bdd1",
+      "amount": 142,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:44:33.653Z",
+      "orderId": "6929b551edf7c3749b42bdce",
+      "transactionRef": "pi_3SYSuW4tOgB3mFky1cYMqKVZ"
+    },
+    {
+      "_id": "6929b614edf7c3749b42bdd6",
+      "amount": 365,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:47:48.801Z",
+      "orderId": "6929b614edf7c3749b42bdd2",
+      "transactionRef": "pi_3SYSxf4tOgB3mFky0LnmiHlW"
+    },
+    {
+      "_id": "6929b633edf7c3749b42bdd9",
+      "amount": 120,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "completed",
+      "createdAt": "2025-11-28T14:48:19.176Z",
+      "orderId": "6929b633edf7c3749b42bdd7",
+      "transactionRef": "pi_3SYSyA4tOgB3mFky10K0GH0m"
+    },
+    {
+      "_id": "6929b66bedf7c3749b42bddd",
+      "amount": 185,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "completed",
+      "createdAt": "2025-11-28T14:49:15.859Z",
+      "orderId": "6929b66bedf7c3749b42bdda",
+      "transactionRef": "pi_3SYSz44tOgB3mFky1OqQMfRv"
+    },
+    {
+      "_id": "6929b693edf7c3749b42bde0",
+      "amount": 600,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:49:55.096Z",
+      "orderId": "6929b693edf7c3749b42bdde",
+      "transactionRef": "pi_3SYSzi4tOgB3mFky0uyfjsD0"
+    },
+    {
+      "_id": "6929b6daedf7c3749b42bde5",
+      "amount": 365,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-11-28T14:51:06.069Z",
+      "orderId": "6929b6daedf7c3749b42bde1",
+      "transactionRef": "pi_3SYT0r4tOgB3mFky1DnVez3c"
+    },
+    {
+      "_id": "692dde484feebdafbda9158d",
+      "amount": 32,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:28:24.589Z",
+      "orderId": "692dde484feebdafbda9158b",
+      "transactionRef": "pi_3SZbpk4tOgB3mFky1hjiwxZy"
+    },
+    {
+      "_id": "692dded54feebdafbda91590",
+      "amount": 32,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:30:45.100Z",
+      "orderId": "692dded54feebdafbda9158e",
+      "transactionRef": "pi_3SZbs14tOgB3mFky1aM4sCVs"
+    },
+    {
+      "_id": "692ddf834feebdafbda91594",
+      "amount": 12444,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:33:39.394Z",
+      "orderId": "692ddf834feebdafbda91591",
+      "transactionRef": "pi_3SZbup4tOgB3mFky126vjjGh"
+    },
+    {
+      "_id": "692de1894feebdafbda91598",
+      "amount": 12444,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:42:17.670Z",
+      "orderId": "692de1894feebdafbda91595",
+      "transactionRef": "pi_3SZc3B4tOgB3mFky1aYBYU2s"
+    },
+    {
+      "_id": "692de2c44feebdafbda9159c",
+      "amount": 24888,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:47:32.988Z",
+      "orderId": "692de2c44feebdafbda91599",
+      "transactionRef": "pi_3SZc8H4tOgB3mFky0xyobLiO"
+    },
+    {
+      "_id": "692de4ee4d6a85eb48958a9a",
+      "amount": 12444,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:56:46.066Z",
+      "orderId": "692de4ee4d6a85eb48958a97",
+      "transactionRef": "pi_3SZcHC4tOgB3mFky0vUAiZ6C"
+    },
+    {
+      "_id": "692de5864d6a85eb48958a9f",
+      "amount": 12564,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T18:59:18.345Z",
+      "orderId": "692de5864d6a85eb48958a9b",
+      "transactionRef": "pi_3SZcJe4tOgB3mFky1BJ2wjNC"
+    },
+    {
+      "_id": "692de66b4d6a85eb48958aa3",
+      "amount": 12444,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T19:03:07.113Z",
+      "orderId": "692de66b4d6a85eb48958aa0",
+      "transactionRef": "pi_3SZcNL4tOgB3mFky1pKFsEr4"
+    },
+    {
+      "_id": "692debe8cf4cf6bd81821893",
+      "amount": 12444,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-01T19:26:32.141Z",
+      "orderId": "692debe8cf4cf6bd81821890",
+      "transactionRef": "pi_3SZck04tOgB3mFky0aU789Ii"
+    },
+    {
+      "_id": "692f02dfa406e6d33031e9e6",
+      "amount": 149104,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-02T15:16:47.546Z",
+      "orderId": "692f02dfa406e6d33031e9e3",
+      "transactionRef": "pi_3SZvJs4tOgB3mFky0eTFFHHY"
+    },
+    {
+      "_id": "692f0331a406e6d33031e9ea",
+      "amount": 12444,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-02T15:18:09.690Z",
+      "orderId": "692f0331a406e6d33031e9e7",
+      "transactionRef": "pi_3SZvLE4tOgB3mFky0sESDXFP"
+    },
+    {
+      "_id": "692f2d2b7b2e33ed9e1cef40",
+      "amount": 37268,
+      "method": "stripe",
+      "currency": "EUR",
+      "status": "pending",
+      "createdAt": "2025-12-02T18:17:15.914Z",
+      "orderId": "692f2d2b7b2e33ed9e1cef3d",
+      "transactionRef": "pi_3SZy8Y4tOgB3mFky0ISGn310"
+    }
+  ],
+  "Product": [
+    {
+      "_id": "692dd9c032bf73c8a5adfd9f",
+      "name": "21412",
+      "description": "412412",
+      "price": 12412,
+      "currency": "EUR",
+      "stockTotal": {
+        "low": 214124,
+        "high": 0,
+        "unsigned": false
+      },
+      "stockAvailable": {
+        "low": 214124,
+        "high": 0,
+        "unsigned": false
+      },
+      "image": "https://api.dicebear.com/7.x/identicon/svg?seed=alexsegui10%40gmail.com",
+      "status": "active",
+      "createdAt": "2025-12-01T18:09:04.199Z",
+      "updatedAt": "2025-12-01T18:09:04.199Z",
+      "categoryId": "69173a1cf90c5daf767001bd"
+    }
+  ]
+}

@@ -16,7 +16,6 @@ export class CartService {
   public cartTotal = signal<number>(0);
 
   constructor() {
-    // Solo cargar el carrito si el usuario es cliente (NO admin ni enterprise)
     const role = this.jwtService.getUserRole();
     if (role === 'cliente' || role === null) {
       this.loadCart();

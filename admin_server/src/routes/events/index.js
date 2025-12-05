@@ -126,7 +126,6 @@ export default async function eventsRoutes(server) {
 
                 // Fetch random merchandising and assign to event
                 const merchandisingProducts = await fetchRandomMerchandising(3)
-                console.log('📦 Merchandising products fetched:', merchandisingProducts)
 
                 // Update event with merchandising
                 const eventWithMerchandising = await server.prisma.events.update({

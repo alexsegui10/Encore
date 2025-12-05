@@ -24,7 +24,7 @@ export class ListEventsComponent implements OnInit {
   listCategories: Category[] = [];
   filters = new Filters();
   offset: number = 0;
-  limit: number = 4;
+  limit: number = 8;
   totalPages: Array<number> = [];
   currentPage: number = 1;
 
@@ -63,16 +63,14 @@ export class ListEventsComponent implements OnInit {
   }
 
   private loadAll(): void {
-    console.log('Loading all events');
-    this.eventService.getAllEvents().subscribe({
+    const params = { limit: this.limit, offset: this.offset };
+    this.eventService.getAllEvents(params).subscribe({
       next: (data: any) => {
         const eventCount = data.event_count || 0;
         const limit = this.limit > 0 ? this.limit : 1;
         const totalPagesCount = Math.max(1, Math.ceil(eventCount / limit));
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
-        console.log('All events data received:', data);
         this.events = data?.events ?? data?.items ?? data ?? [];
-        console.log('Processed events (all):', this.events);
       },
       error: (err) => console.error('Error getAllEvents:', err)
     });
@@ -80,10 +78,8 @@ export class ListEventsComponent implements OnInit {
 
   get_list_filtered(filters: Filters) {
     this.filters = filters;
-    // console.log(JSON.stringify(this.filters));
     this.eventService.get_products_filter(filters).subscribe({
       next: (data: any) => {
-        console.log('Filtered events data received:', data);
         this.events = data.events || [];
 
         // Validate data before creating array
@@ -92,7 +88,6 @@ export class ListEventsComponent implements OnInit {
         const totalPagesCount = Math.max(1, Math.ceil(eventCount / limit));
 
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
-        console.log('Processed filtered events:', this.events);
       },
       error: (err) => {
         console.error('Error getting filtered events:', err);
@@ -111,16 +106,14 @@ export class ListEventsComponent implements OnInit {
 
 
   loadByCategory(slug: string): void {
-    console.log('Loading events by category:', slug);
-    this.eventService.getEventsByCategory(slug).subscribe({
+    const params = { limit: this.limit, offset: this.offset };
+    this.eventService.getEventsByCategory(slug, params).subscribe({
       next: (data: any) => {
         const eventCount = data.event_count || 0;
         const limit = this.limit > 0 ? this.limit : 1;
         const totalPagesCount = Math.max(1, Math.ceil(eventCount / limit));
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
-        console.log('Events data received:', data);
         this.events = data?.events ?? data?.items ?? data ?? [];
-        console.log('Processed events:', this.events);
       },
       error: (err) => {
         console.error('Error getEventsByCategory:', err);
@@ -154,10 +147,22 @@ export class ListEventsComponent implements OnInit {
     } else {
       this.Location.replaceState('/shop/' + btoa(JSON.stringify(this.filters)));
     }
-    // console.log(this.Location);
 
     this.get_list_filtered(this.filters);
-    console.log(`Current page: ${this.currentPage}`);
+  }
+
+  changeItemsPerPage(newLimit: number): void {
+    this.limit = newLimit;
+    this.filters.limit = newLimit;
+    this.currentPage = 1;
+    this.offset = 0;
+    this.filters.offset = 0;
+
+    if (this.slug_Category) {
+      this.loadByCategory(this.slug_Category);
+    } else {
+      this.loadAll();
+    }
   }
 
   /*   private loadByFilters(filters: any): void {

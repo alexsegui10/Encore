@@ -53,17 +53,17 @@
                         <span class="price-amount">{{ item.unitPrice }} {{ order.currency }}</span>
                     </div>
                 </div>
-                } @else if (item.itemType === 'product' && item.productData) {
+                } @else if (item.itemType === 'product' && (item.productData || item.localProduct)) {
                 <div class="item-card product-item">
                     <div class="item-image">
-                        <img [src]="item.productData.image || '/assets/default-product.jpg'"
-                            [alt]="item.productData.name || 'Producto'" />
+                        <img [src]="(item.productData?.image || item.localProduct?.image || '/assets/default-product.jpg')"
+                            [alt]="(item.productData?.name || item.localProduct?.name || 'Producto')" />
                     </div>
                     <div class="item-details">
-                        <h4 class="item-title">{{ item.productData.name || 'Producto' }}</h4>
+                        <h4 class="item-title">{{ item.productData?.name || item.localProduct?.name || 'Producto' }}</h4>
                         <p class="item-type-badge product-badge">Merchandising</p>
-                        @if (item.productData.description) {
-                        <p class="item-description">{{ item.productData.description }}</p>
+                        @if (item.productData?.description || item.localProduct?.description) {
+                        <p class="item-description">{{ item.productData?.description || item.localProduct?.description }}</p>
                         }
                         <div class="item-quantity">
                             <span>Cantidad: {{ item.quantity }}</span>

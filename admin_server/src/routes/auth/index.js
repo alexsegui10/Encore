@@ -74,13 +74,9 @@ export default async function authRoutes(server) {
     schema: schema.getMe,
     handler: async (req, reply) => {
       try {
-        console.log('🔍 GET /auth/me - req.user:', req.user);
-        
         const admin = await server.prisma.admin.findUnique({
           where: { id: req.user.id }
         })
-
-        console.log('🔍 Admin encontrado:', admin ? 'SÍ' : 'NO');
 
         if (!admin) {
           return reply.code(404).send({ message: 'Admin not found' })

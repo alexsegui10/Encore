@@ -18,7 +18,9 @@ import { Location } from '@angular/common';
 export class FiltersComponent implements OnInit {
 
   @Input() listCategories: Category[] = [];
+  @Input() currentLimit: number = 8;
   @Output() eventofiltros: EventEmitter<Filters> = new EventEmitter();
+  @Output() itemsPerPageChange: EventEmitter<number> = new EventEmitter();
 
   routeFilters: string | null = null;
   filters!: Filters
@@ -26,19 +28,34 @@ export class FiltersComponent implements OnInit {
   id_cat: string = "";
   price_max: number | undefined;
   price_min: number | undefined;
+  itemsPerPage: number = 8;
+  filtersExpanded: boolean = false;
 
   constructor(private ActivatedRoute: ActivatedRoute, private Router: Router, private Location: Location) {
     this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
   }
 
   ngOnInit(): void {
+    this.itemsPerPage = this.currentLimit;
     this.ActivatedRoute.snapshot.paramMap.get('filters') != undefined ? this.Highlights() : "";
     this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
   }
 
+  toggleFilters(): void {
+    this.filtersExpanded = !this.filtersExpanded;
+  }
+
+  getActiveFiltersCount(): number {
+    let count = 0;
+    if (this.id_cat && this.id_cat !== '') count++;
+    if (this.price_min !== undefined && this.price_min > 0) count++;
+    if (this.price_max !== undefined && this.price_max > 0) count++;
+    if (this.itemsPerPage !== 8) count++;
+    return count;
+  }
+
   public filter_products() {
     this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
-    console.log('Route filters:', this.routeFilters);
 
     // Crear un nuevo objeto de filtros
     this.filters = new Filters();
@@ -70,8 +87,7 @@ export class FiltersComponent implements OnInit {
     this.price_calc(this.price_min, this.price_max);
     this.filters.price_min = this.price_min;
     this.filters.price_max = this.price_max;
-
-    console.log('Applied filters:', this.filters);
+    this.filters.limit = this.itemsPerPage;
 
     setTimeout(() => {
       this.Location.replaceState('/shop/' + btoa(JSON.stringify(this.filters)));
@@ -92,11 +108,16 @@ export class FiltersComponent implements OnInit {
     }
   }
 
+  public change_items_per_page() {
+    this.itemsPerPageChange.emit(this.itemsPerPage);
+  }
+
   public remove_filters() {
     // Resetear todos los filtros
     this.id_cat = "";
     this.price_min = undefined;
     this.price_max = undefined;
+    this.itemsPerPage = 8;
     this.filters = new Filters();
 
     // Navegar a la página sin filtros

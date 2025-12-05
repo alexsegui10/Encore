@@ -71,7 +71,7 @@ export default async function orderRoutes(fastify, opts) {
                   mainImage: true
                 }
               },
-              product: {
+              localProduct: {
                 select: {
                   id: true,
                   name: true,
@@ -124,7 +124,7 @@ export default async function orderRoutes(fastify, opts) {
                   mainImage: true
                 }
               },
-              product: {
+              localProduct: {
                 select: {
                   id: true,
                   name: true,
