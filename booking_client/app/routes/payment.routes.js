@@ -3,16 +3,7 @@ import { createPaymentIntent, getOrderStatus } from '../controllers/payment.cont
 
 const router = Router();
 
-/**
- * POST /api/payments/create-intent
- * Create a payment intent
- */
 router.post('/create-intent', createPaymentIntent);
-
-/**
- * GET /api/payments/order/:orderId
- * Get order status
- */
 router.get('/order/:orderId', getOrderStatus);
 
 export default router;

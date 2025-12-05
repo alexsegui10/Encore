@@ -33,15 +33,12 @@ export class UserService {
         error: (err) => {
 
           if (err.status === 401 || err.status === 403) {
-            console.warn('Token expirado, el interceptor intentará renovarlo...');
           } else {
-            console.warn('Error al cargar usuario, limpiando sesión...', err);
             this.purgeAuth();
           }
         }
       });
     } else {
-      console.debug('No hay token guardado');
       this.purgeAuth();
     }
   }
@@ -58,7 +55,7 @@ export class UserService {
 
   purgeAuth(): void {
     this.jwtService.destroyToken();
-    
+
     // Actualizar observables globales
     this.currentUserSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
@@ -89,7 +86,6 @@ export class UserService {
         }
       }),
       catchError(err => {
-        console.warn('Refresh token expiró o es inválido');
         return throwError(() => err);
       })
     );
@@ -117,7 +113,7 @@ export class UserService {
       .pipe(
         map((data: { user: User }) => {
           this.currentUserSubject.next(data.user);
-          
+
           return data.user;
         })
       );

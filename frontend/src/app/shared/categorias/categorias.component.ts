@@ -33,7 +33,7 @@ export class ListCategoryComponent implements OnInit {
       next: (cats) => {
         this.categories = cats;
         this.limit = this.limit + 4; },
-      error: (err) => { console.error('Error loading categories:', err); }
+      error: (err) => {}
     });
   }
     getRequestParams(offset: number,limit: number): any{

@@ -24,7 +24,7 @@
               @if (item.event.mainImage) {
               <img [src]="item.event.mainImage" [alt]="item.event.title">
               } @else {
-              <div class="no-image">🎫</div>
+              <div class="no-image">Evento</div>
               }
             </div>
 
@@ -32,10 +32,10 @@
               <h3>{{ item.event.title }}</h3>
               <p class="item-type-badge event-badge">Evento</p>
               @if (item.event.date) {
-              <p class="item-date">📅 {{ item.event.date | date: 'dd/MM/yyyy' }}</p>
+              <p class="item-date">{{ item.event.date | date: 'dd/MM/yyyy' }}</p>
               }
               @if (item.event.location) {
-              <p class="item-location">📍 {{ item.event.location }}</p>
+              <p class="item-location">{{ item.event.location }}</p>
               }
               <p class="item-quantity">Cantidad: {{ item.quantity }}</p>
             </div>
@@ -52,7 +52,7 @@
               @if (item.product.image) {
               <img [src]="item.product.image" [alt]="item.product.name">
               } @else {
-              <div class="no-image">📦</div>
+              <div class="no-image">Producto</div>
               }
             </div>
 
@@ -113,7 +113,7 @@
           </div>
 
           <div class="stripe-info">
-            <p>🔒 Pago seguro procesado por Stripe</p>
+            <p>Pago seguro procesado por Stripe</p>
             <small>Tus datos de pago están protegidos y encriptados</small>
           </div>
 

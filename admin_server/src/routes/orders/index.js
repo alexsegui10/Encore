@@ -3,6 +3,48 @@ import {
   getOrderByIdSchema
 } from './schema.js';
 
+// Function to fetch product data from enterprise server
+async function fetchProductFromEnterprise(productId) {
+  try {
+    const response = await fetch(`http://localhost:5000/product/${productId}`);
+
+    if (!response.ok) {
+
+      return null;
+    }
+
+    const data = await response.json();
+    return data.product || null;
+  } catch (error) {
+
+    return null;
+  }
+}
+
+// Function to enrich order items with product data from enterprise server
+async function enrichOrderItems(items) {
+  return Promise.all(
+    items.map(async (item) => {
+      // If it's a product without productData, try to fetch it
+      if (item.itemType === 'product' && item.productId && !item.productData) {
+        const productData = await fetchProductFromEnterprise(item.productId);
+        if (productData) {
+          return {
+            ...item,
+            productData: {
+              id: productData.id,
+              name: productData.name,
+              image: productData.image || productData.images?.[0] || null,
+              price: productData.price
+            }
+          };
+        }
+      }
+      return item;
+    })
+  );
+}
+
 export default async function orderRoutes(fastify, opts) {
   const { prisma } = fastify;
 
@@ -61,7 +103,13 @@ export default async function orderRoutes(fastify, opts) {
             }
           },
           items: {
-            include: {
+            select: {
+              id: true,
+              quantity: true,
+              unitPrice: true,
+              itemType: true,
+              productId: true,
+              productData: true,
               event: {
                 select: {
                   id: true,
@@ -84,8 +132,16 @@ export default async function orderRoutes(fastify, opts) {
         }
       });
 
+      // Enrich orders with external product data
+      const enrichedOrders = await Promise.all(
+        orders.map(async (order) => {
+          const enrichedItems = await enrichOrderItems(order.items);
+          return { ...order, items: enrichedItems };
+        })
+      );
+
       return reply.send({
-        orders,
+        orders: enrichedOrders,
         total,
         page: parseInt(page),
         limit: parseInt(limit)
@@ -114,7 +170,13 @@ export default async function orderRoutes(fastify, opts) {
             }
           },
           items: {
-            include: {
+            select: {
+              id: true,
+              quantity: true,
+              unitPrice: true,
+              itemType: true,
+              productId: true,
+              productData: true,
               event: {
                 select: {
                   id: true,
@@ -142,7 +204,11 @@ export default async function orderRoutes(fastify, opts) {
         return reply.code(404).send({ error: 'Order not found' });
       }
 
-      return reply.send(order);
+      // Enrich order items with external product data
+      const enrichedItems = await enrichOrderItems(order.items);
+      const enrichedOrder = { ...order, items: enrichedItems };
+
+      return reply.send(enrichedOrder);
     } catch (error) {
       fastify.log.error('Error fetching order:', error);
       return reply.code(500).send({ error: 'Failed to fetch order' });

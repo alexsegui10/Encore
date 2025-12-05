@@ -34,14 +34,14 @@ async function fetchRandomMerchandising(count = 3) {
         const response = await fetch(`http://localhost:5000/product/random?count=${count}`)
 
         if (!response.ok) {
-            console.warn(`Failed to fetch merchandising: ${response.status} ${response.statusText}`)
+
             return []
         }
 
         const data = await response.json()
         return data.products || []
     } catch (error) {
-        console.warn('Error fetching merchandising:', error.message)
+
         return []
     }
 }
@@ -132,7 +132,7 @@ export default async function eventsRoutes(server) {
                     where: { id: newEvent.id },
                     data: { merchandising: merchandisingProducts }
                 })
-                console.log('✅ Event with merchandising:', eventWithMerchandising.merchandising)
+
 
                 return reply.code(201).send({
                     event: formatEventResponse(eventWithMerchandising)

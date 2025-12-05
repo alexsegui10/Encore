@@ -1,6 +1,6 @@
 <div class="cart-container">
   <div class="cart-header">
-    <h1>🛒 Mi Carrito</h1>
+    <h1>Mi Carrito</h1>
     <p class="item-count">{{ cart()?.itemCount || 0 }} {{ (cart()?.itemCount || 0) === 1 ? 'artículo' : 'artículos' }}
     </p>
   </div>
@@ -11,7 +11,7 @@
   </div>
   } @else if (!cart() || cart()!.itemCount === 0) {
   <div class="empty-cart">
-    <div class="empty-icon">🛍️</div>
+    <div class="empty-icon">Tienda</div>
     <h2>Tu carrito está vacío</h2>
     <p>Agrega eventos para comenzar tu compra</p>
     <button class="btn-primary" (click)="continueShopping()">
@@ -28,7 +28,7 @@
         @if (item.event.mainImage) {
         <img [src]="item.event.mainImage" [alt]="item.event.title" class="item-image">
         } @else {
-        <div class="item-image-placeholder">🎫</div>
+        <div class="item-image-placeholder">Evento</div>
         }
 
         <div class="item-details">
@@ -36,10 +36,10 @@
           <p class="item-type-badge event-badge">Evento</p>
           <p class="item-price">{{ item.price | currency: 'EUR' }}</p>
           @if (item.event.date) {
-          <p class="item-date">📅 {{ item.event.date | date: 'dd/MM/yyyy' }}</p>
+          <p class="item-date">{{ item.event.date | date: 'dd/MM/yyyy' }}</p>
           }
           @if (item.event.location) {
-          <p class="item-location">📍 {{ item.event.location }}</p>
+          <p class="item-location">{{ item.event.location }}</p>
           }
         </div>
 
@@ -59,7 +59,7 @@
         </div>
 
         <button class="btn-remove" (click)="removeItem(item.event._id, 'event')" title="Eliminar">
-          🗑️
+          ×
         </button>
         }
 
@@ -68,7 +68,7 @@
         @if (item.product.image) {
         <img [src]="item.product.image" [alt]="item.product.name" class="item-image">
         } @else {
-        <div class="item-image-placeholder">📦</div>
+        <div class="item-image-placeholder">Producto</div>
         }
 
         <div class="item-details">
@@ -96,7 +96,7 @@
         </div>
 
         <button class="btn-remove" (click)="removeItem(item.product.id, 'product')" title="Eliminar">
-          🗑️
+          ×
         </button>
         }
       </div>

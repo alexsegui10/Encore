@@ -216,7 +216,7 @@ list-category {
 .cta-background {
   position: absolute;
   inset: 0;
-  background: 
+  background:
     linear-gradient(135deg, #0a0d16 0%, #1a1f35 50%, #0f1419 100%);
   z-index: 0;
 }
@@ -224,7 +224,7 @@ list-category {
 .cta-overlay {
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(circle at 30% 50%, rgba(18, 115, 230, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 70% 50%, rgba(58, 160, 255, 0.12) 0%, transparent 50%);
   animation: pulseGlow 8s ease-in-out infinite;
@@ -475,23 +475,23 @@ list-category {
   .categories-section {
     padding: 40px 20px 60px;
   }
-  
+
   .section-header {
     margin-bottom: 32px;
   }
-  
+
   .stats-container {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .upcoming-section {
     padding: 60px 20px;
   }
-  
+
   .upcoming-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .upcoming-card {
     padding: 24px;
   }

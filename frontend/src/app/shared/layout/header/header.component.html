@@ -35,8 +35,7 @@
               <img [src]="currentUser()?.image || 'assets/default-avatar.png'" alt="Avatar" class="avatar" />
             </a>
 
-            <span class="username" *ngIf="currentUser()"
-              [title]="isAdmin ? currentUser()?.email : currentUser()?.username">
+            <span class="username" *ngIf="currentUser()" [title]="isAdmin ? currentUser()?.email : currentUser()?.username">
               {{ isAdmin ? (currentUser()?.username || currentUser()?.email) : currentUser()?.username }}
             </span>
 

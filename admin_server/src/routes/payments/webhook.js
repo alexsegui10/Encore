@@ -71,7 +71,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
 
         if (existingPayment.status === 'completed') {
             fastify.log.info(`Payment ${transactionRef} already processed, skipping`);
-            return; 
+            return;
         }
 
         await prisma.payment.update({
@@ -88,7 +88,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
                 items: {
                     include: {
                         event: true,
-                        product: true,
+                        localProduct: true,
                     }
                 },
                 user: true,
@@ -100,63 +100,67 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
         }
 
         for (const item of order.items) {
-            if (item.itemType === 'product' && item.productId) {
-                const product = await prisma.product.findUnique({
-                    where: { id: item.productId }
-                });
-
-                if (!product) {
-                    throw new Error(`Product ${item.productId} not found`);
-                }
-
-                if (product.stockAvailable < item.quantity) {
-                    await prisma.order.update({
-                        where: { id: order.id },
-                        data: { status: 'failed' }
+            if (item.itemType === 'product') {
+                if (item.localProductId) {
+                    const product = await prisma.product.findUnique({
+                        where: { id: item.localProductId }
                     });
 
-                    await prisma.payment.update({
-                        where: { id: existingPayment.id },
-                        data: { status: 'failed' }
-                    });
-
-                    throw new Error(
-                        `Insufficient stock for product ${product.name}. Available: ${product.stockAvailable}, Required: ${item.quantity}`
-                    );
-                }
-
-                await prisma.product.update({
-                    where: { id: item.productId },
-                    data: {
-                        stockAvailable: {
-                            decrement: item.quantity
-                        }
+                    if (!product) {
+                        throw new Error(`Local product ${item.localProductId} not found`);
                     }
-                });
 
-                fastify.log.info(`Deducted ${item.quantity} stock from product ${product.name}`);
+                    if (product.stockAvailable < item.quantity) {
+                        await prisma.order.update({
+                            where: { id: order.id },
+                            data: { status: 'failed' }
+                        });
+
+                        await prisma.payment.update({
+                            where: { id: existingPayment.id },
+                            data: { status: 'failed' }
+                        });
+
+                        throw new Error(
+                            `Insufficient stock for product ${product.name}. Available: ${product.stockAvailable}, Required: ${item.quantity}`
+                        );
+                    }
+
+                    await prisma.product.update({
+                        where: { id: item.localProductId },
+                        data: {
+                            stockAvailable: {
+                                decrement: item.quantity
+                            }
+                        }
+                    });
+
+                    fastify.log.info(`Deducted ${item.quantity} stock from local product ${product.name}`);
+                } else if (item.productId) {
+                    fastify.log.info(`External enterprise product ${item.productId} - stock managed by enterprise_server`);
+                }
             }
 
             if (item.itemType === 'event' && item.eventId) {
                 fastify.log.info(`Event ${item.eventId} stock was reserved during order creation`);
-            }
 
-            const tickets = [];
-            for (let i = 0; i < item.quantity; i++) {
-                const uniqueCode = `TICKET-${crypto.randomUUID().toUpperCase()}`;
-                tickets.push({
-                    uniqueCode,
-                    status: 'valid',
-                    orderItemId: item.id,
-                    userId: order.userId,
+                const tickets = [];
+                for (let i = 0; i < item.quantity; i++) {
+                    const uniqueCode = `TICKET-${crypto.randomUUID().toUpperCase()}`;
+                    tickets.push({
+                        uniqueCode,
+                        status: 'valid',
+                        orderItemId: item.id,
+                        userId: order.userId,
+                    });
+                }
+
+                await prisma.ticket.createMany({
+                    data: tickets
                 });
+
+                fastify.log.info(`Generated ${tickets.length} tickets for event ${item.id}`);
             }
-
-            await prisma.ticket.createMany({
-                data: tickets
-            });
-
-            fastify.log.info(`Generated ${tickets.length} tickets for order item ${item.id}`);
         }
 
         await prisma.order.update({
@@ -164,7 +168,7 @@ async function handlePaymentIntentSucceeded(fastify, paymentIntent) {
             data: { status: 'paid' }
         });
 
-        fastify.log.info(`✅ Order ${order.uid} completed successfully`);
+        fastify.log.info(`Order ${order.uid} completed successfully`);
 
     } catch (error) {
         fastify.log.error(`Error processing payment_intent.succeeded: ${error.message}`);
@@ -225,7 +229,7 @@ async function handlePaymentIntentFailed(fastify, paymentIntent) {
             }
         }
 
-        fastify.log.info(`✅ Order marked as failed and stock returned for payment ${transactionRef}`);
+        fastify.log.info(`Order marked as failed and stock returned for payment ${transactionRef}`);
 
     } catch (error) {
         fastify.log.error(`Error processing payment_intent.payment_failed: ${error.message}`);

@@ -1,76 +1,40 @@
-// seed-admin.js - Script para poblar la BD del admin_server (MongoDB)
+// seed.js - Script para poblar MongoDB compartida
 import 'dotenv/config';
-import { PrismaClient } from '@prisma/client';
-import argon2 from 'argon2';
+import { PrismaClient as PrismaAdmin } from '@prisma/client';
+import { PrismaClient as PrismaEnterprise } from '../enterprise_server/microservices/product-service/node_modules/.prisma/client/index.js';
 
-const prisma = new PrismaClient();
+const admin = new PrismaAdmin();
+const enterprise = new PrismaEnterprise();
+
+function getRandomProducts(products, count) {
+  const shuffled = [...products].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count).map(p => ({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    description: p.description,
+    image: p.image
+  }));
+}
 
 async function main() {
-  console.log(' Iniciando seed del Admin Server...\n');
+  console.log('🚀 Iniciando seed...\n');
 
-  console.log('  Limpiando datos existentes...');
-  await prisma.ticket.deleteMany();
-  await prisma.payment.deleteMany();
-  await prisma.orderItem.deleteMany();
-  await prisma.order.deleteMany();
-  await prisma.product.deleteMany();
-  await prisma.events.deleteMany();
-  await prisma.categories.deleteMany();
-  await prisma.users.deleteMany();
-  await prisma.admin.deleteMany();
-  console.log(' Datos limpiados\n');
+  console.log('🧹 Limpiando datos...');
+  await admin.ticket.deleteMany();
+  await admin.payment.deleteMany();
+  await admin.orderItem.deleteMany();
+  await admin.order.deleteMany();
+  await admin.events.deleteMany();
+  await admin.categories.deleteMany();
+  await enterprise.product.deleteMany();
+  await enterprise.productCategory.deleteMany();
+  console.log('✅ Limpiado\n');
 
-  console.log(' Creando usuario admin...');
-  const hashedPassword = await argon2.hash('admin123');
-  const admin = await prisma.admin.create({
-    data: {
-      uid: 'admin_001',
-      username: 'admin',
-      email: 'admin@encore.com',
-      password: hashedPassword,
-      isActive: true
-    }
-  });
-  console.log(` Admin creado: ${admin.email}\n`);
-
-  console.log(' Creando usuarios de prueba...');
-  const userPassword = await argon2.hash('password123');
-
-  const user1 = await prisma.users.create({
-    data: {
-      uid: 'usr_001',
-      slug: 'john-doe',
-      username: 'johndoe',
-      email: 'john@example.com',
-      password: userPassword,
-      bio: 'Usuario de prueba 1',
-      image: 'https://api.dicebear.com/7.x/identicon/svg?seed=john',
-      isActive: true,
-      status: 'active',
-      role: 'client'
-    }
-  });
-
-  const user2 = await prisma.users.create({
-    data: {
-      uid: 'usr_002',
-      slug: 'jane-smith',
-      username: 'janesmith',
-      email: 'jane@example.com',
-      password: userPassword,
-      bio: 'Usuario de prueba 2',
-      image: 'https://api.dicebear.com/7.x/identicon/svg?seed=jane',
-      isActive: true,
-      status: 'active',
-      role: 'client'
-    }
-  });
-
-  console.log(` Usuarios creados: ${user1.email}, ${user2.email}\n`);
-
-  console.log('  Creando categorías...');
-  const categories = await Promise.all([
-    prisma.categories.create({
+  // 1. CATEGORÍAS DE EVENTOS
+  console.log('📁 Categorías de eventos...');
+  const eventCats = await Promise.all([
+    admin.categories.create({
       data: {
         name: 'Conciertos',
         slug: 'conciertos',
@@ -80,7 +44,7 @@ async function main() {
         status: 'active'
       }
     }),
-    prisma.categories.create({
+    admin.categories.create({
       data: {
         name: 'Festivales',
         slug: 'festivales',
@@ -90,33 +54,228 @@ async function main() {
         status: 'active'
       }
     }),
-    prisma.categories.create({
+    admin.categories.create({
       data: {
         name: 'Teatro',
         slug: 'teatro',
-        description: 'Obras, musicales y clásicos',
+        description: 'Obras y musicales',
         image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
         isActive: true,
         status: 'active'
       }
     }),
-    prisma.categories.create({
+    admin.categories.create({
       data: {
         name: 'Deportes',
         slug: 'deportes',
-        description: 'Partidos y grandes eventos deportivos',
+        description: 'Eventos deportivos',
         image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211',
         isActive: true,
         status: 'active'
       }
     })
   ]);
-  console.log(` ${categories.length} categorías creadas\n`);
+  console.log(`✅ ${eventCats.length} categorías de eventos\n`);
 
-  // 4. Crear eventos con STOCK
-  console.log(' Creando eventos con stock...');
+  // 2. CATEGORÍAS DE PRODUCTOS
+  console.log('📦 Categorías de productos...');
+  const prodCats = await Promise.all([
+    enterprise.productCategory.create({
+      data: {
+        name: 'Ropa',
+        description: 'Camisetas, sudaderas y gorras',
+        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+        isActive: true
+      }
+    }),
+    enterprise.productCategory.create({
+      data: {
+        name: 'Accesorios',
+        description: 'Bolsas, pulseras y llaveros',
+        image: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b',
+        isActive: true
+      }
+    }),
+    enterprise.productCategory.create({
+      data: {
+        name: 'Coleccionables',
+        description: 'Posters, vinilos y pins',
+        image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7',
+        isActive: true
+      }
+    })
+  ]);
+  console.log(`✅ ${prodCats.length} categorías de productos\n`);
+
+  // 3. PRODUCTOS
+  console.log('🛍️  Productos...');
+  const products = await Promise.all([
+    // Ropa
+    enterprise.product.create({
+      data: {
+        name: 'Camiseta Negra Encore',
+        description: 'Camiseta 100% algodón con logo',
+        price: 25,
+        currency: 'EUR',
+        stockTotal: 500,
+        stockAvailable: 500,
+        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+        status: 'active',
+        categoryId: prodCats[0].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Sudadera Gris',
+        description: 'Sudadera con capucha premium',
+        price: 45,
+        currency: 'EUR',
+        stockTotal: 300,
+        stockAvailable: 300,
+        image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7',
+        status: 'active',
+        categoryId: prodCats[0].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Gorra Snapback',
+        description: 'Gorra ajustable con bordado',
+        price: 20,
+        currency: 'EUR',
+        stockTotal: 400,
+        stockAvailable: 400,
+        image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b',
+        status: 'active',
+        categoryId: prodCats[0].id
+      }
+    }),
+    // Accesorios
+    enterprise.product.create({
+      data: {
+        name: 'Tote Bag Ecológica',
+        description: 'Bolsa de algodón orgánico',
+        price: 12,
+        currency: 'EUR',
+        stockTotal: 600,
+        stockAvailable: 600,
+        image: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b',
+        status: 'active',
+        categoryId: prodCats[1].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Pulsera LED',
+        description: 'Pulsera LED recargable',
+        price: 10,
+        currency: 'EUR',
+        stockTotal: 1000,
+        stockAvailable: 1000,
+        image: 'https://images.unsplash.com/photo-1622122201714-77da0ca8e5d2',
+        status: 'active',
+        categoryId: prodCats[1].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Llavero Metálico',
+        description: 'Llavero con logo grabado',
+        price: 8,
+        currency: 'EUR',
+        stockTotal: 800,
+        stockAvailable: 800,
+        image: 'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e',
+        status: 'active',
+        categoryId: prodCats[1].id
+      }
+    }),
+    // Coleccionables
+    enterprise.product.create({
+      data: {
+        name: 'Poster Oficial',
+        description: 'Poster 50x70cm papel premium',
+        price: 15,
+        currency: 'EUR',
+        stockTotal: 500,
+        stockAvailable: 500,
+        image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7',
+        status: 'active',
+        categoryId: prodCats[2].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Vinilo Edición Especial',
+        description: 'Vinilo coloreado edición limitada',
+        price: 35,
+        currency: 'EUR',
+        stockTotal: 200,
+        stockAvailable: 200,
+        image: 'https://images.unsplash.com/photo-1603048588665-791ca8aea617',
+        status: 'active',
+        categoryId: prodCats[2].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Set de Pins',
+        description: 'Set de 5 pins esmaltados',
+        price: 20,
+        currency: 'EUR',
+        stockTotal: 400,
+        stockAvailable: 400,
+        image: 'https://images.unsplash.com/photo-1610651692394-6125c1e0f0a5',
+        status: 'active',
+        categoryId: prodCats[2].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Mochila Premium',
+        description: 'Mochila de alta calidad',
+        price: 40,
+        currency: 'EUR',
+        stockTotal: 250,
+        stockAvailable: 250,
+        image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62',
+        status: 'active',
+        categoryId: prodCats[1].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Camiseta Blanca Premium',
+        description: 'Camiseta oversized de corte moderno',
+        price: 28,
+        currency: 'EUR',
+        stockTotal: 450,
+        stockAvailable: 450,
+        image: 'https://images.unsplash.com/photo-1562157873-818bc0726f68',
+        status: 'active',
+        categoryId: prodCats[0].id
+      }
+    }),
+    enterprise.product.create({
+      data: {
+        name: 'Bufanda Oficial',
+        description: 'Bufanda tejida de alta calidad',
+        price: 18,
+        currency: 'EUR',
+        stockTotal: 350,
+        stockAvailable: 350,
+        image: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20',
+        status: 'active',
+        categoryId: prodCats[0].id
+      }
+    })
+  ]);
+  console.log(`✅ ${products.length} productos\n`);
+
+  // 4. EVENTOS
+  console.log('🎵 Eventos...');
   const events = await Promise.all([
-    prisma.events.create({
+    admin.events.create({
       data: {
         slug: 'hans-zimmer-valencia',
         title: 'Hans Zimmer — Valencia',
@@ -124,20 +283,18 @@ async function main() {
         price: 85,
         currency: 'EUR',
         location: 'Roig Arena, Valencia',
-        description: 'El compositor Hans Zimmer presenta su tour "The Next Level" con banda completa en Valencia.',
-        category: categories[0].id,
+        description: 'El compositor Hans Zimmer presenta su tour "The Next Level".',
+        category: eventCats[0].id,
         status: 'published',
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1506157786151-b8491531f063',
-        images: [
-          'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba',
-          'https://images.unsplash.com/photo-1492684223066-81342ee5ff30'
-        ],
+        images: [],
         stock: 500,
-        favouritesCount: 0
+        favouritesCount: 0,
+        merchandising: getRandomProducts(products, 3)
       }
     }),
-    prisma.events.create({
+    admin.events.create({
       data: {
         slug: 'eric-clapton-madrid',
         title: 'Eric Clapton — Madrid',
@@ -145,20 +302,18 @@ async function main() {
         price: 110,
         currency: 'EUR',
         location: 'Movistar Arena, Madrid',
-        description: 'El legendario guitarrista Eric Clapton regresa a Madrid dentro de su gira europea de 2026.',
-        category: categories[0].id,
+        description: 'El legendario guitarrista Eric Clapton en Madrid.',
+        category: eventCats[0].id,
         status: 'published',
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1483412033650-1015ddeb83d1',
-        images: [
-          'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc',
-          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4'
-        ],
+        images: [],
         stock: 300,
-        favouritesCount: 0
+        favouritesCount: 0,
+        merchandising: getRandomProducts(products, 4)
       }
     }),
-    prisma.events.create({
+    admin.events.create({
       data: {
         slug: 'tame-impala-barcelona',
         title: 'Tame Impala — Barcelona',
@@ -166,20 +321,18 @@ async function main() {
         price: 65,
         currency: 'EUR',
         location: 'Palau Sant Jordi, Barcelona',
-        description: 'La banda australiana Tame Impala recala en Barcelona con su inconfundible sonido psicodélico.',
-        category: categories[0].id,
+        description: 'Tame Impala en Barcelona con su sonido psicodélico.',
+        category: eventCats[0].id,
         status: 'published',
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044',
-        images: [
-          'https://images.unsplash.com/photo-1511379938547-c1f69419868d',
-          'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba'
-        ],
+        images: [],
         stock: 100,
-        favouritesCount: 0
+        favouritesCount: 0,
+        merchandising: getRandomProducts(products, 2)
       }
     }),
-    prisma.events.create({
+    admin.events.create({
       data: {
         slug: 'primavera-sound-2026',
         title: 'Primavera Sound 2026',
@@ -187,20 +340,18 @@ async function main() {
         price: 280,
         currency: 'EUR',
         location: 'Parc del Fòrum, Barcelona',
-        description: 'El festival más esperado del año con más de 200 artistas internacionales.',
-        category: categories[1].id,
+        description: 'El festival más esperado con 200+ artistas.',
+        category: eventCats[1].id,
         status: 'published',
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf',
-        images: [
-          'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
-          'https://images.unsplash.com/photo-1506157786151-b8491531f063'
-        ],
+        images: [],
         stock: 1000,
-        favouritesCount: 0
+        favouritesCount: 0,
+        merchandising: getRandomProducts(products, 5)
       }
     }),
-    prisma.events.create({
+    admin.events.create({
       data: {
         slug: 'rey-leon-madrid',
         title: 'El Rey León — Madrid',
@@ -208,17 +359,18 @@ async function main() {
         price: 90,
         currency: 'EUR',
         location: 'Teatro Lope de Vega, Madrid',
-        description: 'El musical más exitoso de la historia regresa a Madrid.',
-        category: categories[2].id,
+        description: 'El musical más exitoso regresa a Madrid.',
+        category: eventCats[2].id,
         status: 'published',
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
         images: [],
         stock: null,
-        favouritesCount: 0
+        favouritesCount: 0,
+        merchandising: []
       }
     }),
-    prisma.events.create({
+    admin.events.create({
       data: {
         slug: 'real-madrid-barcelona',
         title: 'Real Madrid vs Barcelona',
@@ -226,67 +378,34 @@ async function main() {
         price: 150,
         currency: 'EUR',
         location: 'Santiago Bernabéu, Madrid',
-        description: 'El clásico español en el Bernabéu.',
-        category: categories[3].id,
+        description: 'El clásico español.',
+        category: eventCats[3].id,
         status: 'published',
         isActive: true,
         mainImage: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211',
         images: [],
         stock: 50,
-        favouritesCount: 0
+        favouritesCount: 0,
+        merchandising: getRandomProducts(products, 3)
       }
     })
   ]);
-  console.log(` ${events.length} eventos creados con stock\n`);
+  console.log(`✅ ${events.length} eventos\n`);
 
-  // 5. Crear productos de merchandising (opcional)
-  console.log('🛍️  Creando productos...');
-  const products = await Promise.all([
-    prisma.product.create({
-      data: {
-        name: 'Camiseta Hans Zimmer',
-        description: 'Camiseta oficial del tour',
-        price: 25,
-        currency: 'EUR',
-        stockTotal: 200,
-        stockAvailable: 200,
-        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
-        isActive: true
-      }
-    }),
-    prisma.product.create({
-      data: {
-        name: 'Poster Primavera Sound',
-        description: 'Poster oficial del festival',
-        price: 15,
-        currency: 'EUR',
-        stockTotal: 500,
-        stockAvailable: 500,
-        image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7',
-        isActive: true
-      }
-    })
-  ]);
-  console.log(`✅ ${products.length} productos creados\n`);
-
-  console.log('🎉 ¡Seed completado exitosamente!');
-  console.log('\n📋 Resumen:');
-  console.log(`   - ${1} Admin creado`);
-  console.log(`   - ${2} Usuarios creados`);
-  console.log(`   - ${categories.length} Categorías creadas`);
-  console.log(`   - ${events.length} Eventos creados`);
-  console.log(`   - ${products.length} Productos creados`);
-  console.log('\n🔑 Credenciales de prueba:');
-  console.log('   Admin: admin@encore.com / admin123');
-  console.log('   Usuario: john@example.com / password123');
-  console.log('   Usuario: jane@example.com / password123');
+  console.log('🎉 Seed completado!');
+  console.log(`\n📊 Resumen:`);
+  console.log(`   ✅ ${eventCats.length} categorías de eventos`);
+  console.log(`   ✅ ${prodCats.length} categorías de productos`);
+  console.log(`   ✅ ${products.length} productos`);
+  console.log(`   ✅ ${events.length} eventos\n`);
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error durante el seed:', e);
+    console.error('❌ Error:', e);
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await admin.$disconnect();
+    await enterprise.$disconnect();
   });

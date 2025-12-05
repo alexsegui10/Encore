@@ -73,7 +73,7 @@ export class FiltersComponent implements OnInit {
           urlFilters.name
         );
       } catch (error) {
-        console.error('Error parsing filters from URL:', error);
+
         this.filters = new Filters();
       }
     }
@@ -138,7 +138,7 @@ export class FiltersComponent implements OnInit {
           this.price_max = routeFilters.price_max;
         }
       } catch (error) {
-        console.error('Error parsing route filters in Highlights:', error);
+
         // Resetear valores en caso de error
         this.id_cat = '';
         this.price_min = undefined;

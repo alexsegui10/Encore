@@ -19,10 +19,10 @@ export const moveExpiredTokensToBlacklist = async () => {
         }
         
         if (expiredTokens.length > 0) {
-            console.log(`Movidos ${expiredTokens.length} tokens expirados a blacklist`);
+
         }
     } catch (error) {
-        console.error('Error moviendo tokens expirados:', error);
+
     }
 };
 

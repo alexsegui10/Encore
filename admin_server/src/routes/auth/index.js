@@ -86,7 +86,7 @@ export default async function authRoutes(server) {
 
         return { admin: adminData }
       } catch (error) {
-        console.error('❌ Error en /auth/me:', error);
+
         req.log.error(error)
         return reply.code(500).send({ message: 'Internal server error' })
       }

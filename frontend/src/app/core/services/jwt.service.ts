@@ -35,7 +35,7 @@ export class JwtService {
       );
       return JSON.parse(jsonPayload);
     } catch (error) {
-      console.error('Error al decodificar token:', error);
+
       return null;
     }
   }
@@ -44,7 +44,7 @@ export class JwtService {
   getUserRole(): 'admin' | 'enterprise' | 'cliente' | null {
     const decoded = this.decodeToken();
     if (!decoded) return null;
-    
+
     // El admin server y enterprise server guardan el role directamente en el payload
     // El booking client lo guarda en decoded.user.role
     return decoded.role || decoded.user?.role || null;

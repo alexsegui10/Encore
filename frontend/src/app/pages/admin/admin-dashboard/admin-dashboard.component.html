@@ -10,42 +10,42 @@
 
     <nav class="sidebar-nav">
       <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-        <span class="icon">📊</span>
+        <span class="icon"></span>
         <span class="text">Dashboard</span>
       </a>
       <a routerLink="/admin/dashboard/users" routerLinkActive="active">
-        <span class="icon">👥</span>
+        <span class="icon"></span>
         <span class="text">Usuarios</span>
       </a>
       <a routerLink="/admin/dashboard/categories" routerLinkActive="active">
-        <span class="icon">📁</span>
+        <span class="icon"></span>
         <span class="text">Categorías</span>
       </a>
       <a routerLink="/admin/dashboard/events" routerLinkActive="active">
-        <span class="icon">🎫</span>
+        <span class="icon"></span>
         <span class="text">Eventos</span>
       </a>
       <a routerLink="/admin/dashboard/orders" routerLinkActive="active">
-        <span class="icon">🛒</span>
+        <span class="icon"></span>
         <span class="text">Órdenes</span>
       </a>
       <a routerLink="/admin/dashboard/profile" routerLinkActive="active">
-        <span class="icon">⚙️</span>
+        <span class="icon"></span>
         <span class="text">Mi Perfil</span>
       </a>
     </nav>
 
     <div class="sidebar-footer">
       @if (currentAdmin$ | async; as admin) {
-        <div class="admin-info">
-          <div class="admin-details">
-            <span class="admin-name">{{ admin.username }}</span>
-            <span class="admin-email">{{ admin.email }}</span>
-          </div>
-          <button class="logout-btn" (click)="logout()">
-            <span>🚪</span>
-          </button>
+      <div class="admin-info">
+        <div class="admin-details">
+          <span class="admin-name">{{ admin.username }}</span>
+          <span class="admin-email">{{ admin.email }}</span>
         </div>
+        <button class="logout-btn" (click)="logout()">
+          <span></span>
+        </button>
+      </div>
       }
     </div>
   </aside>

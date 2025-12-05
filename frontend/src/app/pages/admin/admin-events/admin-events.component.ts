@@ -83,7 +83,7 @@ export class AdminEventsComponent implements OnInit {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('Error al cargar categorías:', err);
+
       }
     });
   }
@@ -100,7 +100,7 @@ export class AdminEventsComponent implements OnInit {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('Error al cargar eventos:', err);
+
         this.isLoading.set(false);
         this.cd.markForCheck();
 

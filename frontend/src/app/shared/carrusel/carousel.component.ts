@@ -30,15 +30,12 @@ export class CarouselComponent implements OnInit {
     if (this.slug_details) {
       this.page = "details";
       this.CarouselService.getCarouselDetails(this.slug_details).subscribe((data: CarouselDetails) => {
-        // console.log(data);
-        this.items_details = [data]; // Envolver en array ya que el servicio devuelve un solo objeto
-        console.log(this.items_details);
+        this.items_details = [data];
       });
     } else {
       this.page = "categories";
       this.CarouselService.getCarouselHome().subscribe((data: CarouselHome[]) => {
-        // console.log(data);
-        this.items_carousel = data; // El servicio ya devuelve el array directamente
+        this.items_carousel = data;
       });
     }
   }

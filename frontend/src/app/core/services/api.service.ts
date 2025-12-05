@@ -15,8 +15,7 @@ export class ApiService {
   ) { }
 
   private formatErrors(error: any) {
-    // Devolver el error completo para mantener status, statusText, etc.
-    // pero añadir la información del body si existe
+
     return throwError(() => ({
       ...error,
       message: error?.error?.message || error?.message || 'Error desconocido',
@@ -24,16 +23,12 @@ export class ApiService {
     }));
   }
 
-  // headers opcionales de auth, solo si withAuth === true
   private buildOptions(params?: HttpParams, withAuth: boolean = false) {
     let headers = new HttpHeaders({ 'Accept': 'application/json' });
-    
-    // NO añadir Authorization aquí - el interceptor se encarga de eso
-    // Solo construir los params
-    return { 
-      params: params || new HttpParams(), 
+    return {
+      params: params || new HttpParams(),
       headers,
-      withCredentials: withAuth // Solo enviar cookies si se requiere auth
+      withCredentials: withAuth
     };
   }
 
@@ -45,7 +40,6 @@ export class ApiService {
 
   put(path: string, body: object = {}, port: number = 4000, withAuth: boolean = false): Observable<any> {
     const options = this.buildOptions(undefined, withAuth);
-    // nos aseguramos de mandar JSON
     const headers = options.headers.set('Content-Type', 'application/json');
     return this.http
       .put(`${environment.api_url}:${port}${path}`, body, { ...options, headers })

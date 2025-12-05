@@ -27,11 +27,11 @@ export class ListUsersOrdersComponent implements OnInit {
     private loadUserOrders(): void {
         this.userService.getUserOrders().subscribe({
             next: (response) => {
-                console.log('User orders received:', response);
+
                 this.userOrders.set(response.orders || []);
             },
             error: (err: any) => {
-                console.error('Error loading user orders:', err);
+
                 Swal.fire('Error', 'Error al cargar tus pedidos', 'error');
             }
         });

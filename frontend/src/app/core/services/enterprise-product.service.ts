@@ -11,6 +11,7 @@ export interface EnterpriseProduct {
   stockTotal: number;
   stockAvailable: number;
   image: string | null;
+  status: 'draft' | 'active' | 'hidden' | 'soldout';
   categoryId: string;
   createdAt: string;
   updatedAt: string;
@@ -67,7 +68,7 @@ export class EnterpriseProductService {
         observer.complete();
       });
     }
-    
+
     const idsParam = ids.join(',');
     return this.apiService.get(`/product/by-ids?ids=${idsParam}`, undefined, 5000, true)
       .pipe(map(data => data.products || []));

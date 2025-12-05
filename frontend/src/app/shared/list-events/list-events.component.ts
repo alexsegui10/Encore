@@ -72,7 +72,7 @@ export class ListEventsComponent implements OnInit {
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
         this.events = data?.events ?? data?.items ?? data ?? [];
       },
-      error: (err) => console.error('Error getAllEvents:', err)
+      error: (err) => {}
     });
   }
 
@@ -90,7 +90,7 @@ export class ListEventsComponent implements OnInit {
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
       },
       error: (err) => {
-        console.error('Error getting filtered events:', err);
+
         this.events = [];
       }
     });
@@ -116,7 +116,7 @@ export class ListEventsComponent implements OnInit {
         this.events = data?.events ?? data?.items ?? data ?? [];
       },
       error: (err) => {
-        console.error('Error getEventsByCategory:', err);
+
       }
     });
   }
@@ -170,7 +170,7 @@ export class ListEventsComponent implements OnInit {
         next: (data: any) => {
           this.events = data?.events ?? data?.items ?? data ?? [];
         },
-        error: (err) => console.error('Error getEventsByFilters:', err)
+        error: (err) => {}
       });
     } */
 

@@ -28,7 +28,6 @@ export class DetailsComponent implements OnInit {
     slug: string = '';
     public isLoading = signal(true);
     public event = signal<Event | null>(null);
-    public isEventOwner = false;
     public showMerchandisePopup = false;
     public loadedMerchandising: any[] = [];
 
@@ -53,11 +52,9 @@ export class DetailsComponent implements OnInit {
         this.eventService.getEventBySlug(this.slug).subscribe({
             next: (event) => {
                 this.event.set(event);
-                this.checkIfOwner();
                 this.isLoading.set(false);
             },
             error: (error) => {
-                console.error('Error:', error);
                 this.isLoading.set(false);
 
                 Swal.fire({
@@ -68,21 +65,6 @@ export class DetailsComponent implements OnInit {
                 }).then(() => {
                     this.router.navigateByUrl('/');
                 });
-            }
-        });
-    }
-
-    checkIfOwner(): void {
-        // Implementa la lógica para verificar si el usuario actual es el propietario del evento
-        // Por ahora lo dejamos en false, pero puedes comparar con el usuario actual
-        this.userService.getCurrentUser().subscribe({
-            next: (currentUser) => {
-                // this.isEventOwner = currentUser && currentUser.id === this.event()?.createdBy;
-                // Temporalmente false hasta implementar createdBy en el modelo
-                this.isEventOwner = false;
-            },
-            error: () => {
-                this.isEventOwner = false;
             }
         });
     }
@@ -121,7 +103,6 @@ export class DetailsComponent implements OnInit {
                 this.event.set(response);
             },
             error: (err) => {
-                console.error('Error al dar like:', err);
                 if (err.status === 401 || err.status === 403) {
                     Swal.fire({
                         icon: 'warning',

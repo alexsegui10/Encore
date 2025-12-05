@@ -18,21 +18,14 @@ export const listEvents = async (req, res, next) => {
     let price_min = transUndefined(req.query.price_min, 0);
     let price_max = transUndefined(req.query.price_max, Number.MAX_SAFE_INTEGER);
 
-    // Crear regex para búsqueda de nombre/título
     let nameReg = new RegExp(name, 'i');
 
-    console.log('Query params processed:', {
-      limit, offset, category, name, price_min, price_max
-    });
-
-    // Construir query base - SIEMPRE incluye filtros de precio y nombre
     let query = {
       title: { $regex: nameReg },
       $and: [
         { price: { $gte: parseFloat(price_min) } },
         { price: { $lte: parseFloat(price_max) } }
       ],
-      // Mostrar eventos publicados o sin status definido (para retrocompatibilidad)
       $or: [
         { status: 'published' },
         { status: { $exists: false } },
@@ -40,39 +33,29 @@ export const listEvents = async (req, res, next) => {
       ]
     };
 
-    // Agregar filtro de categoría si está presente
     if (category != "") {
       query.category = category;
     }
 
-    console.log('MongoDB query:', JSON.stringify(query, null, 2));
-
-    // Ejecutar query con paginación
     const events = await Event.find(query)
       .limit(Number(limit))
       .skip(Number(offset))
       .sort('-date');
 
-    // Obtener conteo total con los mismos filtros
     const event_count = await Event.find(query).countDocuments();
-
-    console.log(`Found ${events.length} events, total: ${event_count}`);
 
     if (!events) {
       return res.status(404).json({ msg: "No se encontraron eventos" });
     }
 
-    // Intentar obtener el usuario actual si está autenticado
     let currentUser = null;
     if (req.userId) {
       try {
         currentUser = await User.findById(req.userId).exec();
       } catch (err) {
-        console.log('Usuario no encontrado o token inválido:', err);
       }
     }
 
-    // Transformar cada evento usando toEventResponse para incluir isLiked y likesCount
     const eventsWithLikes = await Promise.all(
       events.map(event => event.toEventResponse(currentUser))
     );
@@ -90,7 +73,6 @@ export const listEvents = async (req, res, next) => {
       }
     });
   } catch (err) {
-    console.error('Error in listEvents:', err);
     next(err);
   }
 };
@@ -99,7 +81,6 @@ export const listEvents = async (req, res, next) => {
 export const getOneEvent = async (req, res, next) => {
   try {
     const { slug } = req.params;
-    // Permitir acceso a eventos publicados o sin status definido (para retrocompatibilidad)
     const doc = await Event.findOne({ 
       slug,
       $or: [
@@ -110,13 +91,11 @@ export const getOneEvent = async (req, res, next) => {
     });
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
 
-    // Intentar obtener el usuario actual si está autenticado
     let currentUser = null;
     if (req.userId) {
       currentUser = await User.findById(req.userId).exec();
     }
 
-    // Usar toEventResponse para incluir isLiked y likesCount
     const eventResponse = await doc.toEventResponse(currentUser);
 
     res.json(eventResponse);
@@ -130,7 +109,6 @@ export const createEvent = async (req, res, next) => {
   try {
     const { title, date, price, currency, location, description, category, status } = req.body;
 
-    // Requisitos mínimos
     if (!title || !date || price == null || category == null) {
       return res.status(400).json({ error: 'title, date, price y category son obligatorios' });
     }
@@ -179,15 +157,12 @@ export const updateEvent = async (req, res, next) => {
 
     await doc.save();
 
-    // If category changed, update the category references
     if (req.body.category && oldCategory && oldCategory.toString() !== req.body.category.toString()) {
-      // Remove from old category
       const oldCategoryDoc = await Category.findById(oldCategory);
       if (oldCategoryDoc) {
         await oldCategoryDoc.removeEvent(doc._id);
       }
 
-      // Add to new category
       const newCategoryDoc = await Category.findById(req.body.category);
       if (newCategoryDoc) {
         await newCategoryDoc.addEvent(doc._id);
@@ -207,7 +182,6 @@ export const deleteEvent = async (req, res, next) => {
     const doc = await Event.findOneAndDelete({ slug });
     if (!doc) return res.status(404).json({ error: 'Evento no encontrado' });
 
-    // Remove the event from its category
     if (doc.category) {
       const categoryDoc = await Category.findById(doc.category);
       if (categoryDoc) {
@@ -225,7 +199,6 @@ export const GetProductsByCategory = asyncHandler(async (req, res) => {
   try {
     const { slug } = req.params;
 
-    // Buscar categorías activas o sin status definido
     const category = await Category.findOne({ 
       slug,
       $or: [
@@ -239,7 +212,6 @@ export const GetProductsByCategory = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Categoria no encontrada" });
     }
 
-    // Obtener eventos publicados o sin status definido de esta categoría
     const events = await Event.find({ 
       category: category._id,
       $or: [
@@ -251,7 +223,7 @@ export const GetProductsByCategory = asyncHandler(async (req, res) => {
 
     return res.status(200).json(events);
   } catch (err) {
-    console.error('Error in GetProductsByCategory:', err);
+
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 });
@@ -328,12 +300,10 @@ export const getFavoriteEvents = asyncHandler(async (req, res) => {
     });
   }
 
-  // Primero obtener los eventos
   const favoriteEvents = await Event.find({
     _id: { $in: loginUser.favouriteEvents }
   }).exec();
 
-  // Luego verificar si está vacío
   if (favoriteEvents.length === 0) {
     return res.status(200).json({
       events: [],
@@ -342,7 +312,6 @@ export const getFavoriteEvents = asyncHandler(async (req, res) => {
     });
   }
 
-  // Transformar los eventos
   const eventsWithDetails = await Promise.all(
     favoriteEvents.map(event => event.toEventResponse(loginUser))
   );

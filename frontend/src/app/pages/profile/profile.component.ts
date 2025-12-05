@@ -47,7 +47,7 @@ export class ProfileComponent {
                     this.user.set(data.profile);
                 },
                 error: (err) => {
-                    console.error('Error al cargar perfil:', err);
+
                     this.profileNotFound.set(true);
                 }
             });
@@ -86,7 +86,7 @@ export class ProfileComponent {
                     this.user.set(data.profile);
                 },
                 error: (err) => {
-                    console.error('Error al dejar de seguir:', err);
+
 
                     // Verificar si es error de autenticación (401 o 403)
                     if (err.status === 401 || err.status === 403) {
@@ -119,7 +119,7 @@ export class ProfileComponent {
                     this.user.set(data.profile);
                 },
                 error: (err) => {
-                    console.error('Error al seguir:', err);
+
 
                     // Verificar si es error de autenticación (401 o 403)
                     if (err.status === 401 || err.status === 403) {

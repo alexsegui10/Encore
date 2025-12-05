@@ -66,7 +66,7 @@ export class CommentsComponent implements OnInit {
         this.comments.update(cs => [res.comment, ...cs]);
         this.newCommentControl.setValue('');
       },
-      error: err => console.error('Error creando comentario', err),
+      error: err => {},
       complete: () => this.posting.set(false),
     });
   }
@@ -78,7 +78,7 @@ export class CommentsComponent implements OnInit {
     this.deletingId.set(id);
     this._eventService.deleteEventComment(this.slug, id).subscribe({
       next: () => this.comments.update(cs => cs.filter(c => c.id !== id)),
-      error: err => console.error('Error eliminando comentario', err),
+      error: err => {},
       complete: () => this.deletingId.set(null),
     });
   }

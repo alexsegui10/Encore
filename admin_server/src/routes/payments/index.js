@@ -169,7 +169,14 @@ export default async function paymentRoutes(fastify, opts) {
                 items.push({
                     productId: productItem.id, // Store product ID for reference
                     quantity: productItem.quantity,
-                    unitPrice
+                    unitPrice,
+                    // Store product data for display purposes
+                    productData: {
+                        id: productItem.id,
+                        name: productItem.name || 'Producto',
+                        image: productItem.image || null,
+                        price: productItem.price || unitPrice
+                    }
                 });
             }
 
@@ -198,6 +205,7 @@ export default async function paymentRoutes(fastify, opts) {
                                     unitPrice: item.unitPrice,
                                     itemType: 'product',
                                     productId: item.productId, // Store product ID
+                                    productData: item.productData || null, // Store product data for display
                                 };
                             }
                         })
@@ -241,7 +249,7 @@ export default async function paymentRoutes(fastify, opts) {
                 data: { transactionRef: paymentIntent.id }
             });
 
-            fastify.log.info(`✅ SAGA completed: PaymentIntent ${paymentIntent.id} for order ${order.uid}`);
+            fastify.log.info(`SAGA completed: PaymentIntent ${paymentIntent.id} for order ${order.uid}`);
 
             return reply.send({
                 clientSecret: paymentIntent.client_secret,
@@ -251,16 +259,14 @@ export default async function paymentRoutes(fastify, opts) {
 
         } catch (error) {
             // SAGA COMPENSATION: Rollback all operations
-            fastify.log.error('❌ SAGA failed, rolling back:', error);
+            fastify.log.error('SAGA failed, rolling back:', error);
             await rollbackTransaction(prisma, compensationLog, fastify);
             return reply.code(500).send({ error: error.message || 'Failed to create payment intent' });
         }
     });
 }
 
-/**
- * Rollback stock reservations (SAGA compensation)
- */
+
 async function rollbackStockReservation(prisma, stockReserved, fastify) {
     for (const reservation of stockReserved) {
         try {
@@ -275,9 +281,6 @@ async function rollbackStockReservation(prisma, stockReserved, fastify) {
     }
 }
 
-/**
- * Complete SAGA rollback (compensation)
- */
 async function rollbackTransaction(prisma, compensationLog, fastify) {
     // Rollback stock
     await rollbackStockReservation(prisma, compensationLog.stockReserved, fastify);

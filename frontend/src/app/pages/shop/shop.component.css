@@ -23,7 +23,7 @@
 .shop-overlay {
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(circle at 30% 50%, rgba(18, 115, 230, 0.12) 0%, transparent 50%),
     radial-gradient(circle at 70% 50%, rgba(58, 160, 255, 0.08) 0%, transparent 50%);
   animation: pulseGlow 8s ease-in-out infinite;
@@ -146,7 +146,7 @@
 .hero-glow {
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(circle at 30% 40%, rgba(18, 115, 230, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 70% 60%, rgba(58, 160, 255, 0.12) 0%, transparent 50%);
   animation: glowPulse 8s ease-in-out infinite;
@@ -160,7 +160,7 @@
 .hero-grid {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(18, 115, 230, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(18, 115, 230, 0.05) 1px, transparent 1px);
   background-size: 50px 50px;

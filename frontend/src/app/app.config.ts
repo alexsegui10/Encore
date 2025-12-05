@@ -8,15 +8,12 @@ import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Configuración básica que ya tenías
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
 
-    // 👇 Necesario para poder usar interceptores
     provideHttpClient(withInterceptorsFromDi()),
 
-    // 👇 Registro del interceptor
     { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
   ],
 };

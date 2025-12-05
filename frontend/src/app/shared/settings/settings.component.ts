@@ -80,7 +80,7 @@ export class SettingsComponent implements OnInit {
             });
           },
           error: (err) => {
-            console.error('Error al cerrar sesión:', err);
+
             // Aunque falle, redirigir
             this.router.navigateByUrl('/');
           }
@@ -194,7 +194,6 @@ export class SettingsComponent implements OnInit {
     const endpoint = `https://api.imgbb.com/1/upload?key=${this.imgbbKey}`;
     const fd = new FormData();
     fd.append('image', file);
-    // fd.append('name', file.name.replace(/\.[^.]+$/, '')); // opcional
 
     const res: any = await this.http.post(endpoint, fd).toPromise();
     return res?.data?.display_url || '';

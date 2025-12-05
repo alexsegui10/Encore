@@ -1,7 +1,7 @@
 <div class="card" style="cursor: pointer;" [routerLink]="['/shop/categories/', category.slug]"
-     [class.category-hidden]="category.status === 'hidden'" 
+     [class.category-hidden]="category.status === 'hidden'"
      [class.category-archived]="category.status === 'archived'">
-  
+
   <div class="card__background" [style.background-image]="'url(' + backgroundUrl + ')'">
     <div class="card__overlay"></div>
     <!-- Badge de estado -->

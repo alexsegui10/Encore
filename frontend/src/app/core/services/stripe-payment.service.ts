@@ -44,14 +44,11 @@ export class StripePaymentService {
 
     async createPaymentIntent(request: PaymentIntentRequest): Promise<PaymentIntentResponse> {
         try {
-            console.log('[Stripe] Creating payment intent...', request);
             const response = await firstValueFrom(
                 this.http.post<PaymentIntentResponse>(`${this.apiUrl}/create-intent`, request)
             );
-            console.log('[Stripe] Payment intent created:', response.orderId);
             return response;
         } catch (error: any) {
-            console.error('[Stripe] Error creating payment intent:', error);
             throw new Error(
                 error.error?.error || error.message || 'Error al crear la intención de pago'
             );
@@ -70,10 +67,8 @@ export class StripePaymentService {
 
     async mountCardElement(elementId: string): Promise<void> {
         try {
-            console.log('[Stripe] Mounting card element...');
             const stripe = await this.getStripe();
             if (!stripe) {
-                console.error('[Stripe] Failed to load Stripe.js');
                 throw new Error('Stripe no se pudo cargar. Verifica tu conexión a internet.');
             }
 
@@ -108,7 +103,6 @@ export class StripePaymentService {
             }
 
             this.cardElement.mount(`#${elementId}`);
-            console.log('[Stripe] Card element mounted successfully');
 
             // Listen for validation errors
             this.cardElement.on('change', (event) => {
@@ -116,21 +110,18 @@ export class StripePaymentService {
                 if (displayError) {
                     if (event.error) {
                         displayError.textContent = event.error.message;
-                        console.warn('[Stripe] Card validation error:', event.error.message);
                     } else {
                         displayError.textContent = '';
                     }
                 }
             });
         } catch (error) {
-            console.error('[Stripe] Error mounting card element:', error);
             throw error;
         }
     }
 
     async confirmCardPayment(clientSecret: string, billingDetails: any): Promise<any> {
         try {
-            console.log('[Stripe] Confirming card payment...');
             const stripe = await this.getStripe();
             if (!stripe) {
                 throw new Error('Stripe no está inicializado');
@@ -148,14 +139,11 @@ export class StripePaymentService {
             });
 
             if (result.error) {
-                console.error('[Stripe] Payment confirmation error:', result.error);
                 throw new Error(result.error.message || 'Error al confirmar el pago');
             }
 
-            console.log('[Stripe] Payment confirmed successfully:', result.paymentIntent?.id);
             return result;
         } catch (error: any) {
-            console.error('[Stripe] Error in confirmCardPayment:', error);
             throw error;
         }
     }

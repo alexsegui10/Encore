@@ -34,11 +34,9 @@ export class SearchComponent implements OnInit {
 
   ngOnInit() {
     if (this.routeFilters !== null) {
-      console.log('dentro');
       this.filters = JSON.parse(atob(this.routeFilters));
     }
     this.search_value = this.filters.name || undefined;
-    // console.log(this.search_value);
   }
 
 
@@ -66,10 +64,6 @@ export class SearchComponent implements OnInit {
       this.EventService.getEventByName(this.search).subscribe(
         (data: any) => {
           this.listEvents = data.events;
-          console.log(this.listEvents);
-          if(data === null ){
-            console.log('error')
-          }
         });
 
     }
@@ -79,7 +73,6 @@ export class SearchComponent implements OnInit {
         this.filters.name = data.search_value;
         this.filters.offset = 0;
         this.Router.navigate(['/shop/' + btoa(JSON.stringify(this.filters))]);
-        // console.log(this.filters);
       }
     }
 

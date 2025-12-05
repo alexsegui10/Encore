@@ -24,7 +24,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token: string | null = this.jwtService.getToken(); 
+    const token: string | null = this.jwtService.getToken();
 
     if (req.url.includes('imgbb.com')) {
       return next.handle(req);
@@ -43,12 +43,6 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Solo intentar refresh token si:
-        // 1. Hay token
-        // 2. Error es 401 o 403
-        // 3. NO es una petición de refresh-token o logout
-        // 4. NO es una petición al admin server (puerto 3000 o /api/auth/*)
-        // 5. Es una petición específica de cliente (puerto 4000 explícito)
         if (token &&
           (error.status === 401 || error.status === 403) &&
           !req.url.includes('/refresh-token') &&

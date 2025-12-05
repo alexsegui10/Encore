@@ -100,21 +100,21 @@
   .filters-inline {
     gap: 10px;
   }
-  
+
   .filter-item {
     padding: 0.6rem 1rem;
   }
-  
+
   .filter-icon {
     font-size: 16px;
   }
-  
+
   .filter-select-inline,
   .filter-input-inline {
     font-size: 13px;
     min-width: 80px;
   }
-  
+
   .filter-input-inline {
     width: 75px;
   }
@@ -270,7 +270,7 @@
 .filter-select:focus,
 .filter-input:focus {
   border-color: #1273e6;
-  box-shadow: 
+  box-shadow:
     0 0 0 3px rgba(18, 115, 230, 0.15),
     0 4px 12px rgba(18, 115, 230, 0.2);
   transform: translateY(-2px);
@@ -337,11 +337,11 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .filters-wrapper {
     padding: 0 16px;
   }
-  
+
   .filters-header,
   .filters-content {
     padding: 16px 20px;
@@ -426,7 +426,7 @@ h3::after {
 .form-control:focus,
 .form-control select:focus {
     border-color: var(--filter-brand);
-    box-shadow: 
+    box-shadow:
         0 0 0 3px rgba(18, 115, 230, 0.2),
         0 8px 20px rgba(18, 115, 230, 0.15);
     transform: translateY(-2px);

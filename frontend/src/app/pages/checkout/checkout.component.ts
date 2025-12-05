@@ -76,7 +76,6 @@ export class CheckoutComponent implements OnInit {
     const directPurchaseEvent = this.directPurchaseService.getDirectPurchase();
 
     if (directPurchaseEvent) {
-      console.log('[Checkout] Loading direct purchase for:', directPurchaseEvent.title);
       const quantity = 1;
       const price = directPurchaseEvent.price || 0;
       const cart: Cart = {
@@ -101,7 +100,6 @@ export class CheckoutComponent implements OnInit {
       // Clear direct purchase after loading
       this.directPurchaseService.clearDirectPurchase();
     } else {
-      console.log('[Checkout] Loading normal cart...');
       this.cartService.getCart().subscribe({
         next: (response: CartResponse) => {
           if (!response.cart || response.cart.items.length === 0) {
@@ -119,7 +117,6 @@ export class CheckoutComponent implements OnInit {
           this.loading.set(false);
         },
         error: (error) => {
-          console.error('Error loading cart:', error);
           Swal.fire({
             title: 'Error',
             text: 'No se pudo cargar el carrito',
@@ -172,8 +169,6 @@ export class CheckoutComponent implements OnInit {
         throw new Error('Carrito vacío');
       }
 
-      console.log('[Checkout] Starting payment process for user:', user.uid);
-
       // Step 1: Create payment intent (SAGA starts in backend)
       const { clientSecret, orderId } = await this.stripePaymentService.createPaymentIntent({
         userUid: user.uid,
@@ -199,8 +194,6 @@ export class CheckoutComponent implements OnInit {
         }
       });
 
-      console.log('[Checkout] Payment intent created, orderId:', orderId);
-
       // Step 2: Confirm payment with Stripe
       const result = await this.stripePaymentService.confirmCardPayment(clientSecret, {
         name: this.billingName,
@@ -209,11 +202,8 @@ export class CheckoutComponent implements OnInit {
 
       if (result.error) {
         // Payment failed - SAGA will rollback in backend via webhook
-        console.error('[Checkout] Payment failed:', result.error);
         throw new Error(result.error.message || 'Error al procesar el pago');
       }
-
-      console.log('[Checkout] Payment confirmed successfully');
 
       // Step 3: Payment successful - show success message
       await Swal.fire({
@@ -231,9 +221,7 @@ export class CheckoutComponent implements OnInit {
       // Step 4: Complete cart (mark as completed instead of clearing)
       try {
         await firstValueFrom(this.cartService.completeCart());
-        console.log('[Checkout] Cart marked as completed');
       } catch (error) {
-        console.warn('[Checkout] Failed to complete cart:', error);
         // Don't throw error, payment was successful
       }
 
@@ -241,8 +229,6 @@ export class CheckoutComponent implements OnInit {
       this.router.navigate(['/profile']);
 
     } catch (error: any) {
-      console.error('[Checkout] Payment error:', error);
-
       // Determine error message
       let errorMessage = 'Hubo un problema al procesar tu pago. Por favor, intenta de nuevo.';
 

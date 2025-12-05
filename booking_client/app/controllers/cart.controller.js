@@ -62,7 +62,7 @@ export const addToCart = async (req, res) => {
 
     return res.status(200).json({ cart: cart.toCartResponse() });
   } catch (error) {
-    console.error('Error adding to cart:', error);
+
     return res.status(500).json({ message: error.message });
   }
 };
@@ -132,7 +132,7 @@ export const addProductToCart = async (req, res) => {
         continue;
       }
       
-      console.error('Error adding product to cart:', error);
+
       return res.status(500).json({ message: error.message });
     }
   }
@@ -297,7 +297,7 @@ export const completeCart = async (req, res) => {
       newCart: newCart.toCartResponse()
     });
   } catch (error) {
-    console.error('Error completing cart:', error);
+
     return res.status(500).json({ message: error.message });
   }
 };
