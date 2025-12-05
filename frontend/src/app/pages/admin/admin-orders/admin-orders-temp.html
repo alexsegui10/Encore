@@ -181,34 +181,20 @@
                                 } @else if (item.productData && item.productData.image) {
                                 <img [src]="item.productData.image" [alt]="item.productData.name" />
                                 } @else {
-                                <div class="image-placeholder">
-                                    <span>{{ item.itemType === 'event' ? 'Evento' : 'Producto' }}</span>
-                                </div>
-                                }
                             </div>
-                            <div class="item-info">
-                                <h4>{{ item.event?.title || item.localProduct?.name || item.productData?.name || 'Item'
-                                    }}</h4>
-                                <div class="item-meta">
-                                    <span class="item-type">{{ item.itemType === 'event' ? 'Evento' : 'Producto'
-                                        }}</span>
-                                    @if (item.event) {
-                                    <span class="item-date">{{ formatDate(item.event.date) }}</span>
-                                    }
-                                </div>
-                                <div class="item-pricing">
-                                    <span>Cantidad: {{ item.quantity }}</span>
-                                    <span>Precio unitario: {{ formatCurrency(item.unitPrice) }}</span>
-                                    <span class="item-total">Subtotal: {{ formatCurrency(item.unitPrice * item.quantity)
-                                        }}</span>
-                                </div>
+                            <div class="item-pricing">
+                                <span>Cantidad: {{ item.quantity }}</span>
+                                <span>Precio unitario: {{ formatCurrency(item.unitPrice) }}</span>
+                                <span class="item-total">Subtotal: {{ formatCurrency(item.unitPrice * item.quantity)
+                                    }}</span>
                             </div>
                         </div>
-                        }
                     </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
-    }
+</div>
+}
 </div>

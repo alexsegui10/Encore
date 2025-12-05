@@ -8,7 +8,14 @@ export interface AdminOrderItem {
   quantity: number;
   unitPrice: number;
   itemType: 'event' | 'product';
-  product?: {
+  productId?: string;
+  productData?: {
+    id: string;
+    name: string;
+    image?: string;
+    price?: number;
+  };
+  localProduct?: {
     id: string;
     name: string;
     image?: string;
@@ -73,7 +80,7 @@ export interface AdminOrderFilters {
 export class AdminOrderService {
   private apiUrl = `${environment.adminServerUrl}/api/orders`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(filters?: AdminOrderFilters): Observable<AdminOrdersResponse> {
     let params = new HttpParams();

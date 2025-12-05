@@ -169,7 +169,14 @@ export default async function paymentRoutes(fastify, opts) {
                 items.push({
                     productId: productItem.id, // Store product ID for reference
                     quantity: productItem.quantity,
-                    unitPrice
+                    unitPrice,
+                    // Store product data for display purposes
+                    productData: {
+                        id: productItem.id,
+                        name: productItem.name || 'Producto',
+                        image: productItem.image || null,
+                        price: productItem.price || unitPrice
+                    }
                 });
             }
 
@@ -198,6 +205,7 @@ export default async function paymentRoutes(fastify, opts) {
                                     unitPrice: item.unitPrice,
                                     itemType: 'product',
                                     productId: item.productId, // Store product ID
+                                    productData: item.productData || null, // Store product data for display
                                 };
                             }
                         })
