@@ -51,7 +51,7 @@ export class EnterpriseCategoriesComponent implements OnInit {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('Error al cargar categorías:', err);
+
         this.isLoading.set(false);
         this.cd.markForCheck();
 

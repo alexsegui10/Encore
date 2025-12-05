@@ -26,7 +26,7 @@ export const listOrders = asyncHandler(async (req, res) => {
         res.status(200).json(data);
 
     } catch (error) {
-        console.error('Error fetching orders from admin server:', error);
+
         res.status(500).json({ error: 'Failed to fetch orders' });
     }
 });

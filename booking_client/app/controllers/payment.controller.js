@@ -30,7 +30,7 @@ export const createPaymentIntent = asyncHandler(async (req, res) => {
     try {
         const adminServerUrl = process.env.ADMIN_SERVER_URL || 'http://localhost:3000';
 
-        console.log(`[SAGA] Initiating payment for user ${userUid} with ${events.length} events and ${products.length} products`);
+
 
         const response = await fetch(`${adminServerUrl}/api/create-payment-intent`, {
             method: 'POST',
@@ -48,16 +48,16 @@ export const createPaymentIntent = asyncHandler(async (req, res) => {
         const data = await response.json();
 
         if (!response.ok) {
-            console.error(`[SAGA] Payment creation failed:`, data);
+
             return res.status(response.status).json(data);
         }
 
-        console.log(`[SAGA] Payment intent created successfully: ${data.orderId}`);
+
 
         res.status(200).json(data);
 
     } catch (error) {
-        console.error('[SAGA] Error creating payment intent:', error);
+
         res.status(500).json({
             error: 'Failed to create payment intent',
             message: error.message
@@ -91,7 +91,7 @@ export const getOrderStatus = asyncHandler(async (req, res) => {
         res.status(200).json(data);
 
     } catch (error) {
-        console.error('Error fetching order status:', error);
+
         res.status(500).json({
             error: 'Failed to fetch order status',
             message: error.message

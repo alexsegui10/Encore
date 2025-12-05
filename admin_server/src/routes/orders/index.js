@@ -9,14 +9,14 @@ async function fetchProductFromEnterprise(productId) {
     const response = await fetch(`http://localhost:5000/product/${productId}`);
 
     if (!response.ok) {
-      console.warn(`Failed to fetch product ${productId}: ${response.status} ${response.statusText}`);
+
       return null;
     }
 
     const data = await response.json();
     return data.product || null;
   } catch (error) {
-    console.warn(`Error fetching product ${productId}:`, error.message);
+
     return null;
   }
 }

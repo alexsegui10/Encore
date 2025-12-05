@@ -55,8 +55,6 @@ export class EventService {
             httpParams = httpParams.set('offset', filters.offset.toString());
         }
 
-        console.log('Sending HTTP params:', httpParams.toString());
-        // Enviar con auth opcional - si hay token lo envía, si no continúa sin él
         return this.apiService.get("/api/eventos", httpParams, 4000, true);
     }
 
@@ -89,8 +87,18 @@ export class EventService {
         return this.apiService.get('/api/eventos', params, 4000);
     }
 
-    getEventsByCategory(categorySlug: string): Observable<Event[]> {
-        return this.apiService.get(`/api/eventos/category/${categorySlug}`, undefined, 4000);
+    getEventsByCategory(categorySlug: string, params?: any): Observable<Event[]> {
+        let httpParams = new HttpParams();
+
+        if (params) {
+            Object.keys(params).forEach(key => {
+                if (params[key] !== null && params[key] !== undefined) {
+                    httpParams = httpParams.set(key, params[key].toString());
+                }
+            });
+        }
+
+        return this.apiService.get(`/api/eventos/category/${categorySlug}`, httpParams, 4000);
     }
 
     getEventsByStatus(status: 'draft' | 'published' | 'cancelled'): Observable<Event[]> {

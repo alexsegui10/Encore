@@ -1,29 +1,35 @@
-<div class="container-fluid bg-white subheader">
-  <h3>Filters</h3>
-  <hr>
-  <div class="row d-flex justify-content-center align-items-center width: 100%;" style="margin-top: 10px;">
-    <div class="col-md-2 pt-3">
-      <div class="form-group ">
-        <select class="form-control" name="category" id="category" [(ngModel)]="id_cat" (change)="filter_products()">
-          <option disabled selected value="">Category</option>
-          <option *ngFor="let category of listCategories" [value]="category._id">{{category.name}}</option>
-        </select>
-      </div>
+<div class="filters-horizontal-wrapper">
+  <div class="filters-inline">
+    <div class="filter-item">
+      <i class="fa fa-tag filter-icon"></i>
+      <select class="filter-select-inline" name="category" id="category" [(ngModel)]="id_cat" (change)="filter_products()">
+        <option value="" selected>Todas las categorías</option>
+        <option *ngFor="let category of listCategories" [value]="category._id">{{category.name}}</option>
+      </select>
     </div>
-    <div class="col-md-2 pt-3">
-      <div>
-        <input type="number" class="form-control" placeholder="Precio Minimo" [(ngModel)]="price_min" min="0" step="5"
-          (input)="filter_products()">
-      </div>
+
+    <div class="filter-item">
+      <i class="fa fa-money filter-icon"></i>
+      <input type="number" class="filter-input-inline" placeholder="Precio mín" [(ngModel)]="price_min" min="0" step="5" (input)="filter_products()">
     </div>
-    <div class="col-md-2 pt-3">
-      <div>
-        <input type="number" class="form-control" placeholder="Precio Maximo" [(ngModel)]="price_max" min="0" step="5"
-          (input)="filter_products()">
-      </div>
+
+    <div class="filter-item">
+      <i class="fa fa-money filter-icon"></i>
+      <input type="number" class="filter-input-inline" placeholder="Precio máx" [(ngModel)]="price_max" min="0" step="5" (input)="filter_products()">
     </div>
-    <div class="col-md-2 pt-3">
-      <button type="button" class="btn btn-danger btn-block" (click)="remove_filters()">Remove Filters</button>
+
+    <div class="filter-item">
+      <i class="fa fa-list filter-icon"></i>
+      <select class="filter-select-inline" name="itemsPerPage" id="itemsPerPage" [(ngModel)]="itemsPerPage" (change)="change_items_per_page()">
+        <option value="4">4</option>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="999">Todos</option>
+      </select>
     </div>
+
+    <button type="button" class="clear-btn-inline" (click)="remove_filters()" *ngIf="getActiveFiltersCount() > 0" title="Limpiar filtros">
+      <i class="fa fa-times"></i>
+    </button>
   </div>
 </div>

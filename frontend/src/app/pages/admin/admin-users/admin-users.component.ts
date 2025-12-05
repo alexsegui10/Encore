@@ -65,7 +65,7 @@ export class AdminUsersComponent implements OnInit {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('Error al cargar usuarios:', err);
+
         this.isLoading.set(false);
         this.cd.markForCheck();
 

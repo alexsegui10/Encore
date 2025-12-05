@@ -28,14 +28,14 @@ export class ListLikedEventsComponent implements OnInit {
 
         this.eventService.getLikedEvents().subscribe({
             next: (response: any) => {
-                console.log('Liked events received:', response);
+
                 // El backend devuelve { events: [...], eventsCount: number }
                 this.likedEvents.set(response.events || []);
                 this.isLoading.set(false);
             },
             error: (err: any) => {
-                console.error('Error loading liked events:', err);
-                
+
+
                 // Si es error de autenticación, simplemente mostrar vacío
                 if (err.status === 401 || err.status === 403) {
                     this.likedEvents.set([]);
@@ -43,7 +43,7 @@ export class ListLikedEventsComponent implements OnInit {
                 } else {
                     this.errorMessage.set('Error al cargar los eventos favoritos');
                 }
-                
+
                 this.isLoading.set(false);
             }
         });
@@ -56,9 +56,9 @@ export class ListLikedEventsComponent implements OnInit {
 
     // Método para eliminar un evento de la lista de forma reactiva
     public onEventUnliked(eventSlug: string): void {
-        console.log('Evento unliked:', eventSlug);
+
         // Filtrar el evento de la lista usando el signal
-        this.likedEvents.update(events => 
+        this.likedEvents.update(events =>
             events.filter(event => event.slug !== eventSlug)
         );
     }

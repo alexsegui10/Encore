@@ -62,60 +62,82 @@ export const addToCart = async (req, res) => {
 
     return res.status(200).json({ cart: cart.toCartResponse() });
   } catch (error) {
-    console.error('Error adding to cart:', error);
+
     return res.status(500).json({ message: error.message });
   }
 };
 
 export const addProductToCart = async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { productId, quantity = 1, product } = req.body;
+  const maxRetries = 3;
+  let attempt = 0;
 
-    if (!product || !product.name || !product.price) {
-      return res.status(400).json({ message: 'Datos del producto incompletos' });
+  while (attempt < maxRetries) {
+    try {
+      const userId = req.userId;
+      const { productId, quantity = 1, product } = req.body;
+
+      if (!product) {
+        return res.status(400).json({ message: 'Producto no proporcionado' });
+      }
+
+      if (!product.name) {
+        return res.status(400).json({ message: 'Falta nombre del producto' });
+      }
+
+      if (product.price === undefined || product.price === null) {
+        return res.status(400).json({ message: 'Falta precio del producto' });
+      }
+
+      // Buscar el carrito de nuevo en cada intento para tener la versión más reciente
+      let cart = await Cart.findOne({ userId, status: 'active' });
+
+      if (!cart) {
+        cart = new Cart({
+          userId,
+          items: [],
+          total: 0,
+          status: 'active'
+        });
+      }
+
+      const existingItemIndex = cart.items.findIndex(
+        item => item.itemType === 'product' && item.product && item.product.id === productId
+      );
+
+      if (existingItemIndex > -1) {
+        cart.items[existingItemIndex].quantity += quantity;
+      } else {
+        cart.items.push({
+          itemType: 'product',
+          product: {
+            id: productId,
+            name: product.name,
+            price: product.price,
+            description: product.description,
+            image: product.image
+          },
+          quantity,
+          price: product.price
+        });
+      }
+
+      cart.calculateTotal();
+      await cart.save();
+
+      return res.status(200).json({ cart: cart.toCartResponse() });
+    } catch (error) {
+      if (error.name === 'VersionError' && attempt < maxRetries - 1) {
+        attempt++;
+        await new Promise(resolve => setTimeout(resolve, 50 * attempt));
+        continue;
+      }
+      
+
+      return res.status(500).json({ message: error.message });
     }
-
-    let cart = await Cart.findOne({ userId, status: 'active' });
-
-    if (!cart) {
-      cart = new Cart({
-        userId,
-        items: [],
-        total: 0,
-        status: 'active'
-      });
-    }
-
-    const existingItemIndex = cart.items.findIndex(
-      item => item.itemType === 'product' && item.product && item.product.id === productId
-    );
-
-    if (existingItemIndex > -1) {
-      cart.items[existingItemIndex].quantity += quantity;
-    } else {
-      cart.items.push({
-        itemType: 'product',
-        product: {
-          id: productId,
-          name: product.name,
-          price: product.price,
-          description: product.description,
-          image: product.image
-        },
-        quantity,
-        price: product.price
-      });
-    }
-
-    cart.calculateTotal();
-    await cart.save();
-
-    return res.status(200).json({ cart: cart.toCartResponse() });
-  } catch (error) {
-    console.error('Error adding product to cart:', error);
-    return res.status(500).json({ message: error.message });
   }
+
+  return res.status(500).json({ message: 'No se pudo añadir el producto después de varios intentos' });
 };
 
 export const updateCartItem = async (req, res) => {
@@ -275,7 +297,7 @@ export const completeCart = async (req, res) => {
       newCart: newCart.toCartResponse()
     });
   } catch (error) {
-    console.error('Error completing cart:', error);
+
     return res.status(500).json({ message: error.message });
   }
 };

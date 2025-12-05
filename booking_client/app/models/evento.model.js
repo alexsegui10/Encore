@@ -33,7 +33,8 @@ const EventSchema = new mongoose.Schema(
       maxlength: 2000
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
       required: true
     },
     slug: {

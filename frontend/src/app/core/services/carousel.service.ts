@@ -14,9 +14,28 @@ export class CarouselService {
 
   // Para obtener las categorías del carousel del home
   getCarouselHome(): Observable<CarouselHome[]> {
-    return this.apiService.get('/api/carousel', undefined, 4000)
+    // Obtener eventos destacados en vez de categorías para mejor calidad
+    return this.apiService.get('/api/eventos', new HttpParams().set('limit', '6'), 4000)
       .pipe(
-        map(response => response.categories)
+        map(response => {
+          // Transformar eventos a formato CarouselHome
+          const events = response.events || [];
+          return events.map((event: any) => {
+            let imageUrl = event.mainImage || event.image || 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14';
+
+            // Mejorar calidad de imágenes de Unsplash
+            if (imageUrl.includes('unsplash.com')) {
+              // Añadir parámetros para mejor calidad: 1920px ancho, calidad 85, fit crop
+              imageUrl = imageUrl.split('?')[0] + '?w=1920&h=1080&fit=crop&q=85&auto=format';
+            }
+
+            return {
+              name: event.title || event.name,
+              image: imageUrl,
+              slug: event.slug
+            };
+          });
+        })
       );
   }
 

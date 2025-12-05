@@ -28,7 +28,6 @@ export class DetailsComponent implements OnInit {
     slug: string = '';
     public isLoading = signal(true);
     public event = signal<Event | null>(null);
-    public isEventOwner = false;
     public showMerchandisePopup = false;
     public loadedMerchandising: any[] = [];
 
@@ -53,11 +52,9 @@ export class DetailsComponent implements OnInit {
         this.eventService.getEventBySlug(this.slug).subscribe({
             next: (event) => {
                 this.event.set(event);
-                this.checkIfOwner();
                 this.isLoading.set(false);
             },
             error: (error) => {
-                console.error('Error:', error);
                 this.isLoading.set(false);
 
                 Swal.fire({
@@ -68,18 +65,6 @@ export class DetailsComponent implements OnInit {
                 }).then(() => {
                     this.router.navigateByUrl('/');
                 });
-            }
-        });
-    }
-
-    checkIfOwner(): void {
-
-        this.userService.getCurrentUser().subscribe({
-            next: (currentUser) => {
-                this.isEventOwner = false;
-            },
-            error: () => {
-                this.isEventOwner = false;
             }
         });
     }
@@ -118,7 +103,6 @@ export class DetailsComponent implements OnInit {
                 this.event.set(response);
             },
             error: (err) => {
-                console.error('Error al dar like:', err);
                 if (err.status === 401 || err.status === 403) {
                     Swal.fire({
                         icon: 'warning',
@@ -150,35 +134,23 @@ export class DetailsComponent implements OnInit {
 
         this.cartService.addToCart(currentEvent._id).subscribe({
             next: () => {
-                const hasMerchandising = currentEvent.merchandising && currentEvent.merchandising.length > 0;
-                
-                if (hasMerchandising) {
-                    this.loadedMerchandising = currentEvent.merchandising!;
+                if (currentEvent.merchandising && currentEvent.merchandising.length > 0) {
+                    this.loadedMerchandising = currentEvent.merchandising.map((p: any) => ({
+                        id: p.id,
+                        name: p.name,
+                        price: p.price,
+                        description: p.description,
+                        image: p.image
+                    }));
                     this.showMerchandisePopup = true;
                 } else {
-                    this.enterpriseProductService.getRandomProducts(3).pipe(
-                        catchError(() => of([]))
-                    ).subscribe({
-                        next: (products) => {
-                            if (products && products.length > 0) {
-                                this.loadedMerchandising = products.map(p => ({
-                                    id: p.id,
-                                    name: p.name,
-                                    price: p.price,
-                                    description: p.description,
-                                    image: p.image
-                                }));
-                                this.showMerchandisePopup = true;
-                            } else {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Añadido al carrito',
-                                    text: `${currentEvent.title} se añadió correctamente`,
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
-                            }
-                        }
+                    // No merchandising for this event
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Añadido al carrito',
+                        text: `${currentEvent.title} se añadió correctamente`,
+                        timer: 2000,
+                        showConfirmButton: false
                     });
                 }
             },

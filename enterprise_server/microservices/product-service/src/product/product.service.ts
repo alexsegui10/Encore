@@ -58,6 +58,20 @@ export class ProductService {
     return shuffled.slice(0, Math.min(count, shuffled.length));
   }
 
+  async findByIds(ids: string[]) {
+    if (!ids || ids.length === 0) {
+      return [];
+    }
+
+    return this.prisma.product.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+  }
+
   async remove(id: string) {
     await this.findOne(id);
     return this.prisma.product.delete({ where: { id } });

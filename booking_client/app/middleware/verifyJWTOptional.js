@@ -44,7 +44,7 @@ const verifyOptionalJWT = async (req, res, next) => {
     next();
   } catch (error) {
     // Si el token expiró o es inválido, simplemente continuar sin autenticación
-    console.log('Token inválido en verificación opcional:', error.message);
+
     req.loggedin = false;
     req.isAuthenticated = false;
     next();

@@ -66,7 +66,7 @@ export class AdminOrders implements OnInit {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('Error al cargar órdenes:', err);
+
         this.isLoading.set(false);
         this.cd.markForCheck();
 

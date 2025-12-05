@@ -45,6 +45,6 @@
 </article>
 
 <!-- Merchandise Popup -->
-<app-merchandise-popup *ngIf="showMerchandisePopup" [merchandising]="event.merchandising || []"
+<app-merchandise-popup *ngIf="showMerchandisePopup" [merchandising]="merchandiseProducts"
   [eventTitle]="event.title" (productsSelected)="onProductsSelected($event)" (cancelled)="onMerchandiseCancelled()">
 </app-merchandise-popup>

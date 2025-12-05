@@ -56,7 +56,7 @@ export class EnterpriseProductsComponent implements OnInit {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('Error al cargar categorías:', err);
+
       }
     });
   }
@@ -73,7 +73,7 @@ export class EnterpriseProductsComponent implements OnInit {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('Error al cargar productos:', err);
+
         this.isLoading.set(false);
         this.cd.markForCheck();
 

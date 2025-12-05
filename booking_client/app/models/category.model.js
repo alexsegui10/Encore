@@ -5,6 +5,7 @@ const CategorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 100 },
     description: { type: String, trim: true, maxlength: 500 },
+    shortDescription: { type: String, trim: true, maxlength: 150 }, // Descripción corta para carrusel
     image: { type: String, trim: true }, // URL de la imagen de la categoría
     slug: { type: String, unique: true, index: true },
     status: { type: String, enum: ['active', 'hidden', 'archived'], default: 'active' },
@@ -36,6 +37,7 @@ CategorySchema.methods.toCategoryCarouselResponse = function () {
     id: this._id,
     name: this.name,
     description: this.description,
+    shortDescription: this.shortDescription,
     image: this.image || '/images/default-category.jpg',
     slug: this.slug,
     status: this.status,
