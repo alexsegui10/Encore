@@ -38,6 +38,12 @@
           <div class="category-content">
             <div class="category-header">
               <h3>{{ product.name }}</h3>
+              <span class="status-badge" [class]="'status-' + product.status">
+                @if (product.status === 'draft') { Borrador }
+                @else if (product.status === 'active') { Activo }
+                @else if (product.status === 'hidden') { Oculto }
+                @else if (product.status === 'soldout') { Agotado }
+              </span>
             </div>
 
             <p class="category-description">
@@ -192,6 +198,26 @@
             @if (productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched) {
               <div class="invalid-feedback">
                 La categoría es requerida
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="status">Estado *</label>
+            <select
+              id="status"
+              formControlName="status"
+              class="form-control"
+              [class.is-invalid]="productForm.get('status')?.invalid && productForm.get('status')?.touched"
+            >
+              <option value="draft">Borrador</option>
+              <option value="active">Activo</option>
+              <option value="hidden">Oculto</option>
+              <option value="soldout">Agotado</option>
+            </select>
+            @if (productForm.get('status')?.invalid && productForm.get('status')?.touched) {
+              <div class="invalid-feedback">
+                El estado es requerido
               </div>
             }
           </div>

@@ -11,6 +11,7 @@ export interface EnterpriseProduct {
   stockTotal: number;
   stockAvailable: number;
   image: string | null;
+  status: 'draft' | 'active' | 'hidden' | 'soldout';
   categoryId: string;
   createdAt: string;
   updatedAt: string;

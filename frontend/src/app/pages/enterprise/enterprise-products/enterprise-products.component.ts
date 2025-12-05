@@ -39,6 +39,7 @@ export class EnterpriseProductsComponent implements OnInit {
       stockTotal: [0, [Validators.required, Validators.min(0)]],
       stockAvailable: [0, [Validators.required, Validators.min(0)]],
       categoryId: ['', Validators.required],
+      status: ['draft', Validators.required],
       image: ['']
     });
   }
@@ -105,7 +106,7 @@ export class EnterpriseProductsComponent implements OnInit {
   openCreateForm() {
     this.isEditing.set(false);
     this.editingId.set(null);
-    this.productForm.reset({ price: 0, stockTotal: 0, stockAvailable: 0 });
+    this.productForm.reset({ price: 0, stockTotal: 0, stockAvailable: 0, status: 'draft' });
     this.showForm.set(true);
     this.cd.markForCheck();
   }
@@ -120,6 +121,7 @@ export class EnterpriseProductsComponent implements OnInit {
       stockTotal: product.stockTotal,
       stockAvailable: product.stockAvailable,
       categoryId: product.categoryId,
+      status: product.status || 'draft',
       image: product.image || ''
     });
     this.showForm.set(true);
