@@ -73,12 +73,9 @@ export class DetailsComponent implements OnInit {
     }
 
     checkIfOwner(): void {
-        // Implementa la lógica para verificar si el usuario actual es el propietario del evento
-        // Por ahora lo dejamos en false, pero puedes comparar con el usuario actual
+
         this.userService.getCurrentUser().subscribe({
             next: (currentUser) => {
-                // this.isEventOwner = currentUser && currentUser.id === this.event()?.createdBy;
-                // Temporalmente false hasta implementar createdBy en el modelo
                 this.isEventOwner = false;
             },
             error: () => {
@@ -153,20 +150,17 @@ export class DetailsComponent implements OnInit {
 
         this.cartService.addToCart(currentEvent._id).subscribe({
             next: () => {
-                // Check if event has merchandising from backend
                 const hasMerchandising = currentEvent.merchandising && currentEvent.merchandising.length > 0;
                 
                 if (hasMerchandising) {
                     this.loadedMerchandising = currentEvent.merchandising!;
                     this.showMerchandisePopup = true;
                 } else {
-                    // Try to load random merchandising from enterprise server
                     this.enterpriseProductService.getRandomProducts(3).pipe(
                         catchError(() => of([]))
                     ).subscribe({
                         next: (products) => {
                             if (products && products.length > 0) {
-                                // Transform enterprise products to merchandising format
                                 this.loadedMerchandising = products.map(p => ({
                                     id: p.id,
                                     name: p.name,
@@ -176,7 +170,6 @@ export class DetailsComponent implements OnInit {
                                 }));
                                 this.showMerchandisePopup = true;
                             } else {
-                                // No merchandising available
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Añadido al carrito',
@@ -228,7 +221,6 @@ export class DetailsComponent implements OnInit {
             return;
         }
 
-        // Add all selected products to cart
         const addProductRequests = products.map(product =>
             this.cartService.addProductToCart(product.id, product, 1)
         );
