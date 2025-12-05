@@ -112,5 +112,6 @@ Este es un proyecto educativo creado con fines de aprendizaje. No está diseñad
 
 **Alex Seguí**
 - GitHub: [@alexsegui10](https://github.com/alexsegui10)
+
 **Dani Sanz**
 - GitHub: [@dasaga26](https://github.com/dasaga26)
