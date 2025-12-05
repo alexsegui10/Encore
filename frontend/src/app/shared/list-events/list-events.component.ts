@@ -24,7 +24,7 @@ export class ListEventsComponent implements OnInit {
   listCategories: Category[] = [];
   filters = new Filters();
   offset: number = 0;
-  limit: number = 8;
+  limit: number = 4;
   totalPages: Array<number> = [];
   currentPage: number = 1;
 

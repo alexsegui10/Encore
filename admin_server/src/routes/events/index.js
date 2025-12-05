@@ -120,6 +120,8 @@ export default async function eventsRoutes(server) {
                         isActive: eventData.isActive !== undefined ? eventData.isActive : true,
                         mainImage: eventData.mainImage || null,
                         images: eventData.images || [],
+                        comments: [],
+                        favouritesCount: 0,
                         stock: eventData.stock !== undefined ? eventData.stock : null
                     }
                 })
@@ -133,6 +135,32 @@ export default async function eventsRoutes(server) {
                     data: { merchandising: merchandisingProducts }
                 })
 
+                // Sync event to MongoDB (booking_client) for likes, comments, etc.
+                try {
+                    await fetch('http://localhost:4000/api/eventos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            slug: eventWithMerchandising.slug,
+                            title: eventWithMerchandising.title,
+                            date: eventWithMerchandising.date,
+                            price: eventWithMerchandising.price,
+                            currency: eventWithMerchandising.currency,
+                            location: eventWithMerchandising.location,
+                            description: eventWithMerchandising.description,
+                            category: eventWithMerchandising.category,
+                            status: eventWithMerchandising.status,
+                            mainImage: eventWithMerchandising.mainImage,
+                            images: eventWithMerchandising.images || [],
+                            merchandising: merchandisingProducts
+                        })
+                    })
+                } catch (syncError) {
+                    req.log.warn('Failed to sync event to MongoDB:', syncError)
+                    // Continue anyway - PostgreSQL is the source of truth
+                }
 
                 return reply.code(201).send({
                     event: formatEventResponse(eventWithMerchandising)
@@ -209,6 +237,31 @@ export default async function eventsRoutes(server) {
                     where: { slug },
                     data: updateData
                 })
+
+                // Sync update to MongoDB (booking_client)
+                try {
+                    await fetch(`http://localhost:4000/api/eventos/${updatedEvent.slug}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            slug: updatedEvent.slug,
+                            title: updatedEvent.title,
+                            date: updatedEvent.date,
+                            price: updatedEvent.price,
+                            currency: updatedEvent.currency,
+                            location: updatedEvent.location,
+                            description: updatedEvent.description,
+                            category: updatedEvent.category,
+                            status: updatedEvent.status,
+                            mainImage: updatedEvent.mainImage,
+                            images: updatedEvent.images || []
+                        })
+                    })
+                } catch (syncError) {
+                    req.log.warn('Failed to sync update to MongoDB:', syncError)
+                }
 
                 return reply.code(200).send({
                     event: formatEventResponse(updatedEvent)

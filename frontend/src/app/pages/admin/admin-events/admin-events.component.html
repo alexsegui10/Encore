@@ -158,8 +158,8 @@
                         <select id="category" formControlName="category" class="form-control"
                             [class.is-invalid]="eventForm.get('category')?.invalid && eventForm.get('category')?.touched">
                             <option value="">Seleccionar categoría</option>
-                            @for (category of categories(); track category.slug) {
-                            <option [value]="category.slug">{{ category.name }}</option>
+                            @for (category of categories(); track category.id) {
+                            <option [value]="category.id">{{ category.name }}</option>
                             }
                         </select>
                         @if (eventForm.get('category')?.invalid && eventForm.get('category')?.touched) {

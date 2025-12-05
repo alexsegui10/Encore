@@ -28,7 +28,7 @@ export class FiltersComponent implements OnInit {
   id_cat: string = "";
   price_max: number | undefined;
   price_min: number | undefined;
-  itemsPerPage: number = 8;
+  itemsPerPage: number = 4;
   filtersExpanded: boolean = false;
 
   constructor(private ActivatedRoute: ActivatedRoute, private Router: Router, private Location: Location) {
@@ -50,7 +50,7 @@ export class FiltersComponent implements OnInit {
     if (this.id_cat && this.id_cat !== '') count++;
     if (this.price_min !== undefined && this.price_min > 0) count++;
     if (this.price_max !== undefined && this.price_max > 0) count++;
-    if (this.itemsPerPage !== 8) count++;
+    if (this.itemsPerPage !== 4) count++;
     return count;
   }
 

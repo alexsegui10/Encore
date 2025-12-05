@@ -114,6 +114,7 @@ export const createEvent = async (req, res, next) => {
     }
 
     const ev = new Event({
+      slug: req.body.slug,
       title,
       date,
       price,
@@ -123,7 +124,10 @@ export const createEvent = async (req, res, next) => {
       category,
       status,
       mainImage: req.body.mainImage || '/images/default-event.jpg',
-      images: req.body.images || []
+      images: req.body.images || [],
+      merchandising: req.body.merchandising || [],
+      comments: [],
+      favouritesCount: 0
     });
 
     await ev.save();
