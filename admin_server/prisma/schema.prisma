@@ -81,7 +81,7 @@ model events {
   currency        String      @default("EUR")
   location        String?
   description     String?
-  category        String
+  category        String      @db.ObjectId
   status          EventStatus @default(draft)
   isActive        Boolean     @default(true)
   mainImage       String?
