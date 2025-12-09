@@ -73,10 +73,10 @@ export class AdminEventsComponent implements OnInit {
         const activeCategories = categories.filter(c => c.status === 'active' && c.isActive);
         this.categories.set(activeCategories);
 
-        // Actualizar opciones de filtro de categoría
+        // Actualizar opciones de filtro de categoría usando ID en lugar de slug
         const categoryOptions: FilterOption[] = [
           { value: 'all', label: 'Todas las categorías' },
-          ...activeCategories.map(cat => ({ value: cat.slug, label: cat.name }))
+          ...activeCategories.map(cat => ({ value: cat.id, label: cat.name }))
         ];
         this.categoryFilterOptions.set(categoryOptions);
 
@@ -329,9 +329,9 @@ export class AdminEventsComponent implements OnInit {
     }).format(price);
   }
 
-  getCategoryName(categorySlug: string): string {
-    const category = this.categories().find(c => c.slug === categorySlug);
-    return category ? category.name : categorySlug;
+  getCategoryName(categoryId: string): string {
+    const category = this.categories().find(c => c.id === categoryId);
+    return category ? category.name : categoryId;
   }
 
   addImageUrl() {
