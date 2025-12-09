@@ -5,6 +5,7 @@ import { ApiService } from './api.service';
 
 export interface AdminCategory {
   id: string;
+  _id?: string;
   name: string;
   slug: string;
   description: string | null;
