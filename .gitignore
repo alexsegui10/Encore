@@ -33,3 +33,9 @@ coverage/
 # Docker
 mongo_data/
 
+
+# MongoDB migration scripts
+import-*.ps1
+import-*.js
+migrate-*.ps1
+mongo-export/
