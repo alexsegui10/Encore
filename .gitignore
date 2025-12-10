@@ -1,63 +1,35 @@
-# Dependencies
 node_modules/
+
+.angular/
+frontend/.angular/
+*.tsbuildinfo
+
+.vite/
+vite.config.js.timestamp-*
+
+*.env
+!*.env.example
+
+dist/
+build/
+
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build outputs
-.angular/
-frontend/.angular/
-*.tsbuildinfo
-.vite/
-vite.config.js.timestamp-*
-dist/
-build/
-
-# Environment variables (NUNCA subir .env!)
-*.env
-.env.local
-.env.*.local
-!.env.example
-
-# Logs
-*.log
-logs/
-
-# OS files
 .DS_Store
 Thumbs.db
 
-# IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
 
-# Testing
 coverage/
 .nyc_output/
 
 # Docker
-**/.dockerignore
+mongo_data/
 
-# Docker volumes (datos sensibles)
-docker-volumes/
-*.sql
-*.dump
-
-# Backup files
-*.bak
-*.backup
-backup-*
-
-# Prisma
-prisma/.env
-*.db
-*.db-journal
-
-# Secrets
-secrets/
-*.pem
-*.key
-*.crt

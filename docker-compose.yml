@@ -1,197 +1,133 @@
-version: "3.9"
-
 services:
-  # MongoDB con Replica Set para Prisma
+  # MongoDB with replica set (required for Mongoose)
   mongo:
     image: mongo:6
-    container_name: encore_mongo
+    container_name: encore-mongo
     restart: always
     ports:
-      - "${MONGO_PORT:-27017}:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-    command: ["--replSet", "${MONGO_REPLICA_SET_NAME:-rs0}", "--bind_ip_all"]
+      - "27017:27017"
+    command: [ "--replSet", "rs0", "--bind_ip_all" ]
     volumes:
       - mongo_data:/data/db
     networks:
-      - encore_network
+      - encore-network
 
-  # Inicializar Replica Set de MongoDB
+  # Service to initialize replica set once mongo is up
   mongo-init:
     image: mongo:6
-    container_name: encore_mongo_init
+    container_name: encore-mongo-init
     restart: "no"
-    env_file: .env
     depends_on:
       - mongo
     networks:
-      - encore_network
-    entrypoint: ["/bin/sh", "-c"]
+      - encore-network
+    entrypoint: [ "/bin/sh", "-c" ]
     command: >
       "sleep 5;
-       mongosh --host mongo:27017 -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin <<'EOF'
+       mongosh --host mongo:27017 <<'EOF'
        try {
          rs.initiate({
-           _id: \"$MONGO_REPLICA_SET_NAME\",
+           _id: \"rs0\",
            members: [{ _id: 0, host: 'mongo:27017' }]
          });
-         print('Replica set iniciado correctamente');
        } catch(e) {
-         print('Replica set ya existe o error: ' + e);
+         print('rs.initiate may have already run: ' + e);
        }
        EOF
        ;
-       echo 'Configuración de MongoDB completada.';"
+       echo 'Replica set init finished.';"
 
-  # MySQL para Enterprise Server
-  mysql:
-    image: mysql:8
-    container_name: encore_mysql
-    restart: always
-    ports:
-      - "${MYSQL_PORT:-3306}:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - encore_network
-
-  # Booking Client - Express + Mongoose
-  booking_client:
-    build:
-      context: ./booking_client
-      dockerfile: Dockerfile
-    container_name: encore_booking_client
-    restart: on-failure
-    ports:
-      - "${BOOKING_PORT:-4000}:4000"
-    env_file: .env
-    environment:
-      - NODE_ENV=production
-      - PORT=4000
-    depends_on:
-      - mongo
-      - mongo-init
-    networks:
-      - encore_network
-    command: ["./wait-for-it.sh", "mongo:27017", "--timeout=60", "--", "npm", "start"]
-
-  # Admin Server - Fastify + Prisma
-  admin_server:
+  # Admin Server (Fastify with Prisma)
+  admin-server:
     build:
       context: ./admin_server
       dockerfile: Dockerfile
-    container_name: encore_admin_server
+    container_name: encore-admin-server
     restart: on-failure
     ports:
-      - "${ADMIN_PORT:-3000}:3000"
-    env_file: .env
+      - "3000:3000"
     environment:
-      - NODE_ENV=production
       - PORT=3000
+      - DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
+      - JWT_SECRET=${JWT_SECRET:-your-jwt-secret}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-your-refresh-secret}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
     depends_on:
       - mongo
       - mongo-init
     networks:
-      - encore_network
-    command: ["./wait-for-it.sh", "mongo:27017", "--timeout=60", "--strict", "--", "./prisma-start.sh"]
+      - encore-network
+    command: [ "./wait-for-it.sh", "mongo:${MONGO_PORT:-27017}", "--timeout=60", "--strict", "--", "./prisma-fastify.sh" ]
 
-  # Enterprise Server Gateway - NestJS
-  enterprise_gateway:
+  # Booking Client (Express with Mongoose)
+  booking-client:
+    build:
+      context: ./booking_client
+      dockerfile: Dockerfile
+    container_name: encore-booking-client
+    restart: on-failure
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - MONGO_URI=mongodb://mongo:27017/encore?replicaSet=rs0
+      - FRONTEND_URL=http://localhost:4200
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET:-your-refresh-token-secret}
+    depends_on:
+      - mongo
+      - mongo-init
+    networks:
+      - encore-network
+    # Uses CMD from Dockerfile: ./start.sh
+
+  # Enterprise Server (NestJS Gateway + Microservices with Prisma)
+  enterprise-server:
     build:
       context: ./enterprise_server
-      dockerfile: Dockerfile.gateway
-    container_name: encore_enterprise_gateway
-    restart: on-failure
-    ports:
-      - "${ENTERPRISE_GATEWAY_PORT:-5000}:5000"
-    env_file: .env
-    depends_on:
-      - mysql
-      - enterprise_service
-      - category_service
-      - product_service
-    networks:
-      - encore_network
-
-  # Enterprise Service
-  enterprise_service:
-    build:
-      context: ./enterprise_server/microservices/enterprise-service
       dockerfile: Dockerfile
-    container_name: encore_enterprise_service
+    container_name: encore-enterprise-server
     restart: on-failure
     ports:
-      - "${ENTERPRISE_SERVICE_PORT:-5001}:5001"
-    env_file: .env
+      - "5000:5000"
+      - "5001:5001"
+      - "5002:5002"
+      - "5003:5003"
+    environment:
+      - PORT=5000
+      - ENTERPRISE_DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
+      - PRODUCT_DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
+      - CATEGORY_DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
+      - DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
     depends_on:
-      - mysql
+      - mongo
+      - mongo-init
     networks:
-      - encore_network
-    command: ["./wait-for-it.sh", "mysql:3306", "--timeout=60", "--", "./prisma-start.sh"]
+      - encore-network
+    command: [ "./wait-for-it.sh", "mongo:${MONGO_PORT:-27017}", "--timeout=60", "--strict", "--", "./prisma-nest.sh" ]
 
-  # Category Service
-  category_service:
-    build:
-      context: ./enterprise_server/microservices/category-service
-      dockerfile: Dockerfile
-    container_name: encore_category_service
-    restart: on-failure
-    ports:
-      - "${CATEGORY_SERVICE_PORT:-5002}:5002"
-    env_file: .env
-    depends_on:
-      - mysql
-    networks:
-      - encore_network
-    command: ["./wait-for-it.sh", "mysql:3306", "--timeout=60", "--", "./prisma-start.sh"]
-
-  # Product Service
-  product_service:
-    build:
-      context: ./enterprise_server/microservices/product-service
-      dockerfile: Dockerfile
-    container_name: encore_product_service
-    restart: on-failure
-    ports:
-      - "${PRODUCT_SERVICE_PORT:-5003}:5003"
-    env_file: .env
-    depends_on:
-      - mysql
-    networks:
-      - encore_network
-    command: ["./wait-for-it.sh", "mysql:3306", "--timeout=60", "--", "./prisma-start.sh"]
-
-  # Frontend - Angular
+  # Frontend (Angular)
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        - BOOKING_API_URL=${BOOKING_API_URL:-http://localhost:4000}
-        - ADMIN_API_URL=${ADMIN_API_URL:-http://localhost:3000}
-        - ENTERPRISE_API_URL=${ENTERPRISE_API_URL:-http://localhost:5000}
-    container_name: encore_frontend
+    container_name: encore-frontend
     restart: unless-stopped
     ports:
-      - "${FRONTEND_PORT:-80}:80"
+      - "4200:80"
     depends_on:
-      - booking_client
-      - admin_server
-      - enterprise_gateway
+      - admin-server
+      - booking-client
+      - enterprise-server
     networks:
-      - encore_network
+      - encore-network
 
 volumes:
   mongo_data:
-  mongo_keyfile:
-  mysql_data:
+    driver: local
 
 networks:
-  encore_network:
+  encore-network:
     driver: bridge

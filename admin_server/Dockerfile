@@ -1,29 +1,36 @@
-# Admin Server Dockerfile
-FROM node:20-alpine
-
+# Stage 1: Install dependencies
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Instalar herramientas necesarias
+# Install netcat for wait-for-it.sh
 RUN apk add --no-cache netcat-openbsd
 
-# Copiar package files
+# Copy package files
 COPY package*.json ./
+RUN npm ci
 
-# Instalar dependencias
-RUN npm ci --only=production
-
-# Copiar Prisma schema
-COPY prisma ./prisma/
-
-# Copiar el resto de la aplicación
+# Copy application code and scripts
 COPY . .
 
-# Copiar scripts
-COPY --chmod=755 wait-for-it.sh ./
-COPY --chmod=755 prisma-start.sh ./
+# Stage 2: Runtime
+FROM node:20-alpine
+WORKDIR /app
 
-# Exponer puerto
+# Install netcat for wait-for-it.sh
+RUN apk add --no-cache netcat-openbsd
+
+# Copy wait-for-it and prisma-fastify scripts
+COPY wait-for-it.sh ./wait-for-it.sh
+COPY prisma-fastify.sh ./prisma-fastify.sh
+RUN chmod +x ./wait-for-it.sh ./prisma-fastify.sh
+
+# Copy node_modules and application code
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/prisma ./prisma
+
+ENV PORT=3000
 EXPOSE 3000
 
-# Comando por defecto
-CMD ["./prisma-start.sh"]
+CMD ["./prisma-fastify.sh"]

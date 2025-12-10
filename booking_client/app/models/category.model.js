@@ -7,7 +7,7 @@ const CategorySchema = new mongoose.Schema(
     description: { type: String, trim: true, maxlength: 500 },
     shortDescription: { type: String, trim: true, maxlength: 150 }, // Descripción corta para carrusel
     image: { type: String, trim: true }, // URL de la imagen de la categoría
-    slug: { type: String, unique: true, index: true },
+    slug: { type: String, unique: true },
     status: { type: String, enum: ['active', 'hidden', 'archived'], default: 'active' },
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: "Events" }],
 

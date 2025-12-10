@@ -23,39 +23,58 @@ El proyecto está dividido en 4 servidores principales:
 
 ## 🚀 Inicio Rápido
 
-### 🐳 Opción 1: Docker (Recomendado)
+### Opción 1: Con Docker (Recomendado) 🐳
 
-La forma más rápida de ejecutar la aplicación completa:
+**Requisitos:**
+- Docker Desktop instalado
+- Al menos 4GB de RAM para Docker
 
-```bash
-# 1. Configurar variables de entorno
-cp .env.example .env
-# Edita .env con tus credenciales
+**Instalación:**
 
-# 2. Levantar todos los servicios
-docker-compose up -d
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/alexsegui10/Encore.git
+   cd Encore
+   ```
 
-# O usando el script de PowerShell
-.\docker-manager.ps1 up
-```
+2. **Configurar variables de entorno**
+   ```bash
+   # Copiar el archivo de ejemplo
+   cp .env.example .env
+   
+   # PowerShell
+   Copy-Item .env.example .env
+   ```
+   
+   Editar `.env` con tus configuraciones (JWT secrets, Stripe keys, etc.)
 
-Accede a:
-- Frontend: http://localhost
-- Admin API: http://localhost:3000
-- Booking API: http://localhost:4000
+3. **Iniciar con Docker Compose**
+   ```bash
+   # Construir e iniciar todos los servicios
+   docker-compose up --build
+   
+   # O usar los scripts de ayuda
+   .\start-all.ps1    # PowerShell
+   .\start-all.bat    # Windows Batch
+   ```
 
-📖 Ver [DOCKER_README.md](./DOCKER_README.md) para más información.
+4. **Acceder a la aplicación**
+   - Frontend: http://localhost:4200
+   - Admin Server: http://localhost:3003
+   - Booking Client: http://localhost:4000
+   - Enterprise Server: http://localhost:3001
 
-### 💻 Opción 2: Desarrollo Local
+📖 **Ver documentación completa de Docker**: [DOCKER.md](./DOCKER.md)
 
-#### Requisitos Previos
+### Opción 2: Instalación Local (Desarrollo)
+
+**Requisitos:**
 - Node.js (v18+)
 - MongoDB
-- MySQL
-- Stripe CLI
+- Stripe CLI (opcional)
 - Angular CLI
 
-#### Instalación
+**Instalación:**
 
 1. **Clonar el repositorio**
    ```bash
@@ -73,13 +92,29 @@ Accede a:
    npm install
    ```
 
-4. **Iniciar todos los servidores**
+4. **Iniciar MongoDB**
    ```bash
-   # Windows
-   .\start-all.bat
+   # Asegúrate de tener MongoDB corriendo localmente
+   mongod
+   ```
+
+5. **Iniciar cada servidor manualmente**
+   ```bash
+   # Terminal 1 - Admin Server
+   cd admin_server
+   npm run dev
    
-   # PowerShell
-   .\start-all.ps1
+   # Terminal 2 - Booking Client
+   cd booking_client
+   npm run dev
+   
+   # Terminal 3 - Enterprise Server
+   cd enterprise_server
+   npm run start:all
+   
+   # Terminal 4 - Frontend
+   cd frontend
+   npm start
    ```
 
 ## 🛠️ Tecnologías Utilizadas
@@ -103,13 +138,27 @@ Accede a:
 
 ```
 Encore/
-├── admin_server/         # Servidor principal de administración
-├── booking_client/       # API de compras para clientes
-├── enterprise_server/    # Microservicios de merchandising
+├── admin_server/         # Servidor principal de administración (Fastify + Prisma)
+├── booking_client/       # API de compras para clientes (Express + Mongoose)
+├── enterprise_server/    # Microservicios de merchandising (NestJS + Prisma)
+│   └── microservices/   # Enterprise, Product, Category services
 ├── frontend/             # Aplicación Angular
-├── start-all.bat         # Script de inicio Windows
-└── start-all.ps1         # Script de inicio PowerShell
+├── docker-compose.yml    # Configuración de Docker Compose
+├── .env.example          # Variables de entorno de ejemplo
+├── DOCKER.md             # Documentación completa de Docker
+├── start-all.bat         # Script de inicio Windows (Docker)
+└── start-all.ps1         # Script de inicio PowerShell (Docker)
 ```
+
+## 🐳 Docker
+
+El proyecto incluye configuración completa de Docker con:
+- MongoDB con Replica Set
+- 4 servicios backend
+- Frontend con Nginx
+- Scripts de inicialización automática
+
+Ver [DOCKER.md](./DOCKER.md) para más detalles.
 
 ## 🧪 Pruebas de Pago
 
