@@ -23,14 +23,39 @@ El proyecto está dividido en 4 servidores principales:
 
 ## 🚀 Inicio Rápido
 
-### Requisitos Previos
+### 🐳 Opción 1: Docker (Recomendado)
+
+La forma más rápida de ejecutar la aplicación completa:
+
+```bash
+# 1. Configurar variables de entorno
+cp .env.example .env
+# Edita .env con tus credenciales
+
+# 2. Levantar todos los servicios
+docker-compose up -d
+
+# O usando el script de PowerShell
+.\docker-manager.ps1 up
+```
+
+Accede a:
+- Frontend: http://localhost
+- Admin API: http://localhost:3000
+- Booking API: http://localhost:4000
+
+📖 Ver [DOCKER_README.md](./DOCKER_README.md) para más información.
+
+### 💻 Opción 2: Desarrollo Local
+
+#### Requisitos Previos
 - Node.js (v18+)
 - MongoDB
 - MySQL
 - Stripe CLI
 - Angular CLI
 
-### Instalación
+#### Instalación
 
 1. **Clonar el repositorio**
    ```bash

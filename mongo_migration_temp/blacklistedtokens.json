@@ -1,0 +1,68 @@
+[
+  {
+    _id: ObjectId('6925fbcfe931a930c959af4e'),
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkxY2MwMmI3OWNlNmNjOTU3NTY5ZjIwIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzYzNDkyMTQ3LCJleHAiOjE3NjQwOTY5NDd9.HaCxhCTTWgUmjLkgKCxTmnBafl0uiqbQ9AF0e2Ial7A',
+    userId: '691cc02b79ce6cc957569f20',
+    reason: 'expired',
+    originalExpiryDate: '2025-11-25T18:55:47.409Z',
+    blacklistedAt: '2025-11-25T18:56:15.594Z',
+    createdAt: '2025-11-25T18:56:15.594Z',
+    updatedAt: '2025-11-25T18:56:15.594Z',
+    __v: 0
+  },
+  {
+    _id: ObjectId('6929ce59f3a7f6687d2212d6'),
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyMDg1YWYxZWI0OTdjMGQ2ZWZmMGNkIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzYzNzQyNjIzLCJleHAiOjE3NjQzNDc0MjN9.rPlSrozYRQXSN9xUwdHMcKjLp_QMwvYsjoGlFzvktWE',
+    userId: '692085af1eb497c0d6eff0cd',
+    reason: 'expired',
+    originalExpiryDate: '2025-11-28T16:30:23.090Z',
+    blacklistedAt: '2025-11-28T16:31:21.587Z',
+    createdAt: '2025-11-28T16:31:21.602Z',
+    updatedAt: '2025-11-28T16:31:21.602Z',
+    __v: 0
+  },
+  {
+    _id: ObjectId('692f2ca4f8879de6bf404044'),
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNWQ1MzE4OTBjYzQwNDkzMmVhYTMxIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MDg3MDg5LCJleHAiOjE3NjQ2OTE4ODl9.B2dIZ2tgpP-QfsCu_0vjsG0gLTIgpCyv7CqeJ_HYBxo',
+    userId: '6925d531890cc404932eaa31',
+    reason: 'expired',
+    originalExpiryDate: '2025-12-02T16:11:29.815Z',
+    blacklistedAt: '2025-12-02T18:15:00.887Z',
+    createdAt: '2025-12-02T18:15:00.891Z',
+    updatedAt: '2025-12-02T18:15:00.891Z',
+    __v: 0
+  },
+  {
+    _id: ObjectId('692f2ca4f8879de6bf40404d'),
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNWQ5MmNkMDA5NjE4YzI2MTcwMWU1Iiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MDg4MTA4LCJleHAiOjE3NjQ2OTI5MDh9.sgwLN77oRzMqqFSwUdfOPLqiDp6Xu4gubjS8k0oO21E',
+    userId: '6925d92cd009618c261701e5',
+    reason: 'expired',
+    originalExpiryDate: '2025-12-02T16:28:28.568Z',
+    blacklistedAt: '2025-12-02T18:15:00.995Z',
+    createdAt: '2025-12-02T18:15:00.996Z',
+    updatedAt: '2025-12-02T18:15:00.996Z',
+    __v: 0
+  },
+  {
+    _id: ObjectId('692f2ca5f8879de6bf404051'),
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyNWRjYjAxZTliY2M2YWMwOTcyYjZmIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0MDg5MDA5LCJleHAiOjE3NjQ2OTM4MDl9.w4g8OkJyC68CjcdQr2oAyZvPvgFQMqDqfxSaHX1sHjo',
+    userId: '6925dcb01e9bcc6ac0972b6f',
+    reason: 'expired',
+    originalExpiryDate: '2025-12-02T16:43:29.140Z',
+    blacklistedAt: '2025-12-02T18:15:01.064Z',
+    createdAt: '2025-12-02T18:15:01.065Z',
+    updatedAt: '2025-12-02T18:15:01.065Z',
+    __v: 0
+  },
+  {
+    _id: ObjectId('6938870b05d61cc6e91f6bb6'),
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjkyZjRjNzRmZjI1YWE1MzhmYWNhOGQwIiwicm9sZSI6ImNsaWVudGUifSwiaWF0IjoxNzY0NzA3NDQ0LCJleHAiOjE3NjUzMTIyNDR9.nvljq-atOg4y3bqha3qKVOqiqkSGaU8q64E1eBfCM4A',
+    userId: ObjectId('692f4c74ff25aa538faca8d0'),
+    reason: 'expired',
+    originalExpiryDate: ISODate('2025-12-09T20:30:44.197Z'),
+    blacklistedAt: ISODate('2025-12-09T20:31:07.449Z'),
+    createdAt: ISODate('2025-12-09T20:31:07.452Z'),
+    updatedAt: ISODate('2025-12-09T20:31:07.452Z'),
+    __v: 0
+  }
+]

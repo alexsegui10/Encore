@@ -1,0 +1,29 @@
+[
+  {
+    _id: ObjectId('691739cff90c5daf767001bc'),
+    name: 'Electr├│nicaa',
+    description: 'Productos electr├│nicos y tecnol├│gicosa',
+    image: 'https://example.com/electronics.jpg',
+    isActive: true,
+    createdAt: ISODate('2025-11-14T14:16:47.240Z'),
+    updatedAt: ISODate('2025-11-18T20:04:54.653Z')
+  },
+  {
+    _id: ObjectId('69173a1cf90c5daf767001bd'),
+    name: 'Ropa y Accesorios',
+    description: 'Moda y complementos',
+    image: 'https://example.com/ropa.jpg',
+    isActive: true,
+    createdAt: ISODate('2025-11-14T14:18:04.096Z'),
+    updatedAt: ISODate('2025-11-14T14:18:04.096Z')
+  },
+  {
+    _id: ObjectId('691cc76e256f67839da4273a'),
+    name: 'Electr├│nicas',
+    description: 'Productos electr├│nicos y tecnol├│gicoss',
+    image: 'https://example.com/electronics.jpg',
+    isActive: true,
+    createdAt: ISODate('2025-11-18T19:22:22.051Z'),
+    updatedAt: ISODate('2025-11-18T20:05:05.072Z')
+  }
+]

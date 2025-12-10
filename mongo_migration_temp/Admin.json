@@ -1,0 +1,12 @@
+[
+  {
+    _id: ObjectId('6904d41d8144fcac0973518b'),
+    uid: 'adm_admin001',
+    username: 'admin1',
+    email: 'admin@encore.com',
+    password: '$argon2id$v=19$m=65536,t=3,p=4$lrx37dVF/1ZYjDEbbxbLUQ$TAeSQOveKjRSTpkXHY/LJ2GtFU9jP++yVFV1sZe+/to',
+    isActive: true,
+    createdAt: ISODate('2025-10-31T15:22:05.855Z'),
+    updatedAt: ISODate('2025-11-07T15:22:51.674Z')
+  }
+]

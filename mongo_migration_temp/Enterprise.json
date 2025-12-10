@@ -1,0 +1,18 @@
+[
+  {
+    _id: ObjectId('691ccabba76de3a36bb6b69c'),
+    uid: 'enterprise_1763494586944',
+    email: 'admin@enterprise.com',
+    password: '$argon2id$v=19$m=65536,t=3,p=4$j4vQFlGqAqZfXDQPxz9PPw$Y6UBYqBXQMm/TnwLp5Q9/8K5bwk+yjRqjr68d/4l6Q8',
+    name: 'Empresa Demo',
+    description: 'Empresa de demostraci├│n para pruebas',
+    logo: 'https://via.placeholder.com/150',
+    website: 'https://enterprise-demo.com',
+    contactEmail: 'contact@enterprise.com',
+    phone: '+34 600 000 000',
+    status: 'active',
+    isVerified: true,
+    createdAt: ISODate('2025-11-18T19:36:27.055Z'),
+    updatedAt: ISODate('2025-11-18T19:36:27.055Z')
+  }
+]
