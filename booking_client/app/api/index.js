@@ -1,6 +1,8 @@
-import dotenv from "dotenv";
-// Load environment variables FIRST before importing other modules
-dotenv.config();
+// Load dotenv only when running locally (not in Docker where env vars are set)
+if (!process.env.MONGO_URI) {
+  const dotenv = await import("dotenv");
+  dotenv.config();
+}
 
 import express from "express";
 import cors from "cors";
@@ -17,17 +19,18 @@ import paymentRoutes from "../routes/payment.routes.js";
 import cartRoutes from "../routes/cart.routes.js";
 import { startTokenCleanup } from "../jobs/tokenCleanup.js";
 import orderRoutes from "../routes/orders.routes.js";
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// CORS configuration - permitir credenciales (cookies)
+// CORS configuration
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:4200',
-  credentials: true, // Permite enviar y recibir cookies
+  credentials: true,
 }));
 
 app.use(express.json());
-app.use(cookieParser()); // Para leer cookies del request
+app.use(cookieParser());
 
 await connectDB();
 
@@ -46,6 +49,7 @@ app.use("/api", profileRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api", orderRoutes);
+
 // 404 handler
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
 
@@ -55,6 +59,6 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`Servidor escuchando en http://127.0.0.1:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Servidor escuchando en http://0.0.0.0:${PORT}`);
 });

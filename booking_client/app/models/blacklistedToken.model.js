@@ -28,9 +28,7 @@ const blacklistedTokenSchema = new mongoose.Schema({
     timestamps: true
 });
 
-blacklistedTokenSchema.index({ token: 1 });
-
-blacklistedTokenSchema.index({ blacklistedAt: 1 }, { 
+blacklistedTokenSchema.index({ blacklistedAt: 1 }, {
     expireAfterSeconds: 7 * 24 * 60 * 60 // 7 días
 });
 

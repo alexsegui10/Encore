@@ -29,3 +29,7 @@ Thumbs.db
 
 coverage/
 .nyc_output/
+
+# Docker
+mongo_data/
+
