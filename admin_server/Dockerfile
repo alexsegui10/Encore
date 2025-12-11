@@ -19,10 +19,14 @@ WORKDIR /app
 # Install netcat for wait-for-it.sh
 RUN apk add --no-cache netcat-openbsd
 
-# Copy wait-for-it and prisma-fastify scripts
+# Copy wait-for-it and prisma scripts
 COPY wait-for-it.sh ./wait-for-it.sh
 COPY prisma-fastify.sh ./prisma-fastify.sh
-RUN chmod +x ./wait-for-it.sh ./prisma-fastify.sh
+# Convert line endings and make executable
+RUN apk add --no-cache dos2unix && \
+    dos2unix ./wait-for-it.sh ./prisma-fastify.sh && \
+    chmod +x ./wait-for-it.sh ./prisma-fastify.sh && \
+    apk del dos2unix
 
 # Copy node_modules and application code
 COPY --from=builder /app/node_modules ./node_modules

@@ -1,0 +1,138 @@
+[
+  {
+    _id: ObjectId('693064f3abac04b90f735189'),
+    name: 'Conciertos',
+    shortDescription: 'Los mejores artistas en directo. Desde pop hasta rock, vive la m├║sica en vivo.',
+    description: 'Disfruta de los mejores',
+    image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80',
+    status: 'active',
+    slug: 'conciertos',
+    events: [
+      ObjectId('693064f3abac04b90f735191'),
+      ObjectId('693064f3abac04b90f735192'),
+      ObjectId('693064f3abac04b90f735194'),
+      ObjectId('693064f3abac04b90f735195'),
+      ObjectId('693064f3abac04b90f735196'),
+      ObjectId('693064f3abac04b90f735197'),
+      ObjectId('693064f3abac04b90f735198')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.415Z'),
+    updatedAt: ISODate('2025-12-03T18:16:00.903Z')
+  },
+  {
+    _id: ObjectId('693064f3abac04b90f73518a'),
+    name: 'Festivales',
+    shortDescription: 'Experiencias musicales ├║nicas. Varios artistas, m├║ltiples escenarios, d├¡as de diversi├│n.',
+    description: 'Festivales de m├║sica ',
+    image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80',
+    status: 'active',
+    slug: 'festivales',
+    events: [
+      ObjectId('693064f3abac04b90f735193'),
+      ObjectId('693064f3abac04b90f735199'),
+      ObjectId('693064f3abac04b90f73519a'),
+      ObjectId('693064f3abac04b90f73519b'),
+      ObjectId('693064f3abac04b90f73519c')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.419Z'),
+    updatedAt: ISODate('2025-12-03T18:15:47.120Z')
+  },
+  {
+    _id: ObjectId('693064f3abac04b90f73518b'),
+    name: 'Deportes',
+    shortDescription: 'Emociones al m├íximo. F├║tbol, baloncesto, y m├ís. Vive el deporte en primera persona.',
+    description: 'Los mejores eventos ',
+    image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80',
+    status: 'active',
+    slug: 'deportes',
+    events: [
+      ObjectId('693064f3abac04b90f73519d'),
+      ObjectId('693064f3abac04b90f73519e'),
+      ObjectId('693064f3abac04b90f73519f'),
+      ObjectId('693064f3abac04b90f7351a0')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.423Z'),
+    updatedAt: ISODate('2025-12-03T18:15:39.800Z')
+  },
+  {
+    _id: ObjectId('693064f3abac04b90f73518c'),
+    name: 'Teatro',
+    shortDescription: 'Obras cl├ísicas y contempor├íneas. Drama, comedia y musicales en los mejores teatros.',
+    description: 'Teatro de calidad. ',
+    image: 'https://images.unsplash.com/photo-1503095396549-807759245b35?w=800&q=80',
+    status: 'active',
+    slug: 'teatro',
+    events: [
+      ObjectId('693064f3abac04b90f7351a1'),
+      ObjectId('693064f3abac04b90f7351a2'),
+      ObjectId('693064f3abac04b90f7351a3'),
+      ObjectId('693064f3abac04b90f7351a4')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.426Z'),
+    updatedAt: ISODate('2025-12-03T18:15:32.536Z')
+  },
+  {
+    _id: ObjectId('693064f3abac04b90f73518d'),
+    name: 'Comedia',
+    shortDescription: 'Risas garantizadas. Los mejores c├│micos y humoristas te har├ín pasar una noche inolvidable.',
+    description: 'Stand-up comedy',
+    image: 'https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=800&q=80',
+    status: 'active',
+    slug: 'comedia',
+    events: [
+      ObjectId('693064f3abac04b90f7351a5'),
+      ObjectId('693064f3abac04b90f7351a6'),
+      ObjectId('693064f3abac04b90f7351a7')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.429Z'),
+    updatedAt: ISODate('2025-12-03T18:15:26.249Z')
+  },
+  {
+    _id: ObjectId('693064f3abac04b90f73518e'),
+    name: 'Cultura',
+    shortDescription: 'Exposiciones, charlas y eventos culturales. Descubre el arte y la cultura en vivo.',
+    description: 'Eventos culturales',
+    image: 'https://cards.algoreducation.com/_next/image?url=https%3A%2F%2Ffiles.algoreducation.com%2Fproduction-ts%2F__S3__35c532d6-678a-40f6-8cb1-1886fc0d30a6&w=3840&q=75',
+    status: 'active',
+    slug: 'cultura',
+    events: [
+      ObjectId('693064f3abac04b90f7351a8'),
+      ObjectId('693064f3abac04b90f7351a9'),
+      ObjectId('693064f3abac04b90f7351aa')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.432Z'),
+    updatedAt: ISODate('2025-12-03T18:15:17.459Z')
+  },
+  {
+    _id: ObjectId('693064f3abac04b90f73518f'),
+    name: 'Familia',
+    shortDescription: 'Diversi├│n para toda la familia. Espect├ículos, circo y entretenimiento para todas las edades.',
+    description: 'Entretenimiento familiar',
+    image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80',
+    status: 'active',
+    slug: 'familia',
+    events: [
+      ObjectId('693064f3abac04b90f7351ab'),
+      ObjectId('693064f3abac04b90f7351ac'),
+      ObjectId('693064f3abac04b90f7351ad')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.436Z'),
+    updatedAt: ISODate('2025-12-03T18:15:05.242Z')
+  },
+  {
+    _id: ObjectId('693064f3abac04b90f735190'),
+    name: 'Gastron├│mica',
+    shortDescription: 'Experiencias culinarias ├║nicas. Festivales gastron├│micos, catas y eventos con los mejores chefs.',
+    description: 'Eventos gastron├│micos ',
+    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    status: 'active',
+    slug: 'gastronomica',
+    events: [
+      ObjectId('693064f3abac04b90f7351ae'),
+      ObjectId('693064f3abac04b90f7351af'),
+      ObjectId('693064f3abac04b90f7351b0')
+    ],
+    createdAt: ISODate('2025-12-03T16:27:31.440Z'),
+    updatedAt: ISODate('2025-12-03T18:14:53.553Z')
+  }
+]

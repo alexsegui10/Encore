@@ -37,7 +37,11 @@ RUN apk add --no-cache netcat-openbsd
 # Copy wait-for-it and prisma-nest scripts
 COPY wait-for-it.sh ./wait-for-it.sh
 COPY prisma-nest.sh ./prisma-nest.sh
-RUN chmod +x ./wait-for-it.sh ./prisma-nest.sh
+# Convert line endings and make executable
+RUN apk add --no-cache dos2unix && \
+    dos2unix ./wait-for-it.sh ./prisma-nest.sh && \
+    chmod +x ./wait-for-it.sh ./prisma-nest.sh && \
+    apk del dos2unix
 
 # Copy node_modules, built code, and config files
 COPY --from=builder /app/node_modules ./node_modules
