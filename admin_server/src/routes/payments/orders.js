@@ -36,7 +36,14 @@ export default async function publicOrderRoutes(fastify, opts) {
                 where: { userId: user.id },
                 include: {
                     items: {
-                        include: {
+                        select: {
+                            id: true,
+                            quantity: true,
+                            unitPrice: true,
+                            itemType: true,
+                            productId: true,
+                            productData: true,
+                            eventId: true,
                             event: {
                                 select: {
                                     id: true,
@@ -60,7 +67,8 @@ export default async function publicOrderRoutes(fastify, opts) {
                 orders.map(async (order) => {
                     const enrichedItems = await Promise.all(
                         order.items.map(async (item) => {
-                            if (item.itemType === 'product' && item.productId) {
+                            // Only fetch external data if productData is not already stored
+                            if (item.itemType === 'product' && item.productId && !item.productData) {
                                 const productData = await fetchProductFromEnterprise(item.productId);
                                 return { ...item, productData };
                             }

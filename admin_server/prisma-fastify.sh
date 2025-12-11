@@ -11,4 +11,4 @@ echo "Pushing database schema..."
 npx prisma db push --schema ./prisma/schema.prisma --skip-generate
 
 echo "Starting Fastify admin server..."
-PORT=3000 node src/server.js
+HOST=0.0.0.0 PORT=3000 node src/server.js

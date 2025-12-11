@@ -49,11 +49,18 @@ services:
     environment:
       - PORT=3000
       - DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
-      - JWT_SECRET=${JWT_SECRET:-your-jwt-secret}
-      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-your-refresh-secret}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}
+      - JWT_ISSUER=${JWT_ISSUER:-encore-admin}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      - CLIENT_URL=${CLIENT_URL:-http://localhost:4200}
+      - BOOKING_CLIENT_URL=${BOOKING_CLIENT_URL:-http://localhost:4000}
       - LOG_LEVEL=${LOG_LEVEL:-info}
+      - NODE_ENV=${NODE_ENV:-development}
+      - HOST=0.0.0.0
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
     depends_on:
       - mongo
       - mongo-init
@@ -73,9 +80,11 @@ services:
     environment:
       - PORT=4000
       - MONGO_URI=mongodb://mongo:27017/encore?replicaSet=rs0
-      - FRONTEND_URL=http://localhost:4200
-      - SECRET_KEY=${SECRET_KEY:-your-secret-key}
-      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET:-your-refresh-token-secret}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:4200}
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - ADMIN_SERVER_URL=http://admin-server:3000
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:4200}
     depends_on:
       - mongo
       - mongo-init
@@ -101,6 +110,15 @@ services:
       - PRODUCT_DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
       - CATEGORY_DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
       - DATABASE_URL=mongodb://mongo:27017/encore?replicaSet=rs0
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}
+      - JWT_ISSUER=${JWT_ISSUER:-encore-enterprise}
+      - ENTERPRISE_SERVICE_PORT=5001
+      - PRODUCT_SERVICE_PORT=5002
+      - CATEGORY_SERVICE_PORT=5003
+      - NODE_ENV=${NODE_ENV:-development}
+      - HOST=0.0.0.0
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
     depends_on:
       - mongo
       - mongo-init
