@@ -3,20 +3,6 @@ import Document from '../models/document.model.js';
 import Event from '../models/evento.model.js';
 import { generateEmbedding, cosineSimilarity, askLLM } from '../services/rag.service.js';
 
-const STOP_WORDS = new Set([
-    'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas',
-    'de', 'del', 'a', 'al', 'en', 'con', 'por', 'para',
-    'que', 'y', 'o', 'si', 'no', 'es', 'son', 'está', 'están',
-    'me', 'te', 'se', 'lo', 'le'
-]);
-
-function extractKeywords(question) {
-    return question
-        .toLowerCase()
-        .split(/\s+/)
-        .filter(word => word.length > 2 && !STOP_WORDS.has(word));
-}
-
 export const askQuestion = asyncHandler(async (req, res) => {
     const { question } = req.body;
 
@@ -29,58 +15,36 @@ export const askQuestion = asyncHandler(async (req, res) => {
     try {
         const questionEmbedding = await generateEmbedding(question);
 
-        const keywords = extractKeywords(question);
+        const allDocuments = await Document.find({}).lean();
 
-        if (keywords.length === 0) {
-            return res.status(200).json({
-                answer: '',
-                relatedEvents: [],
-                context: []
+        if (allDocuments.length === 0) {
+            return res.status(404).json({
+                error: 'No hay documentos en la base de datos. Ejecuta insertDocs.js primero.'
             });
         }
 
-        const regexPattern = keywords.join('|');
-
-        const textMatches = await Document.find({
-            text: { $regex: regexPattern, $options: 'i' }
-        }).limit(150).lean();
-
-        if (textMatches.length === 0) {
-            return res.status(200).json({
-                answer: '',
-                relatedEvents: [],
-                context: []
-            });
-        }
-
-        const scoredDocs = textMatches
+        const scoredDocs = allDocuments
             .map(d => ({
                 ...d,
                 similarity: cosineSimilarity(d.embedding, questionEmbedding)
             }))
-            .filter(d => d.similarity >= 0.45)
             .sort((a, b) => b.similarity - a.similarity)
-            .slice(0, 10);
+            .slice(0, 25);
 
-        if (scoredDocs.length === 0) {
-            return res.status(200).json({
-                answer: '',
-                relatedEvents: [],
-                context: []
-            });
-        }
+        console.log('Top 5 candidates:', scoredDocs.slice(0, 5).map(d => ({
+            title: d.metadata.title,
+            category: d.metadata.category,
+            similarity: d.similarity.toFixed(3)
+        })));
 
         const context = scoredDocs.map(d => {
             const meta = d.metadata;
             return `Título: ${meta.title}
 Categoría: ${meta.category}
-Precio: ${meta.price} ${meta.currency}
-Fecha: ${new Date(meta.date).toLocaleDateString('es-ES')}
-Ubicación: ${meta.location || 'No especificada'}
 Descripción: ${d.text}`;
         }).join('\n\n---\n\n');
 
-        const finalPrompt = `Eres un experto en filtrar eventos relevantes. Analiza cada evento y determina cuáles son relevantes para la pregunta del usuario.
+        const finalPrompt = `Tu tarea es filtrar eventos basándote ÚNICAMENTE en lo que el usuario pide.
 
 EVENTOS DISPONIBLES:
 ${context}
@@ -88,41 +52,81 @@ ${context}
 PREGUNTA DEL USUARIO:
 ${question}
 
-INSTRUCCIONES:
-- Devuelve los títulos de eventos que sean relevantes para la pregunta
-- Si la pregunta menciona temas (motos, música, Disney, deportes), busca eventos relacionados con esos temas
-- Si menciona una ubicación específica, prioriza eventos de esa ubicación pero no descartes otros si no hay suficientes
-- Si menciona precio o fecha, considéralo pero no lo uses como único criterio
-- Sé flexible con sinónimos y términos relacionados (ej: "motos" incluye MotoGP, motociclismo, etc.)
-- Si NO hay eventos relevantes, responde "NINGUNO"
+EJEMPLOS DE LO QUE DEBES HACER:
 
-Responde SOLO con los títulos exactos de los eventos relevantes, uno por línea.
+Usuario pregunta: "fútbol"
+✓ INCLUIR: "Real Madrid vs FC Barcelona" (Categoría: Fútbol), "Final Copa del Rey" (Categoría: Fútbol)
+✗ NO INCLUIR: "David Broncano" (es comedia), "Mad Cool Festival" (es música), "Hans Zimmer" (es música)
+Razón: Solo partidos de fútbol, NO conciertos, NO shows, NO festivales
+
+Usuario pregunta: "quiero reírme"  
+✓ INCLUIR: "Show de Stand-Up" (Categoría: Comedia), "David Broncano" (Categoría: Comedia)
+✗ NO INCLUIR: "Real Madrid vs FC Barcelona" (es fútbol), "Mad Cool" (es música)
+Razón: Solo comedia/humor, NO deportes, NO música
+
+Usuario pregunta: "música"
+✓ INCLUIR: "Mad Cool Festival", "Primavera Sound" (Categoría: Música)
+✗ NO INCLUIR: "Real Madrid vs FC Barcelona" (es fútbol), "David Broncano" (es comedia)
+Razón: Solo música, NO deportes, NO comedia
+
+INSTRUCCIONES CRÍTICAS:
+1. Lee ATENTAMENTE qué pide el usuario
+2. Para CADA evento, mira su título, categoría y descripción
+3. Pregúntate: "¿Este evento ES del mismo tipo que lo que pide?"
+4. Si el usuario pide fútbol → SOLO fútbol
+5. Si pide comedia → SOLO comedia  
+6. Si pide música → SOLO música
+7. NO mezcles tipos diferentes
+8. Si NO estás 100% seguro, NO lo incluyas
+
+Responde SOLO con los títulos EXACTOS de eventos que corresponden.
+Si NO hay, responde "NINGUNO".
 
 RESPUESTA:`;
 
         const llmResponse = await askLLM(finalPrompt, '');
+        console.log('=== LLM Response ===');
+        console.log(llmResponse);
+        console.log('===================');
 
         const relevantTitles = llmResponse
             .split('\n')
             .map(line => line.trim())
             .filter(line => line && line !== 'NINGUNO' && !line.toLowerCase().startsWith('respuesta'));
 
+        console.log('Relevant Titles from LLM:', relevantTitles);
+
         let filteredDocs = scoredDocs;
         if (relevantTitles.length > 0 && !llmResponse.toUpperCase().includes('NINGUNO')) {
             filteredDocs = scoredDocs.filter(doc => {
                 const docTitle = doc.metadata.title.toLowerCase();
+
                 return relevantTitles.some(title => {
                     const titleLower = title.toLowerCase();
-                    return docTitle.includes(titleLower) ||
-                        titleLower.includes(docTitle) ||
-                        docTitle.split(' ').some(word => titleLower.includes(word) && word.length > 4);
+
+                    const match = docTitle === titleLower ||
+                        docTitle.includes(titleLower) ||
+                        titleLower.includes(docTitle);
+
+                    if (match) {
+                        console.log(`✓ Match: "${docTitle}" ↔ "${titleLower}"`);
+                    }
+
+                    return match;
                 });
             });
 
-            if (filteredDocs.length === 0) {
-                filteredDocs = scoredDocs.slice(0, 3);
+            console.log('Final Filtered Docs:', filteredDocs.map(d => d.metadata.title));
+
+            if (filteredDocs.length === 0 && relevantTitles.length > 0) {
+                console.log('WARNING: LLM gave titles but none matched.');
+                filteredDocs = [];
             }
         } else if (llmResponse.toUpperCase().includes('NINGUNO')) {
+            console.log('LLM returned NINGUNO');
+            filteredDocs = [];
+        } else {
+            console.log('LLM returned empty');
             filteredDocs = [];
         }
 
@@ -130,6 +134,8 @@ RESPUESTA:`;
         const relatedEvents = await Event.find({ _id: { $in: eventIds } })
             .populate('category')
             .lean();
+
+        console.log(`Returning ${relatedEvents.length} events`);
 
         return res.status(200).json({
             answer: '',
