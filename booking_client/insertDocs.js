@@ -9,7 +9,7 @@ import Document from './app/models/document.model.js';
 import Category from './app/models/category.model.js';
 import { generateEmbedding } from './app/services/rag.service.js';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/booking';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/encore';
 
 async function connectDB() {
     try {
