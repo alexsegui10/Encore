@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Event } from '../../core/models/event.model';
 import { EventService } from '../../core/services/event.service';
+import { EventBusService } from '../../core/services/event-bus.service';
 import { CardEventComponent } from '../card-event/card-event.component';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
 import { Filters } from '../../core/models/filters.model';
 import { SearchComponent } from '../search/search.component';
-import { PaginationComponent } from  '../pagination/pagination.component';
+import { PaginationComponent } from '../pagination/pagination.component';
 import { FiltersComponent } from '../filters/filters.component';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'list-events',
   standalone: true,
@@ -18,7 +21,7 @@ import { FiltersComponent } from '../filters/filters.component';
   templateUrl: './list-events.component.html',
   styleUrls: ['./list-events.component.css']
 })
-export class ListEventsComponent implements OnInit {
+export class ListEventsComponent implements OnInit, OnDestroy {
   events: Event[] = [];
   cat_id: string | null = null;
   listCategories: Category[] = [];
@@ -31,12 +34,14 @@ export class ListEventsComponent implements OnInit {
   // Params de routing
   private routeFilters: string | null = null;
   private slug_Category: string | null = null;
+  private aiEventsSubscription?: Subscription;
 
   constructor(
     private eventService: EventService,
+    private eventBusService: EventBusService,
     private route: ActivatedRoute,
     private CategoryService: CategoryService,
-   private Location: Location
+    private Location: Location
   ) { }
 
   ngOnInit(): void {
@@ -46,12 +51,25 @@ export class ListEventsComponent implements OnInit {
     // Cargar categorías primero
     this.getListForCategory();
 
+    // Subscribe to AI events
+    this.aiEventsSubscription = this.eventBusService.aiEvents$.subscribe(aiEvents => {
+      if (aiEvents !== null) {
+        this.events = aiEvents;
+        this.totalPages = aiEvents.length > 0 ? [1] : [];
+        this.currentPage = 1;
+      }
+    });
+
     // Cargar inicial
     this.loadEvents();
     if (this.slug_Category !== null) {
       this.getListForCategory();
     }
 
+  }
+
+  ngOnDestroy(): void {
+    this.aiEventsSubscription?.unsubscribe();
   }
 
   private loadEvents(): void {
@@ -72,7 +90,7 @@ export class ListEventsComponent implements OnInit {
         this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
         this.events = data?.events ?? data?.items ?? data ?? [];
       },
-      error: (err) => {}
+      error: (err) => { }
     });
   }
 
@@ -129,7 +147,7 @@ export class ListEventsComponent implements OnInit {
       this.filters = new Filters();
     }
   }
-    setPageTo(pageNumber: number) {
+  setPageTo(pageNumber: number) {
 
     this.currentPage = pageNumber;
 

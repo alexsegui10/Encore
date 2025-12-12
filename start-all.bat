@@ -1,69 +1,57 @@
 @echo off
-REM Script para iniciar la aplicación Encore con Docker
+REM Script para iniciar la aplicación Encore sin Docker
 echo.
 echo ========================================
-echo   ENCORE - Docker Compose
+echo   ENCORE - Inicio Local
 echo ========================================
-echo.
-
-REM Verificar que Docker está corriendo
-echo [1/4] Verificando Docker...
-docker info >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ERROR: Docker no esta corriendo.
-    echo Por favor inicia Docker Desktop.
-    echo.
-    pause
-    exit /b 1
-)
-echo OK: Docker esta corriendo
 echo.
 
 REM Verificar que existe el archivo .env
 if not exist ".env" (
-    echo [2/4] Creando archivo .env desde .env.example...
-    copy .env.example .env
+    echo [1/2] Creando archivo .env desde .env.example...
+    copy .env.example .env >nul
     echo OK: Archivo .env creado
     echo.
 ) else (
-    echo [2/4] Archivo .env encontrado
+    echo [1/2] Archivo .env encontrado
     echo.
 )
 
-REM Detener contenedores existentes
-echo [3/4] Deteniendo contenedores existentes...
-docker-compose down >nul 2>&1
+REM Iniciar servicios en ventanas separadas
+echo [2/2] Iniciando servicios...
 echo.
 
-REM Construir e iniciar los contenedores
-echo [4/4] Construyendo e iniciando contenedores...
-echo Esto puede tomar varios minutos la primera vez...
+echo Iniciando Booking Client en el puerto 4000...
+start "Booking Client" powershell -NoExit -Command "cd '%CD%\booking_client'; npm run dev"
+timeout /t 2 /nobreak >nul
+
+echo Iniciando Admin Server en el puerto 3003...
+start "Admin Server" powershell -NoExit -Command "cd '%CD%\admin_server'; npm run dev"
+timeout /t 2 /nobreak >nul
+
+echo Iniciando Enterprise Server en el puerto 3001...
+start "Enterprise Server" powershell -NoExit -Command "cd '%CD%\enterprise_server'; npm run start:all"
+timeout /t 2 /nobreak >nul
+
+echo Iniciando Frontend en el puerto 4200...
+start "Frontend Angular" powershell -NoExit -Command "cd '%CD%\frontend'; npm start"
+
 echo.
-docker-compose up --build -d
-
-if %errorlevel% equ 0 (
-    echo.
-    echo ========================================
-    echo   SERVICIOS INICIADOS
-    echo ========================================
-    echo.
-    echo   Frontend:           http://localhost:4200
-    echo   Admin Server:       http://localhost:3003
-    echo   Booking Client:     http://localhost:4000
-    echo   Enterprise Server:  http://localhost:3001
-    echo   MongoDB:            mongodb://localhost:27017
-    echo.
-    echo   Ver logs:           docker-compose logs -f
-    echo   Detener:            docker-compose down
-    echo.
-    echo   Presiona cualquier tecla para salir...
-    pause >nul
-) else (
-    echo.
-    echo ERROR: No se pudieron iniciar los contenedores
-    echo Revisa los logs con: docker-compose logs
-    echo.
-    pause
-    exit /b 1
-)
-
+echo ========================================
+echo   SERVICIOS INICIADOS
+echo ========================================
+echo.
+echo Se han abierto 4 ventanas de terminal:
+echo.
+echo   1. Booking Client   - http://localhost:4000
+echo   2. Admin Server     - http://localhost:3003
+echo   3. Enterprise Server- http://localhost:3001
+echo   4. Frontend Angular - http://localhost:4200
+echo.
+echo IMPORTANTE:
+echo   - MongoDB debe estar corriendo en mongodb://localhost:27017
+echo   - Espera 1-2 minutos para que todos los servicios inicien
+echo   - Para detener, cierra cada ventana de terminal
+echo.
+echo   Presiona cualquier tecla para salir...
+pause >nul

@@ -1,0 +1,126 @@
+<div class="ai-search-container">
+  <div class="search-header">
+    <div class="header-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+        <line x1="12" x2="12" y1="19" y2="22"></line>
+      </svg>
+    </div>
+    <h1>Búsqueda Inteligente con IA</h1>
+    <p>Pregunta en lenguaje natural sobre los eventos que buscas</p>
+  </div>
+
+  <div class="search-box">
+    <div class="input-wrapper">
+      <textarea [(ngModel)]="question" placeholder="Ej: Recomiéndame eventos para este fin de semana..." rows="3"
+        [disabled]="loading()" (keydown.enter)="$any($event).ctrlKey && askQuestion()"></textarea>
+      <button class="search-btn" (click)="askQuestion()" [disabled]="loading() || !question().trim()">
+        @if (loading()) {
+        <span class="spinner"></span>
+        } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m5 12 7-7 7 7"></path>
+          <path d="M12 19V5"></path>
+        </svg>
+        }
+      </button>
+    </div>
+    <small class="hint">Presiona Ctrl + Enter para buscar</small>
+  </div>
+
+  @if (!response() && !loading()) {
+  <div class="examples">
+    <h3>Preguntas de ejemplo:</h3>
+    <div class="example-chips">
+      @for (example of exampleQuestions; track example) {
+      <button class="example-chip" (click)="useExample(example)">
+        {{ example }}
+      </button>
+      }
+    </div>
+  </div>
+  }
+
+  @if (error()) {
+  <div class="error-message">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" x2="12" y1="8" y2="12"></line>
+      <line x1="12" x2="12.01" y1="16" y2="16"></line>
+    </svg>
+    <p>{{ error() }}</p>
+  </div>
+  }
+
+  @if (loading()) {
+  <div class="loading-state">
+    <div class="loading-animation">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <p>Procesando tu pregunta con IA...</p>
+  </div>
+  }
+
+  @if (response() && !loading()) {
+  <div class="response-container">
+    <div class="ai-response">
+      <div class="response-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <h2>Respuesta de la IA</h2>
+      </div>
+      <p class="answer-text">{{ response()!.answer }}</p>
+    </div>
+
+    @if (response()!.relatedEvents && response()!.relatedEvents.length > 0) {
+    <div class="related-events">
+      <h3>Eventos Recomendados</h3>
+      <div class="events-grid">
+        @for (event of response()!.relatedEvents; track event._id) {
+        <div class="event-card" [routerLink]="['/evento', event.slug]">
+          <div class="event-image">
+            @if (event.mainImage) {
+            <img [src]="event.mainImage" [alt]="event.title">
+            } @else {
+            <div class="placeholder-image">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <path d="m21 15-5-5L5 21"></path>
+              </svg>
+            </div>
+            }
+          </div>
+          <div class="event-info">
+            <h4>{{ event.title }}</h4>
+            <p class="event-category">{{ event.category?.name || 'Sin categoría' }}</p>
+            <div class="event-meta">
+              <span class="price">{{ event.price }} {{ event.currency }}</span>
+              <span class="date">{{ event.date | date:'dd/MM/yyyy' }}</span>
+            </div>
+            @if (event.location) {
+            <p class="location">📍 {{ event.location }}</p>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <button class="new-search-btn" (click)="clearSearch()">
+      Nueva Búsqueda
+    </button>
+  </div>
+  }
+</div>

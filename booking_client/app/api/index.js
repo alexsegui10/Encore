@@ -19,6 +19,7 @@ import paymentRoutes from "../routes/payment.routes.js";
 import cartRoutes from "../routes/cart.routes.js";
 import { startTokenCleanup } from "../jobs/tokenCleanup.js";
 import orderRoutes from "../routes/orders.routes.js";
+import ragRoutes from "../routes/rag.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -49,6 +50,7 @@ app.use("/api", profileRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api", orderRoutes);
+app.use("/api", ragRoutes);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
