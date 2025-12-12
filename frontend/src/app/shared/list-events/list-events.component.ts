@@ -35,6 +35,8 @@ export class ListEventsComponent implements OnInit, OnDestroy {
   private routeFilters: string | null = null;
   private slug_Category: string | null = null;
   private aiEventsSubscription?: Subscription;
+  private allAIEvents: Event[] = [];
+  private isAISearchActive: boolean = false;
 
   constructor(
     private eventService: EventService,
@@ -52,11 +54,24 @@ export class ListEventsComponent implements OnInit, OnDestroy {
     this.getListForCategory();
 
     // Subscribe to AI events
-    this.aiEventsSubscription = this.eventBusService.aiEvents$.subscribe(aiEvents => {
-      if (aiEvents !== null) {
-        this.events = aiEvents;
-        this.totalPages = aiEvents.length > 0 ? [1] : [];
-        this.currentPage = 1;
+    this.aiEventsSubscription = this.eventBusService.aiEvents$.subscribe(aiEventsData => {
+      if (aiEventsData !== null) {
+        this.allAIEvents = aiEventsData.events;
+        this.isAISearchActive = true;
+        const totalCount = aiEventsData.totalCount;
+
+        const startIndex = this.offset;
+        const endIndex = startIndex + this.limit;
+
+        this.events = this.allAIEvents.slice(startIndex, endIndex);
+
+        const totalPagesCount = Math.max(1, Math.ceil(totalCount / this.limit));
+        this.totalPages = Array.from(new Array(totalPagesCount), (val, index) => index + 1);
+
+        this.currentPage = Math.floor(this.offset / this.limit) + 1;
+      } else {
+        this.isAISearchActive = false;
+        this.allAIEvents = [];
       }
     });
 
@@ -150,6 +165,16 @@ export class ListEventsComponent implements OnInit, OnDestroy {
   setPageTo(pageNumber: number) {
 
     this.currentPage = pageNumber;
+
+    if (this.isAISearchActive && this.allAIEvents.length > 0) {
+      this.offset = this.limit * (this.currentPage - 1);
+
+      const startIndex = this.offset;
+      const endIndex = startIndex + this.limit;
+
+      this.events = this.allAIEvents.slice(startIndex, endIndex);
+      return;
+    }
 
     if (typeof this.routeFilters === 'string') {
       this.refreshRouteFilter();

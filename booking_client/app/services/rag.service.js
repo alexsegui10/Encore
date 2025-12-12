@@ -78,27 +78,16 @@ export function buildContext(documents) {
     return context;
 }
 
-export async function askLLM(question, context) {
+export async function askLLM(prompt, context = '') {
     try {
-        const systemPrompt = `Eres un asistente experto en eventos y entretenimiento. Tu trabajo es ayudar a los usuarios a encontrar eventos que se ajusten a sus necesidades.
-
-Usa SOLAMENTE la información proporcionada en el contexto para responder. Si la información no está en el contexto, di que no tienes esa información.
-
-Responde de manera amigable, concisa y útil en español.`;
-
-        const userPrompt = `${context}
-
-Pregunta del usuario: ${question}
-
-Responde basándote únicamente en los eventos del catálogo mostrados arriba.`;
+        const fullPrompt = context ? `${context}\n\n${prompt}` : prompt;
 
         const response = await axios.post(`${LM_STUDIO_URL}/v1/chat/completions`, {
             model: LLM_MODEL,
             messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: userPrompt }
+                { role: 'user', content: fullPrompt }
             ],
-            temperature: 0.7,
+            temperature: 0.3,
             max_tokens: 500
         });
 

@@ -113,7 +113,7 @@ export class SearchComponent implements OnInit {
         this.aiLoading.set(false);
         const events = res.relatedEvents || [];
 
-        this.eventBusService.setAIEvents(events);
+        this.eventBusService.setAIEvents(events, events.length);
         this.listEvents = events;
       },
       error: (err) => {

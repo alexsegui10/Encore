@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Document from '../models/document.model.js';
 import Event from '../models/evento.model.js';
-import { generateEmbedding, cosineSimilarity } from '../services/rag.service.js';
+import { generateEmbedding, cosineSimilarity, askLLM } from '../services/rag.service.js';
 
 function extractPriceFilter(question) {
     const lowerQuestion = question.toLowerCase();
@@ -40,39 +40,77 @@ export const askQuestion = asyncHandler(async (req, res) => {
     }
 
     try {
-        const queryEmbedding = await generateEmbedding(question);
+        const questionEmbedding = await generateEmbedding(question);
 
-        const allDocuments = await Document.find({}).lean();
+        const words = question.toLowerCase().split(/\s+/);
+        const regexPattern = words.join('|');
 
-        if (allDocuments.length === 0) {
-            return res.status(404).json({
-                error: 'No hay documentos en la base de datos. Ejecuta insertDocs.js primero.'
+        const textMatches = await Document.find({
+            text: { $regex: regexPattern, $options: 'i' }
+        }).limit(200).lean();
+
+        if (textMatches.length === 0) {
+            return res.status(200).json({
+                answer: '',
+                relatedEvents: [],
+                context: []
             });
         }
 
-        const documentsWithSimilarity = allDocuments.map(doc => ({
-            document: doc,
-            similarity: cosineSimilarity(queryEmbedding, doc.embedding)
-        }));
+        const scoredDocs = textMatches
+            .map(d => ({
+                ...d,
+                similarity: cosineSimilarity(d.embedding, questionEmbedding)
+            }))
+            .sort((a, b) => b.similarity - a.similarity)
+            .slice(0, 10);
 
-        documentsWithSimilarity.sort((a, b) => b.similarity - a.similarity);
+        const context = scoredDocs.map(d => {
+            const meta = d.metadata;
+            return `Título: ${meta.title}
+Precio: ${meta.price} ${meta.currency}
+Fecha: ${new Date(meta.date).toLocaleDateString('es-ES')}
+Ubicación: ${meta.location || 'No especificada'}
+Descripción: ${d.text}`;
+        }).join('\n\n---\n\n');
 
-        const SIMILARITY_THRESHOLD = 0.5;
+        const finalPrompt = `Usa SOLO este contexto para determinar qué eventos son relevantes para la pregunta del usuario.
 
-        let relevantDocuments = documentsWithSimilarity
-            .filter(item => item.similarity >= SIMILARITY_THRESHOLD)
-            .map(item => item.document);
+CONTEXTO DE EVENTOS DISPONIBLES:
+${context}
 
-        const priceFilter = extractPriceFilter(question);
+PREGUNTA DEL USUARIO:
+${question}
 
-        if (priceFilter) {
-            relevantDocuments = relevantDocuments.filter(doc => {
-                const price = doc.metadata.price;
-                return price >= priceFilter.min && price <= priceFilter.max;
-            });
+INSTRUCCIONES:
+- Devuelve SOLO los títulos de los eventos que sean realmente relevantes para la pregunta
+- Si la pregunta menciona una ubicación, descarta eventos de otras ubicaciones
+- Si menciona un rango de precio, descarta eventos fuera de ese rango
+- Si menciona una fecha o período, ten en cuenta las fechas de los eventos
+- Si menciona un tipo de evento o categoría, filtra por eso
+- Si NO hay eventos relevantes, di "NINGUNO"
+- Responde SOLO con los títulos separados por saltos de línea, sin explicaciones adicionales
+
+RESPUESTA:`;
+
+        const llmResponse = await askLLM(finalPrompt, '');
+
+        const relevantTitles = llmResponse
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line && line !== 'NINGUNO' && !line.startsWith('RESPUESTA:'));
+
+        let filteredDocs = scoredDocs;
+        if (relevantTitles.length > 0 && !llmResponse.includes('NINGUNO')) {
+            filteredDocs = scoredDocs.filter(doc =>
+                relevantTitles.some(title =>
+                    doc.metadata.title.toLowerCase().includes(title.toLowerCase()) ||
+                    title.toLowerCase().includes(doc.metadata.title.toLowerCase())
+                )
+            );
         }
 
-        const eventIds = relevantDocuments.map(doc => doc.metadata.eventId);
+        const eventIds = filteredDocs.map(doc => doc.metadata.eventId);
         const relatedEvents = await Event.find({ _id: { $in: eventIds } })
             .populate('category')
             .lean();
@@ -80,10 +118,10 @@ export const askQuestion = asyncHandler(async (req, res) => {
         return res.status(200).json({
             answer: '',
             relatedEvents: relatedEvents,
-            context: relevantDocuments.map(doc => ({
+            context: filteredDocs.map(doc => ({
                 title: doc.metadata.title,
                 slug: doc.metadata.slug,
-                similarity: 'high'
+                similarity: doc.similarity.toFixed(2)
             }))
         });
     } catch (error) {
