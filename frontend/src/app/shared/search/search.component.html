@@ -2,39 +2,9 @@
   <form class="search" name="search" (submit)="$event.preventDefault(); search_event(this)">
     <i class="fa fa-search"></i>
 
-    <input type="text" [attr.list]="useAI() ? null : 'search'" class="input" name="txt" [(ngModel)]="search_value"
-      (input)="type_event($any($event.target).value)" (change)="search_event(this)"
-      [placeholder]="useAI() ? 'Pregunta en lenguaje natural...' : 'Buscar evento...'">
+    <input type="text" class="input" name="txt" [(ngModel)]="search_value"
+      placeholder="Pregunta en lenguaje natural...">
 
-    @if (!useAI()) {
-    <datalist id="search">
-      @for (event of listEvents; track event.title) {
-      <option [value]="event.title">{{event.title}}</option>
-      }
-    </datalist>
-    }
-
-    <button type="button" class="btn-ai-toggle" (click)="toggleAI()" [class.active]="useAI()"
-      title="{{ useAI() ? 'Cambiar a búsqueda tradicional' : 'Activar búsqueda con IA' }}">
-      @if (useAI()) {
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-        <line x1="12" x2="12" y1="19" y2="22"></line>
-      </svg>
-      IA
-      } @else {
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
-      IA
-      }
-    </button>
-
-    @if (useAI()) {
     <button type="button" class="btn btn-primary" (click)="searchWithAI()" [disabled]="aiLoading()">
       @if (aiLoading()) {
       <span class="spinner-small"></span>
@@ -42,9 +12,6 @@
       Buscar
       }
     </button>
-    } @else {
-    <button type="submit" class="btn btn-primary">Search</button>
-    }
   </form>
 
   @if (aiError()) {

@@ -88,40 +88,6 @@ form.search .input::placeholder {
   font-weight: 400;
 }
 
-/* Botón toggle de IA */
-.btn-ai-toggle {
-  background: rgba(102, 126, 234, 0.1);
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  border-radius: 20px;
-  padding: 0.5rem 0.9rem;
-  color: #667eea;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-}
-
-.btn-ai-toggle:hover {
-  background: rgba(102, 126, 234, 0.2);
-  border-color: rgba(102, 126, 234, 0.5);
-  transform: translateY(-1px);
-}
-
-.btn-ai-toggle.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
-  color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.btn-ai-toggle svg {
-  flex-shrink: 0;
-}
-
 /* Spinner pequeño para el botón */
 .spinner-small {
   width: 16px;
